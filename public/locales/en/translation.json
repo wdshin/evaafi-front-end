@@ -1,0 +1,10 @@
+{
+  "basePage": {
+     "addWallet": "Add Wallet"
+  },
+  "qrModal": {
+      "title": "Scan QR in TONKEEPER",   
+      "description": "We Niether Recieve nor store your wallet log-in details so your TON is safe",
+      "cancel": "Cancel"   
+  }
+}
