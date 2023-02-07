@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { AuthButton } from '../../components/AuthButton/AuthButton';
-import { BoldInterText } from '../Texts/MainTexts';
+import { BoldRobotoText } from '../Texts/MainTexts';
 import EvaaLogo from '../../assets/pictures/evaa_logo.png'
 import { TonConnectButton } from '@tonconnect/ui-react';
 import { useNavigate } from 'react-router';
@@ -47,7 +47,7 @@ const Header = ({ width } : HeaderProps) => {
         <HeaderWrapper  width={width}>
             <IconWithTextWrapper  onClick={() => navigate("/")}>
                 <Image/>
-                <BoldInterText color='#FFFFFF'>EVAA</BoldInterText>
+                <BoldRobotoText color='#FFFFFF'>EVAA</BoldRobotoText>
             </IconWithTextWrapper>            
             <AuthButton/>
         </HeaderWrapper>

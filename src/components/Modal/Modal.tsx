@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import QRCode from "react-qr-code";
 import styled from "styled-components";
 import { GrayBtn } from "../Buttons/Buttons";
-import { BoldInterText, RegularInterText } from "../Texts/MainTexts";
+import { BoldRobotoText, RegularRobotoText } from "../Texts/MainTexts";
 
 interface QRModalProps {
 	close: () => void;
@@ -21,7 +21,7 @@ const DialogStyled = styled(Dialog.Panel)`
     max-width: 45rem;
 `
 
-const Title = styled(BoldInterText)`
+const Title = styled(BoldRobotoText)`
     color: #000;
     text-align: center;
     margin-top: 3rem;
@@ -29,7 +29,7 @@ const Title = styled(BoldInterText)`
     font-size: 2.4rem;
 `
 
-const Description = styled(RegularInterText)`
+const Description = styled(RegularRobotoText)`
     color: #000;
     text-align: center;
     margin-bottom: 3rem;
