@@ -5,9 +5,11 @@ import USDTLogo from '../../../assets/pictures/usdt_asset.png';
 import { AssetCardButton } from '../../Buttons/Buttons';
 
 
-export interface AssetCardProps { }
+export interface AssetCardProps {
+    onClick?: () => void;
+}
 
-export const SupplyAssetCard = ({} : AssetCardProps) => {    
+export const SupplyAssetCard = ({ onClick } : AssetCardProps) => {    
     return (
         <AssetCardWrapper>
             <AssetWrapper>
@@ -16,12 +18,12 @@ export const SupplyAssetCard = ({} : AssetCardProps) => {
             </AssetWrapper>
             <AssetCardText right={52.5}>100</AssetCardText>
             <AssetCardText right={38.1}>3.12%</AssetCardText>
-            <AssetCardButton right={0}>Supply</AssetCardButton>
+            <AssetCardButton onClick={onClick} right={0}>Supply</AssetCardButton>
         </AssetCardWrapper>
     )
 }
 
-export const MySuppliesAssetCard = ({} : AssetCardProps) => {    
+export const MySuppliesAssetCard = ({ onClick } : AssetCardProps) => {    
     return (
         <AssetCardWrapper>
             <AssetWrapper>
@@ -36,12 +38,12 @@ export const MySuppliesAssetCard = ({} : AssetCardProps) => {
                 <DoubleTextUpper>3.12%</DoubleTextUpper>
                 <DoubleTextLower>2.1 TON</DoubleTextLower>
             </DoubleTextWrapper>
-            <AssetCardButton right={0}>Withdraw</AssetCardButton>
+            <AssetCardButton onClick={onClick} right={0}>Withdraw</AssetCardButton>
         </AssetCardWrapper>
     )
 }
 
-export const BorrowAssetCard = ({} : AssetCardProps) => {    
+export const BorrowAssetCard = ({ onClick} : AssetCardProps) => {    
     return (
         <AssetCardWrapper>
             <AssetWrapper>
@@ -50,12 +52,12 @@ export const BorrowAssetCard = ({} : AssetCardProps) => {
             </AssetWrapper>
             <AssetCardText right={52.5}>2280</AssetCardText>
             <AssetCardText right={38.1}>5.4%</AssetCardText>
-            <AssetCardButton right={0}>Borrow</AssetCardButton>
+            <AssetCardButton onClick={onClick} right={0}>Borrow</AssetCardButton>
         </AssetCardWrapper>
     )
 }
 
-export const MyBorrowsAssetCard = ({} : AssetCardProps) => {    
+export const MyBorrowsAssetCard = ({ onClick } : AssetCardProps) => {    
     return (
         <AssetCardWrapper>
             <AssetWrapper>
@@ -70,7 +72,7 @@ export const MyBorrowsAssetCard = ({} : AssetCardProps) => {
                 <DoubleTextUpper>5.4%</DoubleTextUpper>
                 <DoubleTextLower>1.4 USDT</DoubleTextLower>
             </DoubleTextWrapper>
-            <AssetCardButton right={0}>Repay</AssetCardButton>
+            <AssetCardButton onClick={onClick} right={0}>Repay</AssetCardButton>
         </AssetCardWrapper>
     )
 }

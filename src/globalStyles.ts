@@ -30,10 +30,6 @@ export default createGlobalStyle`
         font-style: normal;
     }
 
-    .root {
-        z-index: -2000;
-    }
-
     * {
         margin: 0;
         padding: 0;

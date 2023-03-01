@@ -4,7 +4,6 @@ import { Fragment, useEffect, useRef, useState } from 'react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 
 export const BlueButton = styled.button`
-	/* z-index: 1; */
 	background: #0381C5;
 	border: none;
 	border-radius: 6.5px;

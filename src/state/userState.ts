@@ -1,28 +1,24 @@
 import { createContext } from 'react';
-// import IUser, { DEFAULT_FIRE_TOKEN, DEFAULT_USER } from '../interfaces/user';
 
 export interface IUserState {
-    nft: any;
+    toncoinPrice: string;
 }
 
 export interface IUserActions {
-    type: 'buyNFT' | 'createSale';
-    payload: {
-        nft: any;
-    };
+    type: 'updateToncoinPrice';
+    payload: string
+
 }
 
 export const initialUserState: IUserState = {
-    nft: null
+    toncoinPrice: '0'
 }
 
 export const userReducer = (state: IUserState, action: IUserActions) => {
-    let nft = action.payload;
+    const toncoinPrice = action.payload;
     switch (action.type) {
-        case 'buyNFT':
-            return { ...state, nft};
-        case 'createSale':
-            return { ...state, nft};
+        case 'updateToncoinPrice':
+            return { ...state, toncoinPrice};
         default:
             return state;
     }

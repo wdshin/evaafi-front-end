@@ -8,8 +8,15 @@ export const BasePageContainer = styled.div`
     justify-content: flex-start;
     width: 100vw;
     min-height: 100vh;
-    background-color: ${props => props.theme.light};
-    z-index: 1000;
+    /* background-color: ${props => props.theme.light}; */
+    background: linear-gradient(
+    to top,
+    #F9FAFB 0%,
+    #F9FAFB 60%,
+    #080A0E 60%,
+    #080A0E 100%
+  );
+    /* z-index: 100; */
     @media only screen and (min-width: 480px) {
         /* width: 100%; */
     }  
@@ -21,7 +28,7 @@ export const BasePageBackgroundOne = styled.div`
     width: 100vw;
     background-color: #080A0E;
     height: 44.2rem;
-    z-index: -500;
+    /* z-index: 100; */
 `
 
 export const ContentWrapper = styled.div`

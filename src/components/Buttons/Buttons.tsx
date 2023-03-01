@@ -21,8 +21,8 @@ export const GrayBtnWide = styled.button`
 export const BlueButton  = styled.button<{width?: string}>`
     opacity: ${props => props.disabled ? "0.5" : "1"};
     width: ${props => props.width ? props.width : "100%"};
-    background: #0593FF;
-    border-radius: 13px;
+    background: ${props => props.theme.blue};
+    border-radius: 5.3px;
     font-size: 1.8rem;
     font-weight: 700;
     padding: 1.2rem 2rem;

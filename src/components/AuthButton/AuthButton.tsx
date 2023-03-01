@@ -13,7 +13,7 @@ import { useTonWalletConnectionError } from '../../hooks/useTonWalletConnectionE
 import { walletsListQuery } from '../../state/wallets-list';
 import { isDesktop, isMobile, openLink } from '../../utils';
 import LoadingComponent from '../LodingComponent/LoadingComponent';
-import { QRModal } from '../Modal/Modal';
+import { QRModal } from '../Modals/Modal';
 import { BlueButton, WalletNumWithMenu } from './AuthButtonStyles';
 
 export function AuthButton() {

@@ -11,7 +11,7 @@ export interface HeaderProps {
 }
 
 const HeaderWrapper = styled.div<{width?: string}>`
-    z-index: 100;
+    /* z-index: 100; */
     display: flex;
     justify-content: space-between;
     align-items: center;
