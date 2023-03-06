@@ -6,9 +6,8 @@ import { BlueButton } from "../Buttons/Buttons";
 import { BoldRobotoText, RegularRobotoText } from "../Texts/MainTexts";
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import { ArrowLongRightIcon } from '@heroicons/react/20/solid'
-import { useContext } from "react";
-import UserContext from "../../state/userState";
 import { AmountInDollars } from "./SupplyModal";
+import { usePrices, Token } from "../../store/prices";
 
 const DialogStyled = styled(Dialog.Panel)`
     position: relative;
@@ -120,40 +119,39 @@ interface SuppluModalProps {
 interface FormData {
     price: string;
 }
- 
-export const BorrowModal = ({ close }: SuppluModalProps) => {
-    const { t, i18n } = useTranslation(); 
-    const { register, handleSubmit, watch, formState: { errors, } } = useForm<FormData>();
-    const userContext = useContext(UserContext);
-    const { userState, userDispatch } = userContext;
 
-	return (
-		<Dialog.Panel as={DialogStyled}>
-            <CloseButton onClick={close}/>
+export const BorrowModal = ({ close }: SuppluModalProps) => {
+    const { t, i18n } = useTranslation();
+    const { register, handleSubmit, watch, formState: { errors, } } = useForm<FormData>();
+    const { formatToUsd } = usePrices();
+
+    return (
+        <Dialog.Panel as={DialogStyled}>
+            <CloseButton onClick={close} />
             <Title>Borrow USDT</Title>
             <HelpWrapper>
-                    <Subtitle>Amount</Subtitle>
-                    <MyStyledInput maxLength={7}  {...register('price', {required: true, pattern: /^(0|[1-9]\d*)(\.\d+)?$/})} placeholder="Enter amount"/>
-                    {watch("price") && <AmountInDollars>{parseFloat(watch("price")) * parseFloat(userState.toncoinPrice)} $</AmountInDollars>}
+                <Subtitle>Amount</Subtitle>
+                <MyStyledInput maxLength={7}  {...register('price', { required: true, pattern: /^(0|[1-9]\d*)(\.\d+)?$/ })} placeholder="Enter amount" />
+                {watch("price") && <AmountInDollars>{formatToUsd(watch("price"), Token.USDT)}</AmountInDollars>}
             </HelpWrapper>
             <HelpWrapper>
-                    <Subtitle>Transaction Overview</Subtitle>
-                    <InfoWrapper>
-                        <InfoTextWrapper>
-                            <InfoText>Borrow Limit Used</InfoText>
-                            <InfoText>0% {<ArrowRight/>} 28%</InfoText>
-                        </InfoTextWrapper>
-                        <InfoTextWrapper>
-                            <InfoText>Borrow Limit</InfoText>
-                            <InfoText>52$ {<ArrowRight/>} 37.8$</InfoText>
-                        </InfoTextWrapper>
-                        <InfoTextWrapper>
-                            <InfoText>APY (Interest)</InfoText>
-                            <InfoTextBlue>5.4%</InfoTextBlue>
-                        </InfoTextWrapper>
-                    </InfoWrapper>
+                <Subtitle>Transaction Overview</Subtitle>
+                <InfoWrapper>
+                    <InfoTextWrapper>
+                        <InfoText>Borrow Limit Used</InfoText>
+                        <InfoText>0% {<ArrowRight />} 28%</InfoText>
+                    </InfoTextWrapper>
+                    <InfoTextWrapper>
+                        <InfoText>Borrow Limit</InfoText>
+                        <InfoText>52$ {<ArrowRight />} 37.8$</InfoText>
+                    </InfoTextWrapper>
+                    <InfoTextWrapper>
+                        <InfoText>APY (Interest)</InfoText>
+                        <InfoTextBlue>5.4%</InfoTextBlue>
+                    </InfoTextWrapper>
+                </InfoWrapper>
             </HelpWrapper>
             <ModalBtn>Borrow</ModalBtn>
-		</Dialog.Panel>
-	)
+        </Dialog.Panel>
+    )
 }

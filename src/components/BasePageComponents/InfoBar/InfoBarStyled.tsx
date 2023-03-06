@@ -80,9 +80,9 @@ export const BorrowLineBack = styled.div`
     height: 0.4rem;
     background-color: #1F2428;
 `
-export const BorrowLineFront = styled.div<{ supplyLimit: number }>`
+export const BorrowLineFront = styled.div<{ borrowLimit: number }>`
     position: absolute;
-    width: ${props => props.supplyLimit}%;
+    width: ${props => props.borrowLimit}%;
     height: 0.4rem;
     background-color: ${props => props.theme.blue};
 `

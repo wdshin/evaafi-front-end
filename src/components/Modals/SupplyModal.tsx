@@ -5,8 +5,7 @@ import styled from "styled-components";
 import { BlueButton } from "../Buttons/Buttons";
 import { BoldRobotoText, RegularRobotoText } from "../Texts/MainTexts";
 import { XMarkIcon } from '@heroicons/react/20/solid'
-import UserContext from "../../state/userState";
-import { useContext } from "react";
+import { Token, usePrices } from "../../store/prices";
 
 const DialogStyled = styled(Dialog.Panel)`
     position: relative;
@@ -116,32 +115,31 @@ interface SuppluModalProps {
 interface FormData {
     price: string;
 }
- 
-export const SupplyModal = ({ close }: SuppluModalProps) => {
-    const { t, i18n } = useTranslation(); 
-    const { register, handleSubmit, watch, formState: { errors, } } = useForm<FormData>();
-    const userContext = useContext(UserContext);
-    const { userState, userDispatch } = userContext;
 
-	return (
-		<Dialog.Panel as={DialogStyled}>
-            <CloseButton onClick={close}/>
+export const SupplyModal = ({ close }: SuppluModalProps) => {
+    const { t, i18n } = useTranslation();
+    const { register, handleSubmit, watch, formState: { errors, } } = useForm<FormData>();
+    const { formatToUsd } = usePrices();
+
+    return (
+        <Dialog.Panel as={DialogStyled}>
+            <CloseButton onClick={close} />
             <Title>Supply TON</Title>
             <HelpWrapper>
-                    <Subtitle>Amount</Subtitle>
-                    <MyStyledInput maxLength={7}  {...register('price', {required: true, pattern: /^(0|[1-9]\d*)(\.\d+)?$/})} placeholder="Enter amount"/>
-                    {watch("price") && <AmountInDollars>{parseFloat(watch("price")) * parseFloat(userState.toncoinPrice)} $</AmountInDollars>}
+                <Subtitle>Amount</Subtitle>
+                <MyStyledInput maxLength={7}  {...register('price', { required: true, pattern: /^(0|[1-9]\d*)(\.\d+)?$/ })} placeholder="Enter amount" />
+                {watch("price") && <AmountInDollars>{formatToUsd(watch("price"), Token.TON)}</AmountInDollars>}
             </HelpWrapper>
             <HelpWrapper>
-                    <Subtitle>Transaction Overview</Subtitle>
-                    <InfoWrapper>
-                        <InfoTextWrapper>
-                            <InfoText>Supply APY</InfoText>
-                            <InfoText>3.12%</InfoText>
-                        </InfoTextWrapper>
-                    </InfoWrapper>
+                <Subtitle>Transaction Overview</Subtitle>
+                <InfoWrapper>
+                    <InfoTextWrapper>
+                        <InfoText>Supply APY</InfoText>
+                        <InfoText>3.12%</InfoText>
+                    </InfoTextWrapper>
+                </InfoWrapper>
             </HelpWrapper>
             <ModalBtn>Supply</ModalBtn>
-		</Dialog.Panel>
-	)
+        </Dialog.Panel>
+    )
 }

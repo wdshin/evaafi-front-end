@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
-import { RecoilRoot } from 'recoil';
+// import { RecoilRoot } from 'recoil';
 import { ThemeProvider } from 'styled-components';
 import './index.css';
 import App from './App';
@@ -26,12 +26,12 @@ const theme = {
 root.render(
   <React.StrictMode>
     <Suspense fallback={<LoadingComponent/>}>
-        <RecoilRoot>
+        {/* <RecoilRoot> */}
           <ThemeProvider theme={theme}>
             <GlobalStyles/>
             <App />
           </ThemeProvider>
-        </RecoilRoot>
+        {/* </RecoilRoot> */}
     </Suspense>
   </React.StrictMode>
 );

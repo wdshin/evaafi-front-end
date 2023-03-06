@@ -6,9 +6,8 @@ import { BlueButton } from "../Buttons/Buttons";
 import { BoldRobotoText, RegularRobotoText } from "../Texts/MainTexts";
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import { ArrowLongRightIcon } from '@heroicons/react/20/solid'
-import UserContext from "../../state/userState";
-import { useContext } from "react";
 import { AmountInDollars } from "./SupplyModal";
+import { usePrices, Token } from "../../store/prices";
 
 const DialogStyled = styled(Dialog.Panel)`
     position: relative;
@@ -120,36 +119,35 @@ interface SuppluModalProps {
 interface FormData {
     price: string;
 }
- 
+
 export const RepayModal = ({ close }: SuppluModalProps) => {
-    const { t, i18n } = useTranslation(); 
+    const { t, i18n } = useTranslation();
     const { register, handleSubmit, watch, formState: { errors, } } = useForm<FormData>();
-    const userContext = useContext(UserContext);
-    const { userState, userDispatch } = userContext;
-    
-	return (
-		<Dialog.Panel as={DialogStyled}>
-            <CloseButton onClick={close}/>
+    const { formatToUsd } = usePrices();
+
+    return (
+        <Dialog.Panel as={DialogStyled}>
+            <CloseButton onClick={close} />
             <Title>Repay USDT</Title>
             <HelpWrapper>
-                    <Subtitle>Amount</Subtitle>
-                    <MyStyledInput maxLength={7}  {...register('price', {required: true, pattern: /^(0|[1-9]\d*)(\.\d+)?$/})} placeholder="Enter amount"/>
-                    {watch("price") && <AmountInDollars>{parseFloat(watch("price")) * parseFloat(userState.toncoinPrice)} $</AmountInDollars>}
+                <Subtitle>Amount</Subtitle>
+                <MyStyledInput maxLength={7}  {...register('price', { required: true, pattern: /^(0|[1-9]\d*)(\.\d+)?$/ })} placeholder="Enter amount" />
+                {watch("price") && <AmountInDollars>{formatToUsd(watch("price"), Token.USDT)}</AmountInDollars>}
             </HelpWrapper>
             <HelpWrapper>
-                    <Subtitle>Transaction Overview</Subtitle>
-                    <InfoWrapper>
-                        <InfoTextWrapper>
-                            <InfoText>Borrow Limit Used</InfoText>
-                            <InfoText>28% {<ArrowRight/>} 0%</InfoText>
-                        </InfoTextWrapper>
-                        <InfoTextWrapper>
-                            <InfoText>Borrow Balance</InfoText>
-                            <InfoText>15$ {<ArrowRight/>} 0$</InfoText>
-                        </InfoTextWrapper>
-                    </InfoWrapper>
+                <Subtitle>Transaction Overview</Subtitle>
+                <InfoWrapper>
+                    <InfoTextWrapper>
+                        <InfoText>Borrow Limit Used</InfoText>
+                        <InfoText>28% {<ArrowRight />} 0%</InfoText>
+                    </InfoTextWrapper>
+                    <InfoTextWrapper>
+                        <InfoText>Borrow Balance</InfoText>
+                        <InfoText>15$ {<ArrowRight />} 0$</InfoText>
+                    </InfoTextWrapper>
+                </InfoWrapper>
             </HelpWrapper>
             <ModalBtn>Repay</ModalBtn>
-		</Dialog.Panel>
-	)
+        </Dialog.Panel>
+    )
 }

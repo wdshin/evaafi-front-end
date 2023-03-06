@@ -5,9 +5,8 @@ import styled from "styled-components";
 import { BlueButton } from "../Buttons/Buttons";
 import { BoldRobotoText, RegularRobotoText } from "../Texts/MainTexts";
 import { XMarkIcon } from '@heroicons/react/20/solid'
-import { useContext } from "react";
-import UserContext from "../../state/userState";
 import { AmountInDollars } from "./SupplyModal";
+import { Token, usePrices } from "../../store/prices";
 
 const DialogStyled = styled(Dialog.Panel)`
     position: relative;
@@ -105,36 +104,35 @@ interface SuppluModalProps {
 interface FormData {
     price: string;
 }
- 
+
 export const WithdrawModal = ({ close }: SuppluModalProps) => {
-    const { t, i18n } = useTranslation(); 
+    const { t, i18n } = useTranslation();
     const { register, handleSubmit, watch, formState: { errors, } } = useForm<FormData>();
-    const userContext = useContext(UserContext);
-    const { userState, userDispatch } = userContext;
-    
-	return (
-		<Dialog.Panel as={DialogStyled}>
-            <CloseButton onClick={close}/>
+    const { formatToUsd } = usePrices();
+
+    return (
+        <Dialog.Panel as={DialogStyled}>
+            <CloseButton onClick={close} />
             <Title>Withdraw TON</Title>
             <HelpWrapper>
-                    <Subtitle>Amount</Subtitle>
-                    <MyStyledInput maxLength={7}  {...register('price', {required: true, pattern: /^(0|[1-9]\d*)(\.\d+)?$/})} placeholder="Enter amount"/>
-                    {watch("price") && <AmountInDollars>{parseFloat(watch("price")) * parseFloat(userState.toncoinPrice)} $</AmountInDollars>}
+                <Subtitle>Amount</Subtitle>
+                <MyStyledInput maxLength={7}  {...register('price', { required: true, pattern: /^(0|[1-9]\d*)(\.\d+)?$/ })} placeholder="Enter amount" />
+                {watch("price") && <AmountInDollars>{formatToUsd(watch("price"), Token.TON)}</AmountInDollars>}
             </HelpWrapper>
             <HelpWrapper>
-                    <Subtitle>Transaction Overview</Subtitle>
-                    <InfoWrapper>
-                        <InfoTextWrapper>
-                            <InfoText>MAX</InfoText>
-                            <InfoText>30 TON</InfoText>
-                        </InfoTextWrapper>
-                        {/* <InfoTextWrapper>
+                <Subtitle>Transaction Overview</Subtitle>
+                <InfoWrapper>
+                    <InfoTextWrapper>
+                        <InfoText>MAX</InfoText>
+                        <InfoText>30 TON</InfoText>
+                    </InfoTextWrapper>
+                    {/* <InfoTextWrapper>
                             <InfoText>Supply APY</InfoText>
                             <InfoText>3.12%</InfoText>
                         </InfoTextWrapper> */}
-                    </InfoWrapper>
+                </InfoWrapper>
             </HelpWrapper>
             <ModalBtn>Withdraw</ModalBtn>
-		</Dialog.Panel>
-	)
+        </Dialog.Panel>
+    )
 }
