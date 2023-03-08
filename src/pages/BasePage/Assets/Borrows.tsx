@@ -5,33 +5,48 @@ import { BorrowDescriptionBar, MyBorrowsDescriptionBar } from '../../../componen
 import { BorrowModal } from '../../../components/Modals/BorrowModal';
 import { Dialog } from '@headlessui/react';
 import { RepayModal } from '../../../components/Modals/RepayModal';
+import { useBalance } from '../../../store/balances';
 
 
 export interface BorrowsProps { }
 
 
-const Borrows = ({} : BorrowsProps) => { 
+const Borrows = ({ }: BorrowsProps) => {
+    const { myBorrows, borrows } = useBalance();
     const [BorrowModalIsOpen, setBorrowModelIsOpen] = useState(false);
     const [RepayModalIsOpen, setRepayModalIsOpen] = useState(false);
 
     return (
         <AssetsWrapper>
-           <Dialog className={`w-full h-full absolute bg-black bg-opacity-50 top-0 flex justify-center items-center`} open={BorrowModalIsOpen} onClose={() => setBorrowModelIsOpen(false)}>
-                <BorrowModal close={() => setBorrowModelIsOpen(false)}/>
+            <Dialog className={`w-full h-full absolute bg-black bg-opacity-50 top-0 flex justify-center items-center`} open={BorrowModalIsOpen} onClose={() => setBorrowModelIsOpen(false)}>
+                <BorrowModal close={() => setBorrowModelIsOpen(false)} />
             </Dialog>
-           <Dialog className={`w-full h-full absolute bg-black bg-opacity-50 top-0 flex justify-center items-center`} open={RepayModalIsOpen} onClose={() => setRepayModalIsOpen(false)}>
-                <RepayModal close={() => setRepayModalIsOpen(false)}/>
+            <Dialog className={`w-full h-full absolute bg-black bg-opacity-50 top-0 flex justify-center items-center`} open={RepayModalIsOpen} onClose={() => setRepayModalIsOpen(false)}>
+                <RepayModal close={() => setRepayModalIsOpen(false)} />
             </Dialog>
             <AssetsSubWrapper>
                 <AssetsTitle>Your Borrows</AssetsTitle>
-                {/* <AssetsSubtitle>Nothing borrowed yet</AssetsSubtitle> */}
-                <MyBorrowsDescriptionBar/>
-                <MyBorrowsAssetCard onClick={() => setRepayModalIsOpen(true)}/>
+                {myBorrows.length > 0 &&
+                    <MyBorrowsDescriptionBar />
+                }
+                {!myBorrows.length &&
+                    <AssetsSubtitle>Nothing borrowed yet</AssetsSubtitle>
+                }
+                {myBorrows.map(myBorrow => (
+                    <MyBorrowsAssetCard {...myBorrow} key={myBorrow.id} onClick={() => setRepayModalIsOpen(true)} />
+                ))}
             </AssetsSubWrapper>
             <AssetsSubWrapper>
                 <AssetsTitle>Borrow</AssetsTitle>
-                <BorrowDescriptionBar/>
-                <BorrowAssetCard onClick={() => setBorrowModelIsOpen(true)}/>
+                {borrows.length > 0 &&
+                    <BorrowDescriptionBar />
+                }
+                {!borrows.length &&
+                    <AssetsSubtitle>Nothing to show</AssetsSubtitle>
+                }
+                {borrows.map(borrow => (
+                    <BorrowAssetCard {...borrow} key={borrow.id} onClick={() => setBorrowModelIsOpen(true)} />
+                ))}
             </AssetsSubWrapper>
         </AssetsWrapper>
     )
