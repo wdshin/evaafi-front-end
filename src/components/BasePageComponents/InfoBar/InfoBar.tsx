@@ -1,17 +1,24 @@
 import { BoldRobotoText, MediumRobotoText } from '../../Texts/MainTexts';
 import { APYWrapper, APYWrapperSubtitle, APYWrapperTitle, BorrowLine, BorrowLineBack, BorrowLineFront, BorrowLineSubtitle, BorrowLineWrapper, InfoBarWrapper, MoneyInfoWrapper, MoneyWrapper, WhiteSpan, WhiteSpanTwo } from './InfoBarStyled';
+import { useBalance } from '../../../store/balances';
+import { usePrices, Token } from '../../../store/prices';
+import { formatPercent } from '../../../utils';
 
 export interface InfoBarProps { }
 
 
 const InfoBar = ({} : InfoBarProps) => { 
+    const { borrowBalance, supplyBalance, borrowLimitPercent, borrowLimitValue, availableToBorrow } = useBalance();
+    const { formatToUsd } = usePrices();
+    const [borrowBalanceInt, borrowBalanceFraction] = formatToUsd(borrowBalance, Token.TON).split(".");
+    const [supplyBalanceInt, supplyBalanceFraction] = formatToUsd(supplyBalance, Token.TON).split(".");
     
     return (
         <InfoBarWrapper>
             <MoneyInfoWrapper>
                 <MoneyWrapper>
                     <MediumRobotoText>Supply Balance</MediumRobotoText>
-                    <BoldRobotoText><WhiteSpan>$1</WhiteSpan>.0000000</BoldRobotoText>
+                    <BoldRobotoText><WhiteSpan>{supplyBalanceInt}</WhiteSpan>.{supplyBalanceFraction}</BoldRobotoText>
                 </MoneyWrapper>
                 <APYWrapper>
                     <APYWrapperTitle>NET APY</APYWrapperTitle>
@@ -19,16 +26,16 @@ const InfoBar = ({} : InfoBarProps) => {
                 </APYWrapper>
                 <MoneyWrapper>
                     <MediumRobotoText>Borrow Balance</MediumRobotoText>
-                    <BoldRobotoText><WhiteSpan>$2</WhiteSpan>.0000000</BoldRobotoText>
+                    <BoldRobotoText><WhiteSpan>{borrowBalanceInt}</WhiteSpan>.{borrowBalanceFraction}</BoldRobotoText>
                 </MoneyWrapper>
             </MoneyInfoWrapper>
             <BorrowLineWrapper>
-                <BorrowLineSubtitle>Borrow Limit <WhiteSpanTwo>3%</WhiteSpanTwo></BorrowLineSubtitle>
+                <BorrowLineSubtitle>Borrow Limit <WhiteSpanTwo>{formatPercent(borrowLimitPercent)}</WhiteSpanTwo></BorrowLineSubtitle>
                 <BorrowLine>
                     <BorrowLineBack/>
-                    <BorrowLineFront borrowLimit={1}/>
+                    <BorrowLineFront borrowLimit={borrowLimitValue}/>
                 </BorrowLine>
-                <BorrowLineSubtitle>$4.00</BorrowLineSubtitle>
+                <BorrowLineSubtitle>{formatToUsd(availableToBorrow, Token.TON)}</BorrowLineSubtitle>
             </BorrowLineWrapper>
         </InfoBarWrapper>
     )
