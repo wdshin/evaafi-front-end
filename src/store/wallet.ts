@@ -22,7 +22,7 @@ interface AuthStore {
 export const useWallet = create<AuthStore>((set) => {
   const connector = new TonConnect(dappMetadata);
   connector.onStatusChange((wallet => {
-    const userAddress = friendlifyUserAddress(wallet?.account.address, wallet?.account.chain);
+    const userAddress = friendlifyUserAddress(wallet?.account.address);
 
     set(() => ({ wallet, userAddress, universalLink: '' }));
   }), console.error);
@@ -34,7 +34,7 @@ export const useWallet = create<AuthStore>((set) => {
   return {
     isLoading: true,
     universalLink: '',
-    userAddress: friendlifyUserAddress(connector?.wallet?.account.address, connector?.wallet?.account.chain),
+    userAddress: friendlifyUserAddress(connector?.wallet?.account.address),
     connector,
 
     wallet: connector.wallet,
