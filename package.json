@@ -28,6 +28,7 @@
     "i18next": "^22.4.9",
     "i18next-browser-languagedetector": "^7.0.1",
     "i18next-http-backend": "^2.1.1",
+    "prando": "^6.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.36.1",
@@ -38,7 +39,9 @@
     "react-router": "^6.4.3",
     "react-router-dom": "^6.4.3",
     "styled-components": "^5.3.6",
-    "tonweb": "^0.0.60",
+    "ton": "^13.4.1",
+    "ton-core": "^0.48.0",
+    "ton-crypto": "^3.2.0",
     "typescript": "^4.9.3",
     "zustand": "^4.3.5"
   },

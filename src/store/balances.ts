@@ -1,8 +1,18 @@
 import { create } from 'zustand';
-import TonWeb from 'tonweb';
 import { Token } from './prices';
+import { Address, TonClient, fromNano, TupleBuilder} from 'ton';
 
-const httpProvider = new TonWeb.HttpProvider('https://testnet.toncenter.com/api/v2/jsonRPC', { apiKey: '49d23d98ab44004b72a7be071d615ea069bde3fbdb395a958d4dfcb4e5475f54' });
+export const toncenter = new TonClient({
+	endpoint: 'https://testnet.toncenter.com/api/v2/jsonRPC',
+    apiKey: "49d23d98ab44004b72a7be071d615ea069bde3fbdb395a958d4dfcb4e5475f54",
+});
+
+export const masterContractAddress = Address.parse('EQBppIY6_jeZOmkYjdAmhHsO3YRPWC5vA6LOdRy4OkhhpeIS');
+
+// const httpProvider = new TonWeb.HttpProvider('https://testnet.toncenter.com/api/v2/jsonRPC', { apiKey: '49d23d98ab44004b72a7be071d615ea069bde3fbdb395a958d4dfcb4e5475f54' });
+const addressTon = Address.parse('EQDvaNEqFsgjbVFz6YjWAChLA6nhph4hww7GiDuyd0H45rtb');
+// const addressUsdt = new TonWeb.Address('EQCW6UgiSzMp6FwCJQ_cFsyn3oJXfnDdNdH10q_9_6vHIh6y');
+
 
 interface MySupply {
     id: string;
@@ -47,18 +57,38 @@ interface BalanceStore {
 }
 
 export const useBalance = create<BalanceStore>((set) => {
-    setInterval(() => {
-        httpProvider.call2('EQDiZ2DfDp5Jgk0iInQOz18fa8Oe9GYcMm0IBXu0qgBObKie', 'getAvailableToBorrow', [['num', 1]]).then(arg => {
-            const borrowBalance = TonWeb.utils.fromNano(arg);
-            set({ borrowBalance })
-        });
+    setInterval(async () =>  {
+        let args = new TupleBuilder();
+        args.writeAddress(addressTon);
+
+        let { stack } = await toncenter.runMethod(
+            masterContractAddress, 
+            'getUIVariables',
+            args.build(),
+        );
+        const supplyBalance = fromNano(stack.readNumber());
+        set({supplyBalance});
+        
+        args.writeNumber(1);
+
+        // httpProvider.call2('EQDiZ2DfDp5Jgk0iInQOz18fa8Oe9GYcMm0IBXu0qgBObKie', 'getAvailableToBorrow', [['num', 1]]).then(arg => {
+        //     const borrowBalance = TonWeb.utils.fromNano(arg);
+        //     set({ borrowBalance })
+        // });
+        // const bytes = await cell.hash();
+        // const hash = TonWeb.utils.bytesToHex(bytes)
+        // httpProvider.call2('EQBppIY6_jeZOmkYjdAmhHsO3YRPWC5vA6LOdRy4OkhhpeIS', 'getAssetRates', [['cell', a]]).then(arg => {
+        //     console.log(arg);
+        //     const supplyBalance = TonWeb.utils.fromNano(arg);
+        //     set({supplyBalance})
+        // })
 
     }, 5000);
 
 
     return {
-        borrowBalance: '',
-        supplyBalance: '123',
+        borrowBalance: '0',
+        supplyBalance: '0',
         borrowLimitPercent: 0.25,
         borrowLimitValue: 14,
         availableToBorrow: '60',

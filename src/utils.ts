@@ -1,4 +1,5 @@
-import Tonweb from 'tonweb';
+import { CHAIN } from '@tonconnect/sdk';
+import { Address } from 'ton';
 
 export function isMobile(): boolean {
 	return window.innerWidth <= 480;
@@ -12,12 +13,12 @@ export function openLink(href: string, target = '_self') {
 	window.open(href, target, 'noreferrer noopener');
 }
 
-export function friendlifyUserAddress(address: string | null | undefined) {
+export function friendlifyUserAddress(address: string | null | undefined, chain?: CHAIN) {
 	if (!address) {
 		return '';
 	}
 
-	const userFriendlyAddress = new Tonweb.utils.Address(address).toString(true);
+	const userFriendlyAddress = Address.parseRaw(address).toString({ testOnly: chain === CHAIN.TESTNET });
 
 	return userFriendlyAddress.slice(0, 4) + '...' + userFriendlyAddress.slice(-3);
 }
