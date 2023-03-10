@@ -67,7 +67,7 @@ export const useBalance = create<BalanceStore>((set) => {
 			args.build(),
 		);
 		console.log('---------------')
-		const item = stack.readCell().beginParse();
+		const item = stack.readCell().beginParse(); // important
 
 		// const dict = Dictionary.loadDirect(, () => {
 		// 	}
@@ -94,7 +94,7 @@ export const useBalance = create<BalanceStore>((set) => {
 				return { a, b, c, d, e, f };
 			}
 			//@ts-ignore
-		}, stack.pop().cell.beginParse())
+		}, stack.readCellOpt())
 
 		function randomAddress(seed: string, workchain?: number) {
 			const random = new Prando(seed);
@@ -114,6 +114,63 @@ export const useBalance = create<BalanceStore>((set) => {
 		console.log(dict.keys())
 		console.log(dict.values())
 		console.log(dict.get(bufferToBigInt(randomAddress('usdt').hash)))
+		console.log('---------------')
+		function hex2a(hexx: any) {
+			var hex = hexx.toString();//force conversion
+			var str = '';
+			for (var i = 0; i < hex.length; i += 2)
+				str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+			return str;
+		}
+		//@ts-ignore
+		const conf = stack.pop().cell.beginParse()
+		console.log(hex2a(conf.loadRef().beginParse().toString().slice(2).slice(0, -1)))
+		console.log('---------------')
+		conf.loadRef()
+		const dictConf = Dictionary.loadDirect(Dictionary.Keys.BigUint(256), {
+			serialize: (src: any, buidler: any) => {
+				buidler.storeSlice(src);
+			},
+			parse: (src: Slice) => {
+				// ;;						.store_int(price, 64)
+				// ;;		.store_int(s_rate, 64)
+				// ;;		.store_int(b_rate, 64)
+				// ;;		.store_int(total_supply_principal, 64)
+				// ;;		.store_int(total_borrow_principal, 64)
+				// ;;		.store_int(last_accural, 64)
+				//
+				//   .storeAddress(randomAddress('oracle'))
+				// .storeUint(8, 8)
+				// .storeRef(beginCell()
+				// 	.storeUint(8300, 16)
+				// 	.storeUint(9000, 16)
+				// 	.storeUint(500, 16)
+				// 	.storeUint(15854895991, 64)
+				// 	.storeUint(25000000000, 64)
+				// 	.storeUint(187500000000, 64)
+				// 	.storeUint(10000000000, 64)
+				// 	.storeUint(100000000000, 64)
+				// 	.storeUint(new BN("B1A2BC2EC500000", 'hex'), 64) // todo move to BN
+				// 	.endCell())
+				// .endCell()
+				const a = src.loadAddress(); // price
+				const b = src.loadUint(8);
+				const ref = src.loadRef().beginParse();
+				const c = ref.loadUint(16);
+				const d = ref.loadUint(16);
+				const e = ref.loadUint(16);
+				const f = ref.loadUint(64);
+				const g = ref.loadUint(64);
+				const h = ref.loadUint(64);
+				const hh = ref.loadUint(64);
+				const hhh = ref.loadUint(64);
+				const hhhh = ref.loadUint(64);
+
+				return { a, b, c, d, e, f, g, h, hh, hhh, hhhh };
+			}
+			//@ts-ignore
+		}, conf.loadRef().beginParse().loadRef().beginParse())
+		console.log(dictConf.get(bufferToBigInt(randomAddress('usdt').hash)))
 		console.log('---------------')
 
 		const supplyBalance = fromNano(stack.readNumber());
