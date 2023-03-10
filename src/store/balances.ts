@@ -127,6 +127,8 @@ export const useBalance = create<BalanceStore>((set) => {
 		console.log(hex2a(conf.loadRef().beginParse().toString().slice(2).slice(0, -1)))
 		console.log('---------------')
 		conf.loadRef()
+		const confItems = conf.loadRef().beginParse()
+
 		const dictConf = Dictionary.loadDirect(Dictionary.Keys.BigUint(256), {
 			serialize: (src: any, buidler: any) => {
 				buidler.storeSlice(src);
@@ -153,6 +155,10 @@ export const useBalance = create<BalanceStore>((set) => {
 				// 	.storeUint(new BN("B1A2BC2EC500000", 'hex'), 64) // todo move to BN
 				// 	.endCell())
 				// .endCell()
+				//
+				//
+				// -------
+				// ;; asset config data parser
 				const a = src.loadAddress(); // price
 				const b = src.loadUint(8);
 				const ref = src.loadRef().beginParse();
@@ -166,11 +172,15 @@ export const useBalance = create<BalanceStore>((set) => {
 				const hhh = ref.loadUint(64);
 				const hhhh = ref.loadUint(64);
 
+				// -------
 				return { a, b, c, d, e, f, g, h, hh, hhh, hhhh };
 			}
 			//@ts-ignore
-		}, conf.loadRef().beginParse().loadRef().beginParse())
+		}, confItems.loadRef().beginParse())
+		// get asset config by add -------
 		console.log(dictConf.get(bufferToBigInt(randomAddress('usdt').hash)))
+		console.log('---------------')
+		console.log(confItems.loadUint(8))//if active = -1 (true) / 0 (false)
 		console.log('---------------')
 
 		const supplyBalance = fromNano(stack.readNumber());
