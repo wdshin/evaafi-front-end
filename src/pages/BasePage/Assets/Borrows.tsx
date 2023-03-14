@@ -18,10 +18,10 @@ const Borrows = ({ }: BorrowsProps) => {
 
     return (
         <AssetsWrapper>
-            <Dialog className={`w-full h-full absolute bg-black bg-opacity-50 top-0 flex justify-center items-center`} open={BorrowModalIsOpen} onClose={() => setBorrowModelIsOpen(false)}>
+            <Dialog className={`w-full h-full fixed bg-black bg-opacity-50 top-0 flex justify-center items-center`} open={BorrowModalIsOpen} onClose={() => setBorrowModelIsOpen(false)}>
                 <BorrowModal close={() => setBorrowModelIsOpen(false)} />
             </Dialog>
-            <Dialog className={`w-full h-full absolute bg-black bg-opacity-50 top-0 flex justify-center items-center`} open={RepayModalIsOpen} onClose={() => setRepayModalIsOpen(false)}>
+            <Dialog className={`w-full h-full fixed bg-black bg-opacity-50 top-0 flex justify-center items-center`} open={RepayModalIsOpen} onClose={() => setRepayModalIsOpen(false)}>
                 <RepayModal close={() => setRepayModalIsOpen(false)} />
             </Dialog>
             <AssetsSubWrapper>

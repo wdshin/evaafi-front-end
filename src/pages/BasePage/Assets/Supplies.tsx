@@ -19,10 +19,10 @@ const Supplies = ({ }: SuppliesProps) => {
 
     return (
         <>
-            <Dialog className={`w-full h-full absolute bg-black bg-opacity-50 top-0 flex justify-center items-center`} open={supplyModalIsOpen} onClose={() => setSupplyModelIsOpen(false)}>
+            <Dialog className={`w-full h-full fixed bg-black bg-opacity-50 top-0 flex justify-center items-center`} open={supplyModalIsOpen} onClose={() => setSupplyModelIsOpen(false)}>
                 <SupplyModal close={() => setSupplyModelIsOpen(false)} />
             </Dialog>
-            <Dialog className={`w-full h-full absolute bg-black bg-opacity-50 top-0 flex justify-center items-center`} open={withdrawModalIsOpen} onClose={() => setWithdrawModalIsOpen(false)}>
+            <Dialog className={`w-full h-full fixed bg-black bg-opacity-50 top-0 flex justify-center items-center`} open={withdrawModalIsOpen} onClose={() => setWithdrawModalIsOpen(false)}>
                 <WithdrawModal close={() => setWithdrawModalIsOpen(false)} />
             </Dialog>
             <AssetsWrapper>
