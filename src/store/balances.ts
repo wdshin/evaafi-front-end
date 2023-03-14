@@ -10,7 +10,7 @@ export const toncenter = new TonClient({
 
 const userSCData =
     { "hex": "b5ee9c72c102330100036e00000d00120017001d00220029002e003500840089008e0093009800a500b600bb00d600e700ec00f100f6011c016f017401850196019b01a001a501b901ca01db01f601fb020002050229022e024b02580268026d0272028c0294029902be02c302e80367036e0114ff00f4a413f4bcf2c80b01020162090202012004030007bcd8339402015806050009b5c59e05b002014808070009af7e7817c00099af46f80e3610904183fa4337d29936c881471aa981c183fa0737d09878102f82191178053a6465816503e5ffe4e8017817e4652064e82a1001c183fa0b28894183fa3e37d2b609017409af81c00202ca210a020120120b0201480f0c0201480e0d0015320040728fc0a0c1fd10e0001d0060c1fd039be864f5c28ff80c1c20020120111000314c8803301cb1f500401cb3f5801cbff0101ca3f0101ca3fc98001d5d3ff0101fa00d33f0101d33f013180201201a130201201714020120161500475f01c6c2103fa443150038307f40e6fa130d23f013120c2ff946c12f025e031a3f025a3800a1570f01c6c21208307f4866fa5908e3c01d23f013153148307f40e6fa13053268307f40e6fa13001f0205f0502f01d108a5f0a23c2009a5033a858a8f02513a002925f04e2218307f47c6fa5e810355f0580201481918001d0830bfe4cc7c09b81b04a8fc09e8e0001d0830bfe4cc7c09781b04a8fc0968e0020120201b0201201f1c0201201e1d0023208c03782dace9d900002a086829406a4120001d208c03782dace9d900002a006a4120001d501a882300de0b6b3a7640000a90480031d699f8080e99f8080e99f8080e99fe99fe98f8080e99f8098c02012029220201582823020120252400435c8500701cb3f500501cb3f500301cb3f0101ca3f0101ca3f0101cb1f0101cb3fc98020120272600353e9034c1f50c3434c3f4c3f4c3f4cff4cff4cff4cff4cff4cfcc2000153b51343e903e903d010c20001bf642801e78b00e78b7a0064f6aa40201202d2a0201202c2b002f65c60043232c1540173c59400fe8084f2dac4b332407ec02000b6be0a3e910c20201202f2e004564830002496dc78083000644c38082ac014883c01482a006a4e00300064806a244c78a020148313000450830002496dc78083000644c38082ac014883c00482a006a4e00300064806a244c78a001f71b088831c02456f8007434c0cc1c6c252103fcbc37bc0700f4c7c04074cfc048b00ca3900cbc0c54dcfc0d151c843c0a1401283c0a550d89bc0d5c14c0b040278c49f04064d41ca8650c0068c5b8a54c141ca8407890cc1c013c0c88d660103c03563c06f80c0d083000a5cc00b50c04bc06f81b0c48300f0c3001e032000a30840ff2f073a2673f" }
-export const masterContractAddress = Address.parse('EQCRfTq-IExpBOyuaWRYvHupsjr2CZrpcc1aQsiYWMA8BJwl');
+export const masterContractAddress = Address.parse('EQCfWNoyevETUwvGmrBoaj3AlcELcU4D2DUrIitga1yZ0LH6');
 export const oracleMasterSourceV1CodeCell = Cell.fromBoc(Buffer.from(userSCData.hex, 'hex'))[0];
 const masterContractCode = oracleMasterSourceV1CodeCell
 const userContractAddress_test = contractAddress(
@@ -105,7 +105,7 @@ export const useBalance = create<BalanceStore>((set) => {
                 const b_rate = BigInt(src.loadUint(64));                      // b_rate
                 const totalSupply = BigInt(src.loadUint(64));  // total_supply
                 const totalBorrow = BigInt(src.loadUint(64));  // total_borrow
-                const lastAccural = BigInt(src.loadUint(64));
+                const lastAccural = BigInt(src.loadUint(32));
                 const balance = BigInt(src.loadUint(64));
                 console.log(balance)
                 return { price, s_rate, b_rate, totalSupply, totalBorrow, lastAccural, balance };
@@ -216,7 +216,7 @@ export const useBalance = create<BalanceStore>((set) => {
                 buidler.storeUint(src.b_rate, 64);
                 buidler.storeUint(src.totalSupply, 64);
                 buidler.storeUint(src.totalBorrow, 64);
-                buidler.storeUint(src.lastAccural, 64);
+                buidler.storeUint(src.lastAccural, 32);
                 buidler.storeUint(src.balance, 64);
             },
             parse: (src: Slice) => {
@@ -276,18 +276,18 @@ export const useBalance = create<BalanceStore>((set) => {
         console.log(BigInt(stackUserAvlToBorr.stack.readNumber())) // avaliable to borrow
         let argsUasdkhfgser = new TupleBuilder();
 
-        argsUserAvl.writeCell(asdf_config);
         argsUserAvl.writeCell(asdf);
+        argsUserAvl.writeCell(asdf_config);
         argsUserAvl.writeAddress(randomAddress('usdt'));
         // argsUserAvl.writeNumber(BigInt((new Date()).getTime() * 1000) - data.lastAccural);
-        argsUserAvl.writeNumber(100);
+        argsUserAvl.writeNumber(10);
 
+        console.log('asdkfj')
         let asdfasdfasf = await toncenter.runMethod(
-            userContractAddress_test,
+            masterContractAddress,
             'getUpdatedRates',
             argsUasdkhfgser.build(),
         );
-        console.log('asdkfj')
         console.log(BigInt(asdfasdfasf.stack.readNumber())) //asset balance
         console.log(BigInt(asdfasdfasf.stack.readNumber())) //asset balance
     }
