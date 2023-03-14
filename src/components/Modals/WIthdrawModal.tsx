@@ -6,7 +6,8 @@ import { BlueButton } from "../Buttons/Buttons";
 import { BoldRobotoText, RegularRobotoText } from "../Texts/MainTexts";
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import { AmountInDollars } from "./SupplyModal";
-import { Token, usePrices } from "../../store/prices";
+import { Token, usePrices, TokenMap } from "../../store/prices";
+import { useBalance } from '../../store/balances';
 
 const DialogStyled = styled(Dialog.Panel)`
     position: relative;
@@ -106,6 +107,7 @@ interface FormData {
 }
 
 export const WithdrawModal = ({ close }: SuppluModalProps) => {
+    const { maxWithdraw } = useBalance();
     const { t, i18n } = useTranslation();
     const { register, handleSubmit, watch, formState: { errors, } } = useForm<FormData>();
     const { formatToUsd } = usePrices();
@@ -124,7 +126,7 @@ export const WithdrawModal = ({ close }: SuppluModalProps) => {
                 <InfoWrapper>
                     <InfoTextWrapper>
                         <InfoText>MAX</InfoText>
-                        <InfoText>30 TON</InfoText>
+                        <InfoText>{maxWithdraw} TON</InfoText>
                     </InfoTextWrapper>
                     {/* <InfoTextWrapper>
                             <InfoText>Supply APY</InfoText>

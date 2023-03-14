@@ -30,10 +30,10 @@ const InfoBar = ({} : InfoBarProps) => {
                 </MoneyWrapper>
             </MoneyInfoWrapper>
             <BorrowLineWrapper>
-                <BorrowLineSubtitle>Borrow Limit <WhiteSpanTwo>{formatToUsd(borrowLimitPercent.toString())}</WhiteSpanTwo></BorrowLineSubtitle>
+                <BorrowLineSubtitle>Borrow Limit <WhiteSpanTwo>{formatPercent(Number(parseFloat(borrowLimitPercent.toString()).toFixed(2)))}</WhiteSpanTwo></BorrowLineSubtitle>
                 <BorrowLine>
                     <BorrowLineBack/>
-                    <BorrowLineFront borrowLimit={Number(formatToUsd(borrowLimitPercent.toString()))}/>
+                    <BorrowLineFront borrowLimit={Number(formatPercent(borrowLimitPercent))}/>
                 </BorrowLine>
                 <BorrowLineSubtitle>{formatToUsd(borrowBalance)}</BorrowLineSubtitle>
             </BorrowLineWrapper>
