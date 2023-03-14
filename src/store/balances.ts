@@ -9,8 +9,8 @@ export const toncenter = new TonClient({
 });
 
 const userSCData =
-    { "hex": "b5ee9c72c102330100038600000d00120017001d00220029002e00350088008d00920097009c00a900ba00d500da00df00e400f5011f01720177017c0181019201a301a801bc01cd01f301f801fd0202021d023c024102460263027002800285028a02a402ac02b102d602db0300037f03860114ff00f4a413f4bcf2c80b01020162090202012004030007bcd8339402015806050009b5c59e057002014808070009af7e7816c000a1af46f80d3610904183fa4337d29936c881471aa981c183fa0737d098780f2f81991178053a6465816503e5ffe4e8017816e4659fe4e82a1001c183fa0b28894183fa3e37d2b609017409af81e47a0064c00202ca1f0a020120100b0201620f0c0201200e0d0015320040728fc0a0c1fd10e0001d0060c1fd039be864f5c2cff80c1c2000314c8803301cb1f500401cb3f5801cbff0101ca3f0101ca3fc98020120161102012015120201201413001d5d3ff0101fa00d33f0101d33f01318004f571fe2030f01a6c2103fa443150038307f40e6fa130d23f013120c2ff946c12f023e031a3f023a3800a1f38780d3610904183fa4337d2c8471e00e91f8098a98a4183fa0737d09829934183fa0737d09800f80f2f8201780d88452f8511e1004d2819d42c54781189d001492f827110c183fa3e37d2f4081aaf82c0201201e170201201b180201201a19001d0830bfe4cc7c09381b04a8fc0968e0001d0830bfe4cc7c08f81b04a8fc08e8e00201201d1c0023208c03782dace9d900002a086829406a4120001d208c03782dace9d900002a006a41200047f10ff1018107f1018411806f05b59d3b200007f101800d4411806f05b59d3b200005482402012029200201582421020120232200314d33f0101d33f0101d33f0101d23f0101d23f0101d33f0131800395c8500601cb3f500401cb3f5801cb3f0101ca3f0101ca3f0101cb3fc980201202825020120272600353e9034c1f50c3434c3f4c3f4c3f4cff4cff4cff4cff4cff4cfcc2000153b51343e903e903d010c20001b5c85003cf1601cf16f400c9ed5480201202d2a0201202c2b002f65c60043232c1540173c59400fe8084f2dac4b332407ec02000b6be0a3e910c20201202f2e004564830002496dc78083000644c38082ac014883c01482a006a4e00300064806a244c78a020148313000450830002496dc78083000644c38082ac014883c00482a006a4e00300064806a244c78a001f71b088831c02456f8007434c0cc1c6c252103fcbc37bc0680f4c7c04074cfc048b00ca3900cbc0bd4dcfc0c951c843c099401283c09d50d89bc0cdc14c0b040278c49f04064d41ca8650c0068c5b8a54c141ca8407890cc1c013c0c08d660103c03563c06780c0d083000a5cc00b50c04bc06781b0c48300f0c3001e032000a30840ff2f094f5afb9" }
-export const masterContractAddress = Address.parse('EQBHau2sc4xoOP8lCPk7H6zkc3E-M3nzIAqBEpPcbMWFOiVG');
+    { "hex": "b5ee9c72c102330100036e00000d00120017001d00220029002e003500840089008e0093009800a500b600bb00d600e700ec00f100f6011c016f017401850196019b01a001a501b901ca01db01f601fb020002050229022e024b02580268026d0272028c0294029902be02c302e80367036e0114ff00f4a413f4bcf2c80b01020162090202012004030007bcd8339402015806050009b5c59e05b002014808070009af7e7817c00099af46f80e3610904183fa4337d29936c881471aa981c183fa0737d09878102f82191178053a6465816503e5ffe4e8017817e4652064e82a1001c183fa0b28894183fa3e37d2b609017409af81c00202ca210a020120120b0201480f0c0201480e0d0015320040728fc0a0c1fd10e0001d0060c1fd039be864f5c28ff80c1c20020120111000314c8803301cb1f500401cb3f5801cbff0101ca3f0101ca3fc98001d5d3ff0101fa00d33f0101d33f013180201201a130201201714020120161500475f01c6c2103fa443150038307f40e6fa130d23f013120c2ff946c12f025e031a3f025a3800a1570f01c6c21208307f4866fa5908e3c01d23f013153148307f40e6fa13053268307f40e6fa13001f0205f0502f01d108a5f0a23c2009a5033a858a8f02513a002925f04e2218307f47c6fa5e810355f0580201481918001d0830bfe4cc7c09b81b04a8fc09e8e0001d0830bfe4cc7c09781b04a8fc0968e0020120201b0201201f1c0201201e1d0023208c03782dace9d900002a086829406a4120001d208c03782dace9d900002a006a4120001d501a882300de0b6b3a7640000a90480031d699f8080e99f8080e99f8080e99fe99fe98f8080e99f8098c02012029220201582823020120252400435c8500701cb3f500501cb3f500301cb3f0101ca3f0101ca3f0101cb1f0101cb3fc98020120272600353e9034c1f50c3434c3f4c3f4c3f4cff4cff4cff4cff4cff4cfcc2000153b51343e903e903d010c20001bf642801e78b00e78b7a0064f6aa40201202d2a0201202c2b002f65c60043232c1540173c59400fe8084f2dac4b332407ec02000b6be0a3e910c20201202f2e004564830002496dc78083000644c38082ac014883c01482a006a4e00300064806a244c78a020148313000450830002496dc78083000644c38082ac014883c00482a006a4e00300064806a244c78a001f71b088831c02456f8007434c0cc1c6c252103fcbc37bc0700f4c7c04074cfc048b00ca3900cbc0c54dcfc0d151c843c0a1401283c0a550d89bc0d5c14c0b040278c49f04064d41ca8650c0068c5b8a54c141ca8407890cc1c013c0c88d660103c03563c06f80c0d083000a5cc00b50c04bc06f81b0c48300f0c3001e032000a30840ff2f073a2673f" }
+export const masterContractAddress = Address.parse('EQCRfTq-IExpBOyuaWRYvHupsjr2CZrpcc1aQsiYWMA8BJwl');
 export const oracleMasterSourceV1CodeCell = Cell.fromBoc(Buffer.from(userSCData.hex, 'hex'))[0];
 const masterContractCode = oracleMasterSourceV1CodeCell
 const userContractAddress_test = contractAddress(
@@ -106,8 +106,8 @@ export const useBalance = create<BalanceStore>((set) => {
                 const totalSupply = BigInt(src.loadUint(64));  // total_supply
                 const totalBorrow = BigInt(src.loadUint(64));  // total_borrow
                 const lastAccural = BigInt(src.loadUint(64));
-                const balance = 100;               // last_accural
-
+                const balance = BigInt(src.loadUint(64));
+                console.log(balance)
                 return { price, s_rate, b_rate, totalSupply, totalBorrow, lastAccural, balance };
             }
             //@ts-ignore
@@ -165,7 +165,7 @@ export const useBalance = create<BalanceStore>((set) => {
         // get asset config by address -------
         console.log(dictConf.get(bufferToBigInt(randomAddress('usdt').hash)))
         console.log('4-----------IS POOL ACTIVE?----')
-        console.log(confItems.loadUint(8)) //if pool active = -1 (true) / 0 (false)
+        console.log(confItems.loadInt(8) === -1) //if pool active = -1 (true) / 0 (false)
         console.log('5--------SRATE BRATE PER SEC BY ASSET-------')
 
         const dictRates = Dictionary.loadDirect(Dictionary.Keys.BigUint(256), {
@@ -173,9 +173,9 @@ export const useBalance = create<BalanceStore>((set) => {
                 buidler.storeSlice(src);
             },
             parse: (src: Slice) => {
-                const s_ratePerSecond = BigInt(src.loadUint(64)); //s_rate_per_second 64bit
-                const b_ratePerSecond = BigInt(src.loadUint(64)); //b_rate_per_second 64bit
-                return { s_ratePerSecond, b_ratePerSecond };
+                const s_rate_per_second = BigInt(src.loadUint(64)); //s_rate_per_second 64bit
+                const b_rate_per_second = BigInt(src.loadUint(64)); //b_rate_per_second 64bit
+                return { s_rate_per_second, b_rate_per_second };
             }
         }, stack.readCellOpt())
 
@@ -187,7 +187,7 @@ export const useBalance = create<BalanceStore>((set) => {
                 buidler.storeSlice(src);
             },
             parse: (src: Slice) => {
-                const reserve = BigInt(src.loadInt(64)); //s_rate_per_second 64bit
+                const reserve = BigInt(src.loadInt(65)); //s_rate_per_second 64bit
                 return { reserve };
             }
         }, stack.readCellOpt())
@@ -196,9 +196,9 @@ export const useBalance = create<BalanceStore>((set) => {
 
         console.log('7----ACCOUNT ASSET BALANCE-----------')
         let argsUser = new TupleBuilder();
-        argsUser.writeAddress(randomAddress('ton'));
-        argsUser.writeNumber(1) //s_rate
-        argsUser.writeNumber(2)//b_rate
+        argsUser.writeAddress(randomAddress('usdt'));
+        argsUser.writeNumber(data.s_rate) //s_rate todo change on actual srate
+        argsUser.writeNumber(data.b_rate)//b_rate todo
 
         let stackUser = await toncenter.runMethod(
             userContractAddress_test,
@@ -217,17 +217,10 @@ export const useBalance = create<BalanceStore>((set) => {
                 buidler.storeUint(src.totalSupply, 64);
                 buidler.storeUint(src.totalBorrow, 64);
                 buidler.storeUint(src.lastAccural, 64);
+                buidler.storeUint(src.balance, 64);
             },
             parse: (src: Slice) => {
-                const price = BigInt(src.loadUint(64));                       // price
-                const s_rate = BigInt(src.loadUint(64));                      // s_rate
-                const b_rate = BigInt(src.loadUint(64));                      // b_rate
-                const totalSupply = BigInt(src.loadUint(64));  // total_supply
-                const totalBorrow = BigInt(src.loadUint(64));  // total_borrow
-                const lastAccural = BigInt(src.loadUint(64));
-                const balance = 100;               // last_accural
-
-                return { price, s_rate, b_rate, totalSupply, totalBorrow, lastAccural, balance };
+                return 0;
             }
         }).endCell();
         argsUserBalances.writeCell(asdf);
@@ -238,12 +231,12 @@ export const useBalance = create<BalanceStore>((set) => {
         );
         // stackUserBalances.stack.readCell().beginParse(); // important 
         // console.log(BigInt(stackUserBalances.stack.readNumber())) //asset balance
-        const dictUserBalances = Dictionary.load(Dictionary.Keys.BigUint(256), {
+        const dictUserBalances = Dictionary.loadDirect(Dictionary.Keys.BigUint(256), {
             serialize: (src: any, buidler: any) => {
                 buidler.storeSlice(src);
             },
             parse: (src: Slice) => {
-                const balance = BigInt(src.loadInt(64)); //s_rate_per_second 64bit
+                const balance = BigInt(src.loadInt(65)); //s_rate_per_second 64bit
                 return { balance };
             }
             //@ts-ignore
@@ -281,6 +274,22 @@ export const useBalance = create<BalanceStore>((set) => {
             argsUserAvl.build(),
         );
         console.log(BigInt(stackUserAvlToBorr.stack.readNumber())) // avaliable to borrow
+        let argsUasdkhfgser = new TupleBuilder();
+
+        argsUserAvl.writeCell(asdf_config);
+        argsUserAvl.writeCell(asdf);
+        argsUserAvl.writeAddress(randomAddress('usdt'));
+        // argsUserAvl.writeNumber(BigInt((new Date()).getTime() * 1000) - data.lastAccural);
+        argsUserAvl.writeNumber(100);
+
+        let asdfasdfasf = await toncenter.runMethod(
+            userContractAddress_test,
+            'getUpdatedRates',
+            argsUasdkhfgser.build(),
+        );
+        console.log('asdkfj')
+        console.log(BigInt(asdfasdfasf.stack.readNumber())) //asset balance
+        console.log(BigInt(asdfasdfasf.stack.readNumber())) //asset balance
     }
 
     setInterval(updateData, 50000);
