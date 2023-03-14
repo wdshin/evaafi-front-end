@@ -10,8 +10,8 @@ export interface InfoBarProps { }
 const InfoBar = ({} : InfoBarProps) => { 
     const { borrowBalance, supplyBalance, borrowLimitPercent, borrowLimitValue, availableToBorrow } = useBalance();
     const { formatToUsd } = usePrices();
-    const [borrowBalanceInt, borrowBalanceFraction] = formatToUsd(borrowBalance, Token.TON).split(".");
-    const [supplyBalanceInt, supplyBalanceFraction] = formatToUsd(supplyBalance, Token.TON).split(".");
+    const [borrowBalanceInt, borrowBalanceFraction] = formatToUsd(borrowBalance).split(".");
+    const [supplyBalanceInt, supplyBalanceFraction] = formatToUsd(supplyBalance).split(".");
     
     return (
         <InfoBarWrapper>
@@ -30,12 +30,12 @@ const InfoBar = ({} : InfoBarProps) => {
                 </MoneyWrapper>
             </MoneyInfoWrapper>
             <BorrowLineWrapper>
-                <BorrowLineSubtitle>Borrow Limit <WhiteSpanTwo>{formatPercent(borrowLimitPercent)}</WhiteSpanTwo></BorrowLineSubtitle>
+                <BorrowLineSubtitle>Borrow Limit <WhiteSpanTwo>{formatToUsd(borrowLimitPercent.toString())}</WhiteSpanTwo></BorrowLineSubtitle>
                 <BorrowLine>
                     <BorrowLineBack/>
-                    <BorrowLineFront borrowLimit={borrowLimitValue}/>
+                    <BorrowLineFront borrowLimit={Number(formatToUsd(borrowLimitPercent.toString()))}/>
                 </BorrowLine>
-                <BorrowLineSubtitle>{formatToUsd(availableToBorrow, Token.TON)}</BorrowLineSubtitle>
+                <BorrowLineSubtitle>{formatToUsd(borrowBalance)}</BorrowLineSubtitle>
             </BorrowLineWrapper>
         </InfoBarWrapper>
     )

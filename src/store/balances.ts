@@ -115,7 +115,7 @@ export const useBalance = create<BalanceStore>((set) => {
 
         let data = dict.get(bufferToBigInt(randomAddress('usdt').hash))
 
-        console.log(data, " usdt");
+        console.log(fromNano(data.price), " usdt");
 
         // const supplyBalance = data.totalSupply;
         // set({ supplyBalance });
@@ -207,7 +207,9 @@ export const useBalance = create<BalanceStore>((set) => {
         );
 
         console.log(BigInt(stackUser.stack.readNumber())) //asset balance
+
         console.log('8--------ACCOUNT BALANCES-------')
+
         let argsUserBalances = new TupleBuilder();
         const asdf = beginCell().storeDictDirect(dict, Dictionary.Keys.BigUint(256), {
             serialize: (src: any, buidler: Builder) => {
@@ -243,6 +245,7 @@ export const useBalance = create<BalanceStore>((set) => {
         }, stackUserBalances.stack.readCell().beginParse())
 
         console.log(dictUserBalances.get(bufferToBigInt(randomAddress('usdt').hash))) //get balance in usd
+        
         console.log('9---------AVL TO BORROW ------')
         let argsUserAvl = new TupleBuilder();
         const asdf_config = beginCell().storeDictDirect(dictConf, Dictionary.Keys.BigUint(256), {
@@ -273,23 +276,37 @@ export const useBalance = create<BalanceStore>((set) => {
             'getAvailableToBorrow',
             argsUserAvl.build(),
         );
-        console.log(BigInt(stackUserAvlToBorr.stack.readNumber())) // avaliable to borrow
-        let argsUasdkhfgser = new TupleBuilder();
+        // console.log(BigInt(stackUserAvlToBorr.stack.readNumber())) // avaliable to borrow
 
+        // let argsUpdateRates = new TupleBuilder();
+        
         argsUserAvl.writeCell(asdf);
         argsUserAvl.writeCell(asdf_config);
         argsUserAvl.writeAddress(randomAddress('usdt'));
         // argsUserAvl.writeNumber(BigInt((new Date()).getTime() * 1000) - data.lastAccural);
         argsUserAvl.writeNumber(10);
+        
+        // console.log('asdkfj')
+        
+        // let getUpdateRates = await toncenter.runMethod(
+            //     masterContractAddress,
+            //     'getUpdatedRates',
+            //     argsUpdateRates.build(),
+            // );
+            // console.log(BigInt(getUpdateRates.stack.readNumber())) //asset balance
+            // console.log(BigInt(getUpdateRates.stack.readNumber())) //asset balance
 
-        console.log('asdkfj')
-        let asdfasdfasf = await toncenter.runMethod(
-            masterContractAddress,
-            'getUpdatedRates',
-            argsUasdkhfgser.build(),
-        );
-        console.log(BigInt(asdfasdfasf.stack.readNumber())) //asset balance
-        console.log(BigInt(asdfasdfasf.stack.readNumber())) //asset balance
+            const borrowBalance = fromNano(BigInt(stackUserAvlToBorr.stack.readNumber()));
+            set({borrowBalance});
+
+            const supplyBalance = fromNano((dictUserBalances.get(bufferToBigInt(randomAddress('usdt').hash)).balance));
+            set({supplyBalance})
+
+            const limitUsed = Number(fromNano(data.price)) + Number(supplyBalance);
+            const totalLimit = limitUsed + Number(borrowBalance);
+            const borrowLimitPercent = limitUsed/totalLimit;
+            set({borrowLimitPercent})
+
     }
 
     setInterval(updateData, 50000);
