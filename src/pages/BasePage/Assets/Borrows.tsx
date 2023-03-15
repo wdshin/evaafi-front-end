@@ -42,7 +42,7 @@ const Borrows = ({ }: BorrowsProps) => {
                     <BorrowDescriptionBar />
                 }
                 {!borrows.length &&
-                    <AssetsSubtitle>Nothing to show</AssetsSubtitle>
+                    <AssetsSubtitle>Loading market data</AssetsSubtitle>
                 }
                 {borrows.map(borrow => (
                     <BorrowAssetCard {...borrow} key={borrow.id} onClick={() => setBorrowModelIsOpen(true)} />

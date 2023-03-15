@@ -109,7 +109,7 @@ export const useBalance = create<BalanceStore>((set) => {
                 const totalBorrow = BigInt(src.loadUint(64));                 // total_borrow
                 const lastAccural = BigInt(src.loadUint(32));
                 const balance = BigInt(src.loadUint(64));
-                console.log(balance, totalBorrow)
+                console.log(price)
                 return { price, s_rate, b_rate, totalSupply, totalBorrow, lastAccural, balance };
             }
             //@ts-ignore
@@ -271,7 +271,8 @@ export const useBalance = create<BalanceStore>((set) => {
             'getAvailableToBorrow',
             argsUserAvl.build(),
         );
-        // console.log(BigInt(stackUserAvlToBorr.stack.readNumber())) // avaliable to borrow
+        const availableToBorrowData = BigInt(stackUserAvlToBorr.stack.readNumber());
+        console.log(availableToBorrowData); // avaliable to borrow
 
         // let argsUpdateRates = new TupleBuilder();
 
@@ -281,8 +282,6 @@ export const useBalance = create<BalanceStore>((set) => {
         // argsUserAvl.writeNumber(BigInt((new Date()).getTime() * 1000) - data.lastAccural);
         argsUserAvl.writeNumber(10);
 
-        // console.log('asdkfj')
-
         // let getUpdateRates = await toncenter.runMethod(
         //     masterContractAddress,
         //     'getUpdatedRates',
@@ -291,7 +290,7 @@ export const useBalance = create<BalanceStore>((set) => {
         // console.log(BigInt(getUpdateRates.stack.readNumber())) //asset balance
         // console.log(BigInt(getUpdateRates.stack.readNumber())) //asset balance
 
-        const borrowBalance = fromNano(Number(BigInt(stackUserAvlToBorr.stack.readNumber())));
+        const borrowBalance = fromNano(Number(availableToBorrowData));
         set({ borrowBalance });
 
         const supplyBalance = fromNano((dictUserBalances.get(bufferToBigInt(randomAddress('usdt').hash)).balance));
@@ -312,7 +311,21 @@ export const useBalance = create<BalanceStore>((set) => {
             apy: apy_supply,
             earned: '13',
         };
-        const mySupplies = [newSupply];
+        const newSupply2 = {
+            id: 'fir12312321st',
+            token: Token.TON,
+            balance: assetBalance.toString(),
+            apy: apy_supply,
+            earned: '13',
+        };
+        const newSupply3 = {
+            id: 'fir12311112321st',
+            token: Token.USDT,
+            balance: assetBalance.toString(),
+            apy: apy_supply,
+            earned: '13',
+        };
+        const mySupplies = [newSupply, newSupply2, newSupply3];
 
         set({ mySupplies });
 
@@ -325,9 +338,12 @@ export const useBalance = create<BalanceStore>((set) => {
         };
         const myBorrows = [newBorrow];
         set({ myBorrows });
+
+        const maxWithdraw = Number(assetBalance);
+        set({maxWithdraw})
     }
 
-    setInterval(updateData, 50000);
+    setInterval(updateData, 60000);
     updateData();
 
     return {
@@ -336,7 +352,7 @@ export const useBalance = create<BalanceStore>((set) => {
         borrowLimitPercent: 0.25,
         borrowLimitValue: 14,
         availableToBorrow: '60',
-        maxWithdraw: 30,
+        maxWithdraw: 0,
         mySupplies: [],
         myBorrows: [],
         supplies: [{

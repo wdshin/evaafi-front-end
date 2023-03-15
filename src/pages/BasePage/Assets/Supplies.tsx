@@ -46,7 +46,7 @@ const Supplies = ({ }: SuppliesProps) => {
                         <SupplyDescriptionBar />
                     }
                     {!supplies.length && 
-                        <AssetsSubtitle>Nothing to show</AssetsSubtitle>
+                        <AssetsSubtitle>Loading market data</AssetsSubtitle>
                     }
                     {supplies.map(supply => (
                         <SupplyAssetCard {...supply} key={supply.id} onClick={() => setSupplyModelIsOpen(true)} />
