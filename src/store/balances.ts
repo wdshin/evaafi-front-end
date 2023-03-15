@@ -199,7 +199,7 @@ export const useBalance = create<BalanceStore>((set) => {
             'getAccountAssetBalance',
             argsUser.build(),
         );
-        
+
         const assetBalance = BigInt(accountAssetBalance.stack.readNumber());
         console.log(assetBalance) //asset balance
 
@@ -226,6 +226,7 @@ export const useBalance = create<BalanceStore>((set) => {
             'getAccountBalances',
             argsUserBalances.build(),
         );
+
         // stackUserBalances.stack.readCell().beginParse(); // important 
         // console.log(BigInt(stackUserBalances.stack.readNumber())) //asset balance
         const dictUserBalances = Dictionary.loadDirect(Dictionary.Keys.BigUint(256), {
@@ -275,6 +276,20 @@ export const useBalance = create<BalanceStore>((set) => {
         console.log(availableToBorrowData); // avaliable to borrow
 
         // let argsUpdateRates = new TupleBuilder();
+
+        console.log('10---------agregated balances------')
+        let argsUserBalanceas = new TupleBuilder();
+
+        argsUserBalanceas.writeCell(asdf_config);
+        argsUserBalanceas.writeCell(asdf);
+        // let argsUpdateRates = new TupleBuilder();
+        let getAggregatedBalances = await toncenter.runMethod(
+            userContractAddress_test,
+            'getAggregatedBalances',
+            argsUserBalanceas.build(),
+        );
+        console.log(getAggregatedBalances.stack.readNumber()) // agregatedbalances 
+        console.log(getAggregatedBalances.stack.readNumber())
 
         argsUserAvl.writeCell(asdf);
         argsUserAvl.writeCell(asdf_config);
@@ -340,7 +355,7 @@ export const useBalance = create<BalanceStore>((set) => {
         set({ myBorrows });
 
         const maxWithdraw = Number(assetBalance);
-        set({maxWithdraw})
+        set({ maxWithdraw })
     }
 
     setInterval(updateData, 60000);
