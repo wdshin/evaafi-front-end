@@ -19,7 +19,7 @@ export const MySuppliesDescriptionBar = ({} : AssetsDescriptionBarProps) => {
         <AssetsDescriptionBarWrapper>
             <AssetsDescriptionText>Asset</AssetsDescriptionText>
             <AssetsDescriptionText right={45.5}>Balance</AssetsDescriptionText>
-            <AssetsDescriptionText right={28.1}>APY/Earned</AssetsDescriptionText>
+            <AssetsDescriptionText right={30.1}>APY</AssetsDescriptionText>
         </AssetsDescriptionBarWrapper>
     )
 }
@@ -38,7 +38,7 @@ export const MyBorrowsDescriptionBar = ({} : AssetsDescriptionBarProps) => {
         <AssetsDescriptionBarWrapper>
             <AssetsDescriptionText>Asset</AssetsDescriptionText>
             <AssetsDescriptionText right={45.5}>Balance</AssetsDescriptionText>
-            <AssetsDescriptionText right={28.1}>APY/Acrrued</AssetsDescriptionText>
+            <AssetsDescriptionText right={31.1}>APY</AssetsDescriptionText>
         </AssetsDescriptionBarWrapper>
     )
 }
