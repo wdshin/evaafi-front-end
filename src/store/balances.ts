@@ -109,21 +109,13 @@ export const useBalance = create<BalanceStore>((set) => {
                 const totalBorrow = BigInt(src.loadUint(64));                 // total_borrow
                 const lastAccural = BigInt(src.loadUint(32));
                 const balance = BigInt(src.loadUint(64));
-                console.log(balance)
+                console.log(balance, totalBorrow)
                 return { price, s_rate, b_rate, totalSupply, totalBorrow, lastAccural, balance };
             }
             //@ts-ignore
         }, stack.readCellOpt())
 
         let data = dict.get(bufferToBigInt(randomAddress('usdt').hash))
-
-        console.log(fromNano(data.price), " usdt");
-
-        // const supplyBalance = data.totalSupply;
-        // set({ supplyBalance });
-
-        // const borrowBalance = data.totalBorrow;
-        // set({ borrowBalance });
 
         console.log('2-----------POOL METADATA----')
 
@@ -168,7 +160,7 @@ export const useBalance = create<BalanceStore>((set) => {
         console.log(dictConf.get(bufferToBigInt(randomAddress('usdt').hash)))
         console.log('4-----------IS POOL ACTIVE?----')
         console.log(confItems.loadInt(8) === -1) //if pool active = -1 (true) / 0 (false)
-        console.log('5--------SRATE BRATE PER SEC BY ASSET-------')
+        console.log('5----SRATE BRATE PER SEC BY ASSET----')
 
         const dictRates = Dictionary.loadDirect(Dictionary.Keys.BigUint(256), {
             serialize: (src: any, buidler: any) => {
@@ -181,7 +173,7 @@ export const useBalance = create<BalanceStore>((set) => {
             }
         }, stack.readCellOpt())
 
-        // console.log(dictRates.get(bufferToBigInt(randomAddress('usdt').hash)))
+        console.log(dictRates.get(bufferToBigInt(randomAddress('usdt').hash)))
 
         console.log('6---------RESERVE BY ASSET------')
         const dictReserves = Dictionary.loadDirect(Dictionary.Keys.BigUint(256), {
@@ -207,8 +199,9 @@ export const useBalance = create<BalanceStore>((set) => {
             'getAccountAssetBalance',
             argsUser.build(),
         );
-
-        // console.log(BigInt(stackUser.stack.readNumber())) //asset balance
+        
+        const assetBalance = BigInt(accountAssetBalance.stack.readNumber());
+        console.log(assetBalance) //asset balance
 
         console.log('8--------ACCOUNT BALANCES-------')
 
@@ -309,7 +302,6 @@ export const useBalance = create<BalanceStore>((set) => {
         const borrowLimitPercent = limitUsed / totalLimit;
         set({ borrowLimitPercent });
 
-        const assetBalance = Number(BigInt(accountAssetBalance.stack.readNumber()));
         const apy_supply = ((Number(fromNano(dictRates.get(bufferToBigInt(randomAddress('usdt').hash)).s_rate_per_second)) * 360 * 24 + 1) ^ 365 - 1) / 10000;
         const apy_borrow = ((Number(fromNano(dictRates.get(bufferToBigInt(randomAddress('usdt').hash)).b_rate_per_second)) * 360 * 24 + 1) ^ 365 - 1) / 10000000;
 
