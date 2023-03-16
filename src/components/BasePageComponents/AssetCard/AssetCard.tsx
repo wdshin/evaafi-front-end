@@ -48,7 +48,7 @@ export const MySuppliesAssetCard = ({ onClick, token, balance, apy, earned } : A
             </DoubleTextWrapper>
             <DoubleTextWrapper right={30.1}>
                 <DoubleTextUpper>{(parseFloat(apy.toString()).toFixed(2))} %</DoubleTextUpper>
-                <DoubleTextLower>{earned} {TokenMap[token].ticker}</DoubleTextLower>
+                {/* <DoubleTextLower>{earned} {TokenMap[token].ticker}</DoubleTextLower> */}
             </DoubleTextWrapper>
             <AssetCardButton onClick={onClick} right={0}>Withdraw</AssetCardButton>
         </AssetCardWrapper>
@@ -82,8 +82,8 @@ export const MyBorrowsAssetCard = ({ onClick, token, balance, apy, accrued} : As
                 <DoubleTextLower>{formatToUsd(balance, token)}</DoubleTextLower>
             </DoubleTextWrapper>
             <DoubleTextWrapper right={30.1}>
-                <DoubleTextUpper>{accrued} {TokenMap[token].ticker}</DoubleTextUpper>
-                <DoubleTextLower>{formatPercent(Number((parseFloat(apy.toString())).toFixed(4)))}</DoubleTextLower>
+                <DoubleTextUpper>{formatPercent(Number((parseFloat(apy.toString())).toFixed(4)))}</DoubleTextUpper>
+                {/* <DoubleTextLower>{accrued} {TokenMap[token].ticker}</DoubleTextLower> */}
             </DoubleTextWrapper>
             <AssetCardButton onClick={onClick} right={0}>Repay</AssetCardButton>
         </AssetCardWrapper>
