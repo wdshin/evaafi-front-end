@@ -16,7 +16,7 @@ export const oracleMasterSourceV1CodeCell = Cell.fromBoc(Buffer.from(userSCData.
 const masterContractCode = oracleMasterSourceV1CodeCell;
 const RATE_DECIMAL = Math.pow(10, 18);
 const VALUE_DECIMAL = Math.pow(10, 9);
-const BALANCE_DECIMAL =  Math.pow(10, 6)
+const BALANCE_DECIMAL = Math.pow(10, 6)
 console.log(RATE_DECIMAL, VALUE_DECIMAL);
 
 const userContractAddress_test = contractAddress(
@@ -82,6 +82,9 @@ interface BalanceStore {
     borrowLimitPercent: number;
     borrowLimitValue: number;
     maxWithdraw: number;
+    maxSupply: number;
+    maxBorrow: number;
+    maxRepay: number;
     mySupplies: MySupply[];
     myBorrows: MyBorrow[];
     supplies: Supply[];
@@ -182,7 +185,7 @@ export const useBalance = create<BalanceStore>((set) => {
         const ratesPerSecondDataUsdt = dictRates.get(bufferToBigInt(randomAddress('usdt').hash));
         console.log(dictRates.get(bufferToBigInt(randomAddress('ton').hash)))
         const ratesPerSecondDataTon = dictRates.get(bufferToBigInt(randomAddress('ton').hash));
-        
+
 
         console.log('6---------RESERVE BY ASSET------')
         const dictReserves = Dictionary.loadDirect(Dictionary.Keys.BigUint(256), {
@@ -332,20 +335,18 @@ export const useBalance = create<BalanceStore>((set) => {
         // console.log(BigInt(getUpdateRates.stack.readNumber())) //asset balance
         // console.log(BigInt(getUpdateRates.stack.readNumber())) //asset balance
 
-        const supplyBalance = (Number(getAggregatedBalances.stack.readNumber() / VALUE_DECIMAL)).toString();
+        const supplyBalance = (getAggregatedBalances.stack.readNumber() / VALUE_DECIMAL).toString();
         set({ supplyBalance });
 
         const borrowBalance = (getAggregatedBalances.stack.readNumber() / VALUE_DECIMAL).toString();
         set({ borrowBalance });
 
         const limitUsed = (Number(availableToBorrowData) / VALUE_DECIMAL);
-        console.log(limitUsed);
-        
-
         const totalLimit = limitUsed + Number(borrowBalance);
+
         const borrowLimitValue = totalLimit;
-        set({borrowLimitValue});
-        const borrowLimitPercent =  Math.abs(limitUsed) / totalLimit;
+        set({ borrowLimitValue });
+        const borrowLimitPercent = Math.abs(limitUsed) / totalLimit;
         set({ borrowLimitPercent });
 
         const apy_usdt_supply = ((Number(ratesPerSecondDataUsdt.s_rate_per_second) * 360 * 24 + 1) ^ 365 - 1) / VALUE_DECIMAL;
@@ -369,7 +370,6 @@ export const useBalance = create<BalanceStore>((set) => {
         };
 
         const mySupplies = [newSupply, newSupply2];
-
         set({ mySupplies });
 
         const newBorrow = {
@@ -379,11 +379,27 @@ export const useBalance = create<BalanceStore>((set) => {
             apy: apy_usdt_borrow,
             accrued: '22',
         };
+
         const myBorrows = [newBorrow];
         set({ myBorrows });
 
-        const maxWithdraw = Number(assetBalanceUsdt);
-        set({ maxWithdraw })
+        // if (Number(assetBalanceUsdt) / BALANCE_DECIMAL > 0) {
+            const maxWithdraw = Number(assetBalanceUsdt) / BALANCE_DECIMAL;
+            set({ maxWithdraw });
+        // } else {
+        //     const maxWithdraw = "Unavailable";
+        //     //@ts-ignore
+        //     set({ maxWithdraw });
+        // }
+
+        const maxBorrow = Number(parseFloat((Number(availableToBorrowData) / Number(data.price)).toString()).toFixed(2));
+        set({ maxBorrow });
+
+        const maxRepay = ((Number(assetBalanceUsdt) - Number(data.lastAccural))/ VALUE_DECIMAL); //+t need to add
+        set({maxRepay});
+
+        const maxSupply = Number(data.balance) / BALANCE_DECIMAL;
+        set({maxSupply})
     }
 
     setInterval(updateData, 6000000);
@@ -395,7 +411,10 @@ export const useBalance = create<BalanceStore>((set) => {
         borrowLimitPercent: 0,
         borrowLimitValue: 0,
         availableToBorrow: '0',
+        maxSupply: 200,
         maxWithdraw: 0,
+        maxBorrow: 0,
+        maxRepay: 0,
         mySupplies: [],
         myBorrows: [],
         supplies: [{

@@ -126,7 +126,7 @@ export const WithdrawModal = ({ close }: SuppluModalProps) => {
                 <InfoWrapper>
                     <InfoTextWrapper>
                         <InfoText>MAX</InfoText>
-                        <InfoText>{maxWithdraw} TON</InfoText>
+                        <InfoText>{maxWithdraw}</InfoText>
                     </InfoTextWrapper>
                     {/* <InfoTextWrapper>
                             <InfoText>Supply APY</InfoText>

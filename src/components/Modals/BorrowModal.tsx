@@ -8,6 +8,7 @@ import { XMarkIcon } from '@heroicons/react/20/solid'
 import { ArrowLongRightIcon } from '@heroicons/react/20/solid'
 import { AmountInDollars } from "./SupplyModal";
 import { usePrices, Token } from "../../store/prices";
+import { useBalance } from "../../store/balances";
 
 const DialogStyled = styled(Dialog.Panel)`
     position: relative;
@@ -124,6 +125,7 @@ export const BorrowModal = ({ close }: SuppluModalProps) => {
     const { t, i18n } = useTranslation();
     const { register, handleSubmit, watch, formState: { errors, } } = useForm<FormData>();
     const { formatToUsd } = usePrices();
+    const { maxBorrow } = useBalance();
 
     return (
         <Dialog.Panel as={DialogStyled}>
@@ -137,6 +139,10 @@ export const BorrowModal = ({ close }: SuppluModalProps) => {
             <HelpWrapper>
                 <Subtitle>Transaction Overview</Subtitle>
                 <InfoWrapper>
+                <InfoTextWrapper>
+                        <InfoText>MAX</InfoText>
+                        <InfoText>{maxBorrow} USDT</InfoText>
+                    </InfoTextWrapper>
                     <InfoTextWrapper>
                         <InfoText>Borrow Limit Used</InfoText>
                         <InfoText>0% {<ArrowRight />} 28%</InfoText>

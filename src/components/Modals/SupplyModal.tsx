@@ -6,6 +6,7 @@ import { BlueButton } from "../Buttons/Buttons";
 import { BoldRobotoText, RegularRobotoText } from "../Texts/MainTexts";
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import { Token, usePrices } from "../../store/prices";
+import { useBalance } from "../../store/balances";
 
 const DialogStyled = styled(Dialog.Panel)`
     position: relative;
@@ -120,6 +121,7 @@ export const SupplyModal = ({ close }: SuppluModalProps) => {
     const { t, i18n } = useTranslation();
     const { register, handleSubmit, watch, formState: { errors, } } = useForm<FormData>();
     const { formatToUsd } = usePrices();
+    const { maxSupply } = useBalance();
 
     return (
         <Dialog.Panel as={DialogStyled}>
@@ -133,6 +135,10 @@ export const SupplyModal = ({ close }: SuppluModalProps) => {
             <HelpWrapper>
                 <Subtitle>Transaction Overview</Subtitle>
                 <InfoWrapper>
+                    <InfoTextWrapper>
+                        <InfoText>MAX</InfoText>
+                        <InfoText>{maxSupply} USDT</InfoText>
+                    </InfoTextWrapper>
                     <InfoTextWrapper>
                         <InfoText>Supply APY</InfoText>
                         <InfoText>3.12%</InfoText>
