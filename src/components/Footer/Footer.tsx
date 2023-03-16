@@ -4,6 +4,7 @@ const FooterWrapper = styled.div`
     margin-top: 3.5rem;
     font-size: 1.8rem;
     font-weight: 700;
+    margin-bottom: 5rem;
 `
 const FooterLink = styled.a`
     color: #0381C5;

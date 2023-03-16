@@ -361,7 +361,7 @@ export const useBalance = create<BalanceStore>((set) => {
         const newSupply = {
             id: 'fir12321st',
             token: Token.USDT,
-            balance: parseFloat((Number(assetBalanceUsdt) / BALANCE_DECIMAL).toString()).toFixed(2),
+            balance: Math.abs(Number(parseFloat((Number(assetBalanceUsdt) / BALANCE_DECIMAL).toString()).toFixed(2))).toString(),
             apy: apy_usdt_supply,
             earned: '13',
         };
@@ -388,7 +388,7 @@ export const useBalance = create<BalanceStore>((set) => {
         set({ myBorrows });
 
         // if (Number(assetBalanceUsdt) / BALANCE_DECIMAL > 0) {
-            const maxWithdraw = Number(assetBalanceUsdt) / BALANCE_DECIMAL;
+            const maxWithdraw = Math.abs(Number(assetBalanceUsdt)) / BALANCE_DECIMAL;
             set({ maxWithdraw });
         // } else {
         //     const maxWithdraw = "Unavailable";
