@@ -16,7 +16,8 @@ export const oracleMasterSourceV1CodeCell = Cell.fromBoc(Buffer.from(userSCData.
 const masterContractCode = oracleMasterSourceV1CodeCell;
 const RATE_DECIMAL = Math.pow(10, 18);
 const VALUE_DECIMAL = Math.pow(10, 9);
-const BALANCE_DECIMAL = Math.pow(10, 6)
+const BALANCE_DECIMAL = Math.pow(10, 6);
+const SEC_DECIMAL = Math.pow(10, 12)
 console.log(RATE_DECIMAL, VALUE_DECIMAL);
 
 const userContractAddress_test = contractAddress(
@@ -351,7 +352,10 @@ export const useBalance = create<BalanceStore>((set) => {
 
         const apy_usdt_supply = ((Number(ratesPerSecondDataUsdt.s_rate_per_second) * 360 * 24 + 1) ^ 365 - 1) / VALUE_DECIMAL;
         const apy_ton_supply = ((Number(ratesPerSecondDataTon.s_rate_per_second) * 360 * 24 + 1) ^ 365 - 1) / VALUE_DECIMAL;
-        const apy_usdt_borrow = ((Number(ratesPerSecondDataUsdt.b_rate_per_second) * 360 * 24 + 1) ^ 365 - 1) / VALUE_DECIMAL;
+        const apy_usdt_borrow_math = Number(ratesPerSecondDataUsdt.b_rate_per_second) / SEC_DECIMAL;
+        const apy_usdt_borrow = ((apy_usdt_borrow_math  * 360 * 24 + 1) ^ 365 - 1) / 10000;
+        
+        
 
 
         const newSupply = {
