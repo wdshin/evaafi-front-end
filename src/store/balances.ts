@@ -313,7 +313,9 @@ export const useBalance = create<BalanceStore>((set) => {
             'getAggregatedBalances',
             argsUserBalanceas.build(),
         );
-        // // console.log(getAggregatedBalances.stack.readNumber()) // agregatedbalances 
+        // const aggregatedBalance1 = getAggregatedBalances.stack.readNumber();// agregatedbalances 
+        // const aggregatedBalance2 = getAggregatedBalances.stack.readNumber();// agregatedbalances 
+        // console.log(aggregatedBalance1,aggregatedBalance2)
         // console.log(getAggregatedBalances.stack.readNumber())
 
         argsUserAvl.writeCell(asdf);
@@ -330,20 +332,20 @@ export const useBalance = create<BalanceStore>((set) => {
         // console.log(BigInt(getUpdateRates.stack.readNumber())) //asset balance
         // console.log(BigInt(getUpdateRates.stack.readNumber())) //asset balance
 
-        const borrowBalance = (Number(availableToBorrowData) / VALUE_DECIMAL).toString();
-        set({ borrowBalance });
-
-        const supplyBalance = (Number(supplyBalanceData) / VALUE_DECIMAL).toString();
+        const supplyBalance = (Number(getAggregatedBalances.stack.readNumber() / VALUE_DECIMAL)).toString();
         set({ supplyBalance });
 
-        const limitUsed = getAggregatedBalances.stack.readNumber() / VALUE_DECIMAL;
+        const borrowBalance = (getAggregatedBalances.stack.readNumber() / VALUE_DECIMAL).toString();
+        set({ borrowBalance });
+
+        const limitUsed = (Number(availableToBorrowData) / VALUE_DECIMAL);
         console.log(limitUsed);
         
 
         const totalLimit = limitUsed + Number(borrowBalance);
         const borrowLimitValue = totalLimit;
         set({borrowLimitValue});
-        const borrowLimitPercent = totalLimit / limitUsed;
+        const borrowLimitPercent =  Math.abs(limitUsed) / totalLimit;
         set({ borrowLimitPercent });
 
         const apy_usdt_supply = ((Number(ratesPerSecondDataUsdt.s_rate_per_second) * 360 * 24 + 1) ^ 365 - 1) / VALUE_DECIMAL;
@@ -384,15 +386,15 @@ export const useBalance = create<BalanceStore>((set) => {
         set({ maxWithdraw })
     }
 
-    setInterval(updateData, 60000);
+    setInterval(updateData, 6000000);
     updateData();
 
     return {
         borrowBalance: '0',
         supplyBalance: '0',
-        borrowLimitPercent: 0.25,
-        borrowLimitValue: 14,
-        availableToBorrow: '60',
+        borrowLimitPercent: 0,
+        borrowLimitValue: 0,
+        availableToBorrow: '0',
         maxWithdraw: 0,
         mySupplies: [],
         myBorrows: [],
