@@ -3,6 +3,7 @@ import { Token } from './prices';
 import { Dictionary, beginCell, Builder, Slice, contractAddress, Address, Cell, TonClient, fromNano, TupleBuilder } from 'ton';
 import { randomAddress } from '../utils'
 import { Integer } from 'io-ts';
+import { SignatureHelpTriggerReason } from 'typescript';
 
 export const toncenter = new TonClient({
     endpoint: 'https://testnet.toncenter.com/api/v2/jsonRPC',
@@ -30,6 +31,11 @@ const userContractAddress_test = contractAddress(
             .storeDict()
             .endCell(),
     });
+
+// @ts-ignore
+window.usersc = userContractAddress_test
+// @ts-ignore
+window.mastersc = masterContractAddress
 
 console.log(userContractAddress_test.toString());
 
@@ -353,9 +359,9 @@ export const useBalance = create<BalanceStore>((set) => {
         const apy_usdt_supply = ((Number(ratesPerSecondDataUsdt.s_rate_per_second) * 360 * 24 + 1) ^ 365 - 1) / VALUE_DECIMAL;
         const apy_ton_supply = ((Number(ratesPerSecondDataTon.s_rate_per_second) * 360 * 24 + 1) ^ 365 - 1) / VALUE_DECIMAL;
         const apy_usdt_borrow_math = Number(ratesPerSecondDataUsdt.b_rate_per_second) / SEC_DECIMAL;
-        const apy_usdt_borrow = ((apy_usdt_borrow_math  * 360 * 24 + 1) ^ 365 - 1) / 10000;
-        
-        
+        const apy_usdt_borrow = ((apy_usdt_borrow_math * 360 * 24 + 1) ^ 365 - 1) / 10000;
+
+
 
 
         const newSupply = {
@@ -388,8 +394,8 @@ export const useBalance = create<BalanceStore>((set) => {
         set({ myBorrows });
 
         // if (Number(assetBalanceUsdt) / BALANCE_DECIMAL > 0) {
-            const maxWithdraw = Number(assetBalanceUsdt) / BALANCE_DECIMAL;
-            set({ maxWithdraw });
+        const maxWithdraw = Number(assetBalanceUsdt) / BALANCE_DECIMAL;
+        set({ maxWithdraw });
         // } else {
         //     const maxWithdraw = "Unavailable";
         //     //@ts-ignore
@@ -399,11 +405,11 @@ export const useBalance = create<BalanceStore>((set) => {
         const maxBorrow = Number(parseFloat((Number(availableToBorrowData) / Number(data.price)).toString()).toFixed(2));
         set({ maxBorrow });
 
-        const maxRepay = ((Number(assetBalanceUsdt) - Number(data.lastAccural))/ VALUE_DECIMAL); //+t need to add
-        set({maxRepay});
+        const maxRepay = ((Number(assetBalanceUsdt) - Number(data.lastAccural)) / VALUE_DECIMAL); //+t need to add
+        set({ maxRepay });
 
         const maxSupply = Number(data.balance) / BALANCE_DECIMAL;
-        set({maxSupply})
+        set({ maxSupply })
     }
 
     setInterval(updateData, 6000000);

@@ -10,6 +10,8 @@ import { AmountInDollars } from "./SupplyModal";
 import { usePrices, Token } from "../../store/prices";
 import { useBalance } from "../../store/balances";
 
+import { useWallet } from '../../store/wallet';
+
 const DialogStyled = styled(Dialog.Panel)`
     position: relative;
     padding: 4.5rem 3.5rem 21.8rem 3.5rem;
@@ -127,6 +129,17 @@ export const BorrowModal = ({ close }: SuppluModalProps) => {
     const { formatToUsd } = usePrices();
     const { maxBorrow } = useBalance();
 
+    const { sendTransaction } = useWallet();
+
+    const click = () => {
+        console.log(1)
+        const amount = '0.1'
+        // @ts-ignore
+        const reciver = window.mastersc
+        const payload = ''
+        sendTransaction(reciver.toString(), amount, payload)
+    }
+
     return (
         <Dialog.Panel as={DialogStyled}>
             <CloseButton onClick={close} />
@@ -139,7 +152,7 @@ export const BorrowModal = ({ close }: SuppluModalProps) => {
             <HelpWrapper>
                 <Subtitle>Transaction Overview</Subtitle>
                 <InfoWrapper>
-                <InfoTextWrapper>
+                    <InfoTextWrapper>
                         <InfoText>MAX</InfoText>
                         <InfoText>{maxBorrow} USDT</InfoText>
                     </InfoTextWrapper>
@@ -157,7 +170,7 @@ export const BorrowModal = ({ close }: SuppluModalProps) => {
                     </InfoTextWrapper>
                 </InfoWrapper>
             </HelpWrapper>
-            <ModalBtn>Borrow</ModalBtn>
+            <ModalBtn onClick={() => click()}>Borrow</ModalBtn>
         </Dialog.Panel>
     )
 }

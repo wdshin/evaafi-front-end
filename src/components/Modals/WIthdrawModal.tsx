@@ -9,6 +9,8 @@ import { AmountInDollars } from "./SupplyModal";
 import { Token, usePrices, TokenMap } from "../../store/prices";
 import { useBalance } from '../../store/balances';
 
+import { useWallet } from '../../store/wallet';
+
 const DialogStyled = styled(Dialog.Panel)`
     position: relative;
     padding: 4.5rem 3.5rem 21.8rem 3.5rem;
@@ -112,6 +114,17 @@ export const WithdrawModal = ({ close }: SuppluModalProps) => {
     const { register, handleSubmit, watch, formState: { errors, } } = useForm<FormData>();
     const { formatToUsd } = usePrices();
 
+    const { sendTransaction } = useWallet();
+
+    const click = () => {
+        console.log(1)
+        const amount = '0.1'
+        //@ts-ignore
+        const reciver = window.mastersc
+        const payload = ''
+        sendTransaction(reciver.toString(), amount, payload)
+    }
+
     return (
         <Dialog.Panel as={DialogStyled}>
             <CloseButton onClick={close} />
@@ -134,7 +147,7 @@ export const WithdrawModal = ({ close }: SuppluModalProps) => {
                         </InfoTextWrapper> */}
                 </InfoWrapper>
             </HelpWrapper>
-            <ModalBtn>Withdraw</ModalBtn>
+            <ModalBtn onClick={click}>Withdraw</ModalBtn>
         </Dialog.Panel>
     )
 }

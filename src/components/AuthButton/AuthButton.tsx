@@ -10,19 +10,19 @@ import { BlueButton, WalletNumWithMenu } from './AuthButtonStyles';
 import { useWallet } from '../../store/wallet';
 
 export function AuthButton() {
-	const { t, i18n } = useTranslation(); 
+	const { t, i18n } = useTranslation();
 	const navigate = useNavigate();
 
 	const { login, logout, userAddress, universalLink, resetUniversalLink, isLoading } = useWallet();
 
 	if (isLoading) {
-		return <LoadingComponent/>;
+		return <LoadingComponent />;
 	}
 
 	return (
 		<>
-			{userAddress && 
-				<WalletNumWithMenu address={userAddress} onDisconnect={() => { logout(); navigate(0); }}/>
+			{userAddress &&
+				<WalletNumWithMenu address={userAddress} onDisconnect={() => { logout(); navigate(0); }} />
 			}
 
 			{!userAddress &&
@@ -30,7 +30,7 @@ export function AuthButton() {
 			}
 
 			<Dialog className={`w-full h-full  absolute bg-black bg-opacity-50 top-0 flex justify-center items-center`} open={!!universalLink} onClose={resetUniversalLink}>
-				<QRModal close={resetUniversalLink} link={universalLink}/>
+				<QRModal close={resetUniversalLink} link={universalLink} />
 			</Dialog>
 		</>
 	);

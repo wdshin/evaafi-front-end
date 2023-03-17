@@ -10,6 +10,8 @@ import { AmountInDollars } from "./SupplyModal";
 import { usePrices, Token } from "../../store/prices";
 import { useBalance } from "../../store/balances";
 
+import { useWallet } from '../../store/wallet';
+
 const DialogStyled = styled(Dialog.Panel)`
     position: relative;
     padding: 4.5rem 3.5rem 21.8rem 3.5rem;
@@ -122,10 +124,21 @@ interface FormData {
 }
 
 export const RepayModal = ({ close }: SuppluModalProps) => {
-    const { maxRepay} = useBalance();
+    const { maxRepay } = useBalance();
     const { t, i18n } = useTranslation();
     const { register, handleSubmit, watch, formState: { errors, } } = useForm<FormData>();
     const { formatToUsd } = usePrices();
+
+    const { sendTransaction } = useWallet();
+
+    const click = () => {
+        console.log(1)
+        const amount = '0.1'
+        //@ts-ignore
+        const reciver = window.mastersc
+
+        sendTransaction(reciver.toString(), amount)
+    }
 
     return (
         <Dialog.Panel as={DialogStyled}>
@@ -139,7 +152,7 @@ export const RepayModal = ({ close }: SuppluModalProps) => {
             <HelpWrapper>
                 <Subtitle>Transaction Overview</Subtitle>
                 <InfoWrapper>
-                <InfoTextWrapper>
+                    <InfoTextWrapper>
                         <InfoText>MAX</InfoText>
                         <InfoText>{maxRepay} USDT</InfoText>
                     </InfoTextWrapper>
@@ -153,7 +166,7 @@ export const RepayModal = ({ close }: SuppluModalProps) => {
                     </InfoTextWrapper>
                 </InfoWrapper>
             </HelpWrapper>
-            <ModalBtn>Repay</ModalBtn>
+            <ModalBtn onClick={click}>Repay</ModalBtn>
         </Dialog.Panel>
     )
 }

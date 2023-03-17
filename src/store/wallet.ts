@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { TonConnect, Wallet, isWalletInfoInjected, WalletInfoRemote } from '@tonconnect/sdk';
+import { toNano } from 'ton';
 
 import { friendlifyUserAddress, isMobile, openLink, addReturnStrategy } from '../utils';
 
@@ -15,6 +16,7 @@ interface AuthStore {
 
   logout: () => void;
   login: () => void;
+  sendTransaction: (address: string, amount: string, payload?: string) => void;
 
   resetUniversalLink: () => void;
 }
@@ -66,6 +68,28 @@ export const useWallet = create<AuthStore>((set) => {
       }
 
     },
+
+    sendTransaction: async (address: string, amount: string, payload?: string) => {
+      console.log(address)
+      console.log(amount)
+
+      const tx = await connector.sendTransaction({
+        validUntil: (new Date()).getTime() / 1000 + 5 * 1000 * 60,
+        messages: [
+          {
+            address,
+            amount: toNano(amount).toString(),
+            payload
+          }
+        ]
+      });
+      if (tx.boc) {
+        alert('tx done')
+      } else {
+        alert('something went wrong')
+      }
+    },
+
     resetUniversalLink: () => {
       set({ universalLink: undefined });
     }

@@ -8,6 +8,8 @@ import { XMarkIcon } from '@heroicons/react/20/solid'
 import { Token, usePrices } from "../../store/prices";
 import { useBalance } from "../../store/balances";
 
+import { useWallet } from '../../store/wallet';
+
 const DialogStyled = styled(Dialog.Panel)`
     position: relative;
     padding: 4.5rem 3.5rem 21.8rem 3.5rem;
@@ -123,6 +125,16 @@ export const SupplyModal = ({ close }: SuppluModalProps) => {
     const { formatToUsd } = usePrices();
     const { maxSupply } = useBalance();
 
+    const { sendTransaction } = useWallet();
+
+    const click = () => {
+        console.log(1)
+        const amount = '0.1'
+        //@ts-ignore
+        const reciver = window.mastersc
+        sendTransaction(reciver.toString(), amount)
+    }
+
     return (
         <Dialog.Panel as={DialogStyled}>
             <CloseButton onClick={close} />
@@ -145,7 +157,7 @@ export const SupplyModal = ({ close }: SuppluModalProps) => {
                     </InfoTextWrapper>
                 </InfoWrapper>
             </HelpWrapper>
-            <ModalBtn>Supply</ModalBtn>
+            <ModalBtn onClick={click}>Supply</ModalBtn>
         </Dialog.Panel>
     )
 }
