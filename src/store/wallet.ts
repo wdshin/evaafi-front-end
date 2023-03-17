@@ -6,6 +6,12 @@ import { fromNano, TonClient, beginCell, toNano, Address, JettonMaster, Contract
 import { friendlifyUserAddress, isMobile, openLink, addReturnStrategy, randomAddress } from '../utils';
 import { useBalance } from './balances';
 
+const ton = beginCell().storeUint(4, 3)
+  .storeUint(0, 8)
+  .storeUint(0x1a4219fe5e60d63af2a3cc7dce6fec69b45c6b5718497a6148e7c232ac87bd8an, 256).endCell().beginParse().loadAddress()
+
+const usdt = Address.parseFriendly('EQBOSPO9jMeJPQTmau2FKk3_NryuAucfv5pgxBXd7BxGIs5w').address
+
 const jettonWalletAddressMain = 'EQDLqyBI-LPJZy-s2zEZFQMyF9AU-0DxDDSXc2fA-YXCJIIq' // todo calculate jeton wallet 
 
 function bufferToBigInt(buffer: any, start = 0, end = buffer.length) {
@@ -57,27 +63,27 @@ interface AuthStore {
 export const useWallet = create<AuthStore>((set, get) => {
 
   const connector = new TonConnect(dappMetadata);
-  
+
   connector.onStatusChange((async (wallet) => {
     const userAddress = friendlifyUserAddress(wallet?.account.address);
     const tonBalance = fromNano(await client.getBalance(Address.parse(connector?.wallet?.account.address as string)))
     const contract = new Minter(Address.parse(jettonWalletAddressMain));
     const juserwalletEvaaMasterSC = await client.open(contract).getWalletAddress(Address.parseRaw(wallet?.account.address as string))
     const contract1 = new Minter(Address.parseFriendly(juserwalletEvaaMasterSC.toString()).address);
-    
+
     let usdtBalance = 0;
 
     try {
       const juserwalletEvaaMasterSC1 = await client.open(contract1).getBalance()
       usdtBalance = juserwalletEvaaMasterSC1.readNumber() / 1000000;
-    } catch(e) {
+    } catch (e) {
       console.log('error with get usdtBalance', e)
     }
 
     set(() => ({ wallet, userAddress, universalLink: '' }));
 
     console.log('userAddress', wallet?.account.address)
-  
+
     useBalance.setState({ usdtBalance: String(usdtBalance), tonBalance, userAddress: Address.parseRaw(wallet?.account.address as string) });
 
   }), console.error);
@@ -148,7 +154,7 @@ export const useWallet = create<AuthStore>((set, get) => {
             payload: body.toBoc().toString('base64'),
           })
         } else if (action === 'withdrawal' || action === 'borrow') {
-          const assetAddress = bufferToBigInt(randomAddress('ton').hash) // todo change address
+          const assetAddress = bufferToBigInt(ton.hash) // todo change address
 
           const body = beginCell()
             .storeUint(60, 32)
@@ -194,7 +200,7 @@ export const useWallet = create<AuthStore>((set, get) => {
             payload: body.toBoc().toString('base64'),
           })
         } else if (action === 'withdraw' || action === 'borrow') {
-          const assetAddress = bufferToBigInt(randomAddress('usdt').hash) // todo change address
+          const assetAddress = bufferToBigInt(usdt.hash) // todo change address
           const body = beginCell()
             .storeUint(60, 32)
             .storeUint(0, 64)
