@@ -17,6 +17,7 @@
     "@tonconnect/protocol": "^2.0.0",
     "@tonconnect/sdk": "^2.0.5",
     "@tonconnect/ui-react": "^0.0.6",
+    "@types/bn.js": "^5.1.1",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.3",
     "@types/react": "^18.0.25",

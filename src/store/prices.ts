@@ -12,10 +12,12 @@ export enum Token {
 export const TokenMap = {
     [Token.TON]: {
         ticker: 'TON',
+        tokenId: 'ton',
         icon: TONLogo
     },
     [Token.USDT]: {
         ticker: 'USDT',
+        tokenId: 'usdt',
         icon: USDTLogo
     }
 };

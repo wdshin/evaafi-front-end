@@ -3,15 +3,20 @@ import { TonConnect, Wallet, isWalletInfoInjected, WalletInfoRemote } from '@ton
 import { BN } from 'bn.js'
 import { fromNano, TonClient, beginCell, toNano, Address, JettonMaster, ContractProvider, Contract } from 'ton';
 // import { tonweb } from 'tonweb'
+import { friendlifyUserAddress, isMobile, openLink, addReturnStrategy, randomAddress } from '../utils';
+
+
+
 function bufferToBigInt(buffer: any, start = 0, end = buffer.length) {
   const bufferAsHexString = buffer.slice(start, end).toString("hex");
   return BigInt(`0x${bufferAsHexString}`);
 }
+
 const client = new TonClient({
   endpoint: 'https://testnet.toncenter.com/api/v2/jsonRPC',
   apiKey: "49d23d98ab44004b72a7be071d615ea069bde3fbdb395a958d4dfcb4e5475f54",
 });
-import { friendlifyUserAddress, isMobile, openLink, addReturnStrategy, randomAddress } from '../utils';
+
 
 const dappMetadata = { manifestUrl: 'https://api.tonft.app/apiv1/getConfig' };
 class Minter implements Contract {
@@ -160,6 +165,7 @@ export const useWallet = create<AuthStore>((set, get) => {
           const body = beginCell()
             .storeUint(0xf8a7ea5, 32)
             .storeUint(0, 64)
+            // @ts-ignore
             .storeCoins(new BN(Number(amount) * (1000000) + ''))
             .storeAddress(juserwalletEvaaMasterSC)
             .storeAddress(null) //responce add?

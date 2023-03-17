@@ -7,7 +7,7 @@ import { BoldRobotoText, RegularRobotoText } from "../Texts/MainTexts";
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import { AmountInDollars } from "./SupplyModal";
 import { Token, usePrices, TokenMap } from "../../store/prices";
-import { useBalance } from '../../store/balances';
+import { Supply, useBalance } from '../../store/balances';
 
 import { useWallet } from '../../store/wallet';
 
@@ -102,23 +102,27 @@ export const CloseButton = styled(XMarkIcon)`
 
 interface SuppluModalProps {
     close: () => void;
+    supply?: Supply;
 }
 
 interface FormData {
     price: string;
 }
 
-export const WithdrawModal = ({ close }: SuppluModalProps) => {
+export const WithdrawModal = ({ close, supply }: SuppluModalProps) => {
     const { maxWithdraw } = useBalance();
+
     const { t, i18n } = useTranslation();
     const { register, handleSubmit, watch, formState: { errors, } } = useForm<FormData>();
     const { formatToUsd } = usePrices();
+    
+    const currentToken = supply?.token || Token.TON;
+    const { tokenId, ticker } = TokenMap[currentToken];
 
     const { sendTransaction } = useWallet();
 
     const tokenAmount = watch("price")
     const click = () => {
-        const tokenId = 'usdt' // 'usdt'
         const action = 'withdraw'
         // @ts-ignore
         const reciver = window.mastersc
@@ -128,18 +132,18 @@ export const WithdrawModal = ({ close }: SuppluModalProps) => {
     return (
         <Dialog.Panel as={DialogStyled}>
             <CloseButton onClick={close} />
-            <Title>Withdraw TON</Title>
+            <Title>Withdraw {ticker}</Title>
             <HelpWrapper>
                 <Subtitle>Amount</Subtitle>
                 <MyStyledInput maxLength={7}  {...register('price', { required: true, pattern: /^(0|[1-9]\d*)(\.\d+)?$/ })} placeholder="Enter amount" />
-                {watch("price") && <AmountInDollars>{formatToUsd(watch("price"), Token.TON)}</AmountInDollars>}
+                {watch("price") && <AmountInDollars>{formatToUsd(watch("price"), currentToken)}</AmountInDollars>}
             </HelpWrapper>
             <HelpWrapper>
                 <Subtitle>Transaction Overview</Subtitle>
                 <InfoWrapper>
                     <InfoTextWrapper>
                         <InfoText>MAX</InfoText>
-                        <InfoText>{maxWithdraw}</InfoText>
+                        <InfoText>{maxWithdraw[currentToken]} {ticker}</InfoText>
                     </InfoTextWrapper>
                     {/* <InfoTextWrapper>
                             <InfoText>Supply APY</InfoText>
