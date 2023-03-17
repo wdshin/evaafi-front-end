@@ -19,7 +19,7 @@ const client = new TonClient({
 });
 
 
-const dappMetadata = { manifestUrl: 'https://api.tonft.app/apiv1/getConfig' };
+const dappMetadata = { manifestUrl: 'https://raw.githubusercontent.com/evaafi/front-end/dev/getConfig.json' };
 class Minter implements Contract {
   constructor(readonly address: Address) { }
   async getWalletAddress(provider: ContractProvider, address: Address) {
