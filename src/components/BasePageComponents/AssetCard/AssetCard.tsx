@@ -77,7 +77,7 @@ export const MyBorrowsAssetCard = ({ onClick, token, balance, apy, accrued} : As
                 <AssetCardLogo src={TokenMap[token].icon}/>
                 <AssetCardTextSimple>{TokenMap[token].ticker}</AssetCardTextSimple>
             </AssetWrapper>
-            <DoubleTextWrapper right={45.5}>
+            <DoubleTextWrapper right={42.5}>
                 <DoubleTextUpper>{balance} {TokenMap[token].ticker}</DoubleTextUpper>
                 <DoubleTextLower>{formatToUsd(balance, token)}</DoubleTextLower>
             </DoubleTextWrapper>

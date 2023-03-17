@@ -14,12 +14,13 @@ interface AuthStore {
   wallet: Wallet | null,
 
   logout: () => void;
+  callIfLoged: <T>(callback: (...args: T[]) => void) => ((...args: T[]) => void) ;
   login: () => void;
 
   resetUniversalLink: () => void;
 }
 
-export const useWallet = create<AuthStore>((set) => {
+export const useWallet = create<AuthStore>((set, get) => {
   const connector = new TonConnect(dappMetadata);
   connector.onStatusChange((wallet => {
     const userAddress = friendlifyUserAddress(wallet?.account.address);
@@ -42,6 +43,17 @@ export const useWallet = create<AuthStore>((set) => {
     logout: () => {
       connector.disconnect();
     },
+
+    callIfLoged: <T>(callback: (...args: T[]) => void) => (
+      (...args: T[]) => {
+        if ( get().userAddress ){
+          callback(...args);
+        } else {
+          get().login();
+        }
+      }
+    ),
+
     login: async () => {
       const walletsList = await connector.getWallets();
       const embeddedWallet = walletsList.filter(isWalletInfoInjected).find((wallet) => wallet.embedded);
