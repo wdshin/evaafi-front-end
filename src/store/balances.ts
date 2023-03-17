@@ -98,6 +98,7 @@ interface BalanceStore {
     userAddress?: Address;
     apy_usdt_borrow: number;
     apy_ton_supply: number;
+    forceUpdateData: () => void;
 }
 
 export const useBalance = create<BalanceStore>((set, get) => {
@@ -397,23 +398,20 @@ export const useBalance = create<BalanceStore>((set, get) => {
         argsUserBalanceas.writeCell(asdf);
         // let argsUpdateRates = new TupleBuilder();
 
-        let aggregatedbalances = 0;
-
-        // } catch (e) {
-        //     console.log('error with getAggregatedBalances', e)
-        // }
-        const getAggregatedBalances = await toncenter.runMethod(
-            userContractAddress_test,
-            'getAggregatedBalances',
-            argsUserBalanceas.build(),
-        );
-        const aggregatedBalance1 = getAggregatedBalances.stack.readNumber();// agregatedbalances
-        const aggregatedBalance2 = getAggregatedBalances.stack.readNumber();// agregatedbalances
-        console.log(aggregatedBalance1, aggregatedBalance2);
-
-
-
-
+        let aggregatedBalance1 = 0;
+        let aggregatedBalance2 = 0;
+        try {
+            const getAggregatedBalances = await toncenter.runMethod(
+                userContractAddress_test,
+                'getAggregatedBalances',
+                argsUserBalanceas.build(),
+            );
+            aggregatedBalance1 = getAggregatedBalances.stack.readNumber();// agregatedbalances 
+            aggregatedBalance2 = getAggregatedBalances.stack.readNumber();// agregatedbalances   
+            console.log(aggregatedBalance1, aggregatedBalance2);
+        } catch (e) {
+            console.log('error with getAggregatedBalances', e)
+        }
 
         // console.log(aggregatedBalance1,aggregatedBalance2)
         // console.log(getAggregatedBalances.stack.readNumber())
@@ -537,5 +535,6 @@ export const useBalance = create<BalanceStore>((set, get) => {
         apy_ton_supply: 0,
         tonBalance: '0',
         usdtBalance: '0',
+        forceUpdateData: updateData
     }
 });

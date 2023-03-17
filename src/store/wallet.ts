@@ -85,6 +85,7 @@ export const useWallet = create<AuthStore>((set, get) => {
     console.log('userAddress', wallet?.account.address)
 
     useBalance.setState({ usdtBalance: String(usdtBalance), tonBalance, userAddress: Address.parseRaw(wallet?.account.address as string) });
+    useBalance.getState().forceUpdateData();
 
   }), console.error);
 
