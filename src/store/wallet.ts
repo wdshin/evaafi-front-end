@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { TonConnect, Wallet, isWalletInfoInjected, WalletInfoRemote } from '@tonconnect/sdk';
 import { BN } from 'bn.js'
-import { TonClient, beginCell, toNano, Address, JettonMaster, ContractProvider, Contract } from 'ton';
+import { fromNano, TonClient, beginCell, toNano, Address, JettonMaster, ContractProvider, Contract } from 'ton';
 // import { tonweb } from 'tonweb'
 function bufferToBigInt(buffer: any, start = 0, end = buffer.length) {
   const bufferAsHexString = buffer.slice(start, end).toString("hex");
@@ -24,6 +24,12 @@ class Minter implements Contract {
     const { stack } = await provider.get("get_wallet_address", [param]);
     return stack.readAddress();
   }
+  async getBalance(provider: ContractProvider) {
+    const { stack } = await provider.get("get_wallet_data", []);
+    return stack;
+    // const stack = await provider.getState();
+    // return stack;
+  }
 }
 
 interface AuthStore {
@@ -35,7 +41,7 @@ interface AuthStore {
   wallet: Wallet | null,
 
   logout: () => void;
-  callIfLoged: <T>(callback: (...args: T[]) => void) => ((...args: T[]) => void) ;
+  callIfLoged: <T>(callback: (...args: T[]) => void) => ((...args: T[]) => void);
   login: () => void;
   sendTransaction: (address: string, amount: string, tokenId: string, action: string) => void;
 
@@ -44,10 +50,25 @@ interface AuthStore {
 
 export const useWallet = create<AuthStore>((set, get) => {
   const connector = new TonConnect(dappMetadata);
-  connector.onStatusChange((wallet => {
+  connector.onStatusChange((async (wallet) => {
     const userAddress = friendlifyUserAddress(wallet?.account.address);
+    const tonBalance = fromNano(await client.getBalance(Address.parse(connector?.wallet?.account.address as string)))
+    const jettonWalletAddressMain = 'EQDLqyBI-LPJZy-s2zEZFQMyF9AU-0DxDDSXc2fA-YXCJIIq' // todo calculate jeton wallet 
+    const contract = new Minter(Address.parse(jettonWalletAddressMain));
+    const juserwalletEvaaMasterSC = await client.open(contract).getWalletAddress(Address.parseRaw(wallet?.account.address as string))
+    // const contract1 = new Minter(juserwalletEvaaMasterSC );
+    // // console.log(Address.parseRaw(wallet?.account.address as string).toString())
+    console.log(juserwalletEvaaMasterSC.toString()
+    )
+    const contract1 = new Minter(Address.parseFriendly(juserwalletEvaaMasterSC.toString()).address);
+    const juserwalletEvaaMasterSC1 = await client.open(contract1).getBalance()
+    console.log('-----------------------')
+    console.log()
+    // console.log(Number(BigInt(juserwalletEvaaMasterSC).toString()) / 1000000)
+    console.log('-----------------------')
+    const usdtBalance = juserwalletEvaaMasterSC1.readNumber() / 1000000
 
-    set(() => ({ wallet, userAddress, universalLink: '' }));
+    set(() => ({ wallet, userAddress, tonBalance, usdtBalance, universalLink: '' }));
   }), console.error);
 
   connector.restoreConnection().then(() => {
@@ -59,7 +80,6 @@ export const useWallet = create<AuthStore>((set, get) => {
     universalLink: '',
     userAddress: friendlifyUserAddress(connector?.wallet?.account.address),
     connector,
-
     wallet: connector.wallet,
 
     logout: () => {
@@ -68,7 +88,7 @@ export const useWallet = create<AuthStore>((set, get) => {
 
     callIfLoged: <T>(callback: (...args: T[]) => void) => (
       (...args: T[]) => {
-        if ( get().userAddress ){
+        if (get().userAddress) {
           callback(...args);
         } else {
           get().login();
