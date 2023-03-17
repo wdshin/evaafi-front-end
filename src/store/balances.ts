@@ -92,6 +92,7 @@ interface BalanceStore {
     userAddress?: Address;
     apy_usdt_borrow: number;
     apy_ton_supply: number;
+    forceUpdateData: () => void;
 }
 
 export const useBalance = create<BalanceStore>((set, get) => {
@@ -529,5 +530,6 @@ export const useBalance = create<BalanceStore>((set, get) => {
         apy_ton_supply: 0,
         tonBalance: '0',
         usdtBalance: '0',
+        forceUpdateData: updateData
     }
 });
