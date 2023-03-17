@@ -6,6 +6,7 @@ import { fromNano, TonClient, beginCell, toNano, Address, JettonMaster, Contract
 import { friendlifyUserAddress, isMobile, openLink, addReturnStrategy, randomAddress } from '../utils';
 import { useBalance } from './balances';
 
+const jettonWalletAddressMain = 'EQDLqyBI-LPJZy-s2zEZFQMyF9AU-0DxDDSXc2fA-YXCJIIq' // todo calculate jeton wallet 
 
 function bufferToBigInt(buffer: any, start = 0, end = buffer.length) {
   const bufferAsHexString = buffer.slice(start, end).toString("hex");
@@ -60,7 +61,6 @@ export const useWallet = create<AuthStore>((set, get) => {
   connector.onStatusChange((async (wallet) => {
     const userAddress = friendlifyUserAddress(wallet?.account.address);
     const tonBalance = fromNano(await client.getBalance(Address.parse(connector?.wallet?.account.address as string)))
-    const jettonWalletAddressMain = 'EQDLqyBI-LPJZy-s2zEZFQMyF9AU-0DxDDSXc2fA-YXCJIIq' // todo calculate jeton wallet 
     const contract = new Minter(Address.parse(jettonWalletAddressMain));
     const juserwalletEvaaMasterSC = await client.open(contract).getWalletAddress(Address.parseRaw(wallet?.account.address as string))
     const contract1 = new Minter(Address.parseFriendly(juserwalletEvaaMasterSC.toString()).address);
@@ -76,6 +76,9 @@ export const useWallet = create<AuthStore>((set, get) => {
 
     set(() => ({ wallet, userAddress, universalLink: '' }));
     useBalance.setState({ usdtBalance: String(usdtBalance), tonBalance });
+
+    //@ts-ignore
+    window.userAddress = Address.parseRaw(wallet?.account.address as string);
 
   }), console.error);
 
@@ -162,7 +165,6 @@ export const useWallet = create<AuthStore>((set, get) => {
         }
       } else if (tokenId === 'usdt') {
         if (action === 'supply' || action === 'repay') {
-          const jettonWalletAddressMain = 'EQDLqyBI-LPJZy-s2zEZFQMyF9AU-0DxDDSXc2fA-YXCJIIq' // todo calculate jeton wallet 
           const contract = new Minter(Address.parse(jettonWalletAddressMain));
           const juserwalletEvaaMasterSC = await client.open(contract).getWalletAddress(Address.parseFriendly(address).address)
           const body = beginCell()

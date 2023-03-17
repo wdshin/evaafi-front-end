@@ -3,6 +3,7 @@ import { Token } from './prices';
 import { Dictionary, beginCell, Builder, Slice, contractAddress, Address, Cell, TonClient, TupleBuilder } from 'ton';
 import { randomAddress } from '../utils'
 // import { Integer } from 'io-ts';
+import { BN } from 'bn.js'
 
 export const toncenter = new TonClient({
     endpoint: 'https://testnet.toncenter.com/api/v2/jsonRPC',
@@ -10,8 +11,8 @@ export const toncenter = new TonClient({
 });
 
 const userSCData =
-    { "hex": "b5ee9c72c1023d010004c200000d00120017001d00220027002e003300380046004c009f00a600ab00b000b500ba00c700d800dd00e200e7010201150189018e01b401b90237023c02bb02be02c302c802cd02de02ef02f402f9030d031e032f0334034f03540378037d039a03a703ac03bc03c103c603e003e803ed04120417043c04bb04c20114ff00f4a413f4bcf2c80b010201620d0202012004030007bcd833940201200c0502012007060009b5c59e06300201480b080201200a090018aafc547210f033fe2030f0330008a994f03400a1af46f8103610904183fa4337d29936c881471ca981c183fa0737d09878122f82191178053a6465816503e5ffe4e8017819907f101864652064e82a1001c183fa0b28894183fa3e37d2b609017409af81c00009b97e7f03080202ca310e020120200f0201201310020148121100154c80101ca3f028307f4438001d5018307f40e6fa193d70a3fe030708020120191402012018150201201716003132200cc072c7d4010072cfd60072ffc040728fc040728ff260002134ffc04074cfc04074cfc04074cfc04c6000e347020f0206c21208307f4866fa5908e5c01d23f013153158307f40e6fa13053278307f40e6fa13001f0245f0403f021109a5f0a24c1008e103103a312f02901a87a58f005a90413a08e193323c2009f5003f02958a87a58f005a90414a003925f04e202e251218307f47c6fa5e85f036c2280201201b1a00475f0206c2103fa443150038307f40e6fa130d23f013120c2ff946c12f029e031a3f029a380201201e1c01f51c083c081b084820c1fd219be9642399c0748fc04c54c560c1fd039be84c14c9e0c1fd039be84c007c0917c100fc0857c20c887f880c09704023845b0840e8c4bc0a406a1e963c016a4104e823880d0930802385413c0a406a162a1e963c016a412049c42a41052800e497c17880b8944860c1fd1f1be97a17c0e01d00066c22a101f71c083c081b084820c1fd219be964239980748fc04c54c560c1fd039be84c14c9e0c1fd039be84c007c0917c100fc08441e17c20c89704023849b08540cea1e9400fc0144aa4128fc0a452823880d09308023855410aa006a1e963c016a412049c42a413c0a44e800a497c17880f8944c60c1fd1f1be97a17c0cccc601f0002b90201202a2102012025220201482423001d0830bfe4cc7c0ab81b04a8fc0ae8e0001d0830bfe4cc7c0a781b04a8fc0a68e0020120292602012028270023208c03782dace9d900002a086829406a4120001d208c03782dace9d900002a006a4120001d501a882300de0b6b3a7640000a90480201202c2b0031d699f8080e99f8080e99f8080e99fe99fe98f8080e99f8098c0201202e2d00435c8500701cb3f500501cb3f500301cb3f0101ca3f0101ca3f0101cb1f0101cb3fc98020120302f00353e9034c1f50c3434c3f4c3f4c3f4cff4cff4cff4cff4cff4cfcc2000153b51343e903e903d010c200201203332001bf321400f3c58073c5bd00327b55202012037340201203635002f65c60043232c1540173c59400fe8084f2dac4b332407ec02000b6be0a3e910c20201203938004564830002496dc78083000644c38082ac014883c01482a006a4e00300064806a244c78a0201483b3a00450830002496dc78083000644c38082ac014883c00482a006a4e00300064806a244c78a001f71b088831c02456f8007434c0cc1c6c252103fcbc37bc0800f4c7c04074cfc048b00ca3900cbc0d94dcfc0e551c843c0b1401283c0b550d89bc0e9c14c0b040278c49f04064d41ca8650c0068c5b8a54c141ca8407890cc1c013c0dc8d660103c03563c07f80c0d083000a5cc00b50c04bc07f81b0c48300f4c3001e03c000a30840ff2f015b3698b" }
-export const masterContractAddress = Address.parse('EQAue0Nf7bZpKZxqsfM1B62g7WC_3l2kHsjKtsWdOfQ5XWQh');
+    { "hex": "b5ee9c72c10246010005a200000d00120017001d0022002700330038003d004b005100a500ac00b100b600bb00c800d900de00f601010106010b011001150138013d015c016f0174017901ee01f3021a0221022602a1032003240329032e0333033803540365036a037b038f039403a503b603bb03c003db03ff0404042104260436044a044f0454046e0476047b04a004a504ca054905a20114ff00f4a413f4bcf2c80b010201620d0202012004030007bcd833940201200c0502012007060013b5c59e04226be07e06700201480b080201200a090018aafc547210f035fe2030f0350008a994f03600a3af46f81089af81904183fa4337d29936c881471ca981c183fa0737d0987812af8219117805ba6465816503e5ffe4e801781a907f101864652064e82a1001c183fa0b28894183fa3e37d2b609017409af81c00009b97e7f03280202c9150e0201ce120f02014811100015320040728fc0a0c1fd10e0001d0060c1fd039be864f5c28ff80c1c200201581413002b34ffc04074cfc04074cfc04074cfc0407d013d010c20001134ffc040748fc04c600201203c1602012027170201201d180201201a1900416b2200f8072c7d4018072cfd40133c5960072ffc04072cfc040728fc040728ff260201481c1b003932200cc072c7d4014072cfd400f3c5804072ffc040728fc040728ff260002134ffc04074cfc04074cfc04074cfc04c60020120231e020120201f00e547020f021135f03208307f4866fa5908e5c01d23f013153158307f40e6fa13053278307f40e6fa13001f0255f0403f022109a5f0a24c1008e103103a312f02a01a87a58f004a90413a08e193323c2009f5003f02a58a87a58f004a90414a003925f04e202e251218307f47c6fa5e85f036c228020120222100493c0844d7c0c0fe910c5400e0c1fd039be84c348fc04c4830bfe51b04bc0ab80c68fc0aa8e000093c0cf08020020158252400f11c14c060c1fd219be9642399c0748fc04c54c560c1fd039be84c14c9e0c1fd039be84c007c0957c100fc0897c20c887f880c09704023845b0840e8c4bc0a806a1e963c012a4104a823880d0930802385413c0a806a162a1e963c012a412049c42a4104e800a497c17880789444e0c1fd1f1be97a16db0ca86001f71c083c0844d7c0c820c1fd219be964239980748fc04c54c560c1fd039be84c14c9e0c1fd039be84c007c0957c100fc08841e17c20c89704023849b08540cea1e9400fc0104aa4128fc0a852823880d09308023855410aa006a1e963c012a412049c42a413c0a84e800a497c17880f8944c60c1fd1f1be97a17c0cce026000431b9020120332802012030290201202d2a0201202c2b00331c14c0b040270c4870406480a864cc0068f8a50c00a840788060001d0830bfe4cc7c0af81b04a8fc0b28e00201202f2e001d0830bfe4cc7c0ab81b04a8fc0aa8e00023208c03782dace9d900002a086829406a41200201583231001d208c03782dace9d900002a006a4120001d006a208c03782dace9d900002a412002012037340201483635003134cfc04074cfc04074cfc04074cff4cff4c7c04074cfc04c600043321401c072cfd4014072cfd400c072cfc040728fc040728fc04072c7c04072cff260020120393800354fa40d307d430d0d30fd30fd30fd33fd33fd33fd33fd33fd33f3080201203b3a001b3b51343e903e903d013480004c60002332140133c59633c5bd0000407280327b5520020148403d0201203f3e002f69c60043232c1540173c59400fe8084f2dac4b332407ec02000bf7c147d2218402012042410045d106000492db8f0106000c8987010558029107802105400d49c006000c900d44898f14020148444300450830002496dc78083000644c38082ac014883c00482a006a4e00300064806a244c78a001f71b088831c02456f8007434c0cc1c6c252103fcbc37bc084134c7c04074cfc048b00fe5d7c0db04dc3c083808b01023850c0c4d00fc1094d07c11006804093c11449c3c083809bcb4aa08b00ca38b0cbc0e14d4fc11151c843c0b5401283c0b950d093c11413c0bc9440d14109c017c0e491660103c039540bc0838204500ae22c03d8e3a3631f0435365f044547430f02d26a14540f02e543656f0455133f0348e1914f02f103770260410395092f03e5443558040f00e587ff020e05f08e0303220c0029730d4305502f020e06c41c00730840ff2f06f347720" }
+export const masterContractAddress = Address.parse('EQDrlBKVYw4Vd8CU91s4reMIoEMhxHuTXmUeN5JgegBZKsrv');
 export const oracleMasterSourceV1CodeCell = Cell.fromBoc(Buffer.from(userSCData.hex, 'hex'))[0];
 const masterContractCode = oracleMasterSourceV1CodeCell;
 const RATE_DECIMAL = Math.pow(10, 18);
@@ -20,14 +21,18 @@ const BALANCE_DECIMAL = Math.pow(10, 6);
 const SEC_DECIMAL = Math.pow(10, 12);
 const COUNT_DECIMAL = Math.pow(10, 8);
 
+console.log(new BN(0)
+)
 const userContractAddress_test = contractAddress(
     0,
     {
         code: masterContractCode,
         data: beginCell()
-            .storeAddress(randomAddress('master'))
-            .storeAddress(randomAddress('user')) // u need to put user wallet address here to calculate userContractAddress
+            .storeAddress(masterContractAddress)
+            //@ts-ignore
+            .storeAddress(window.userAddress) // u need to put user wallet address here to calculate userContractAddress
             .storeDict()
+            .storeInt(BigInt(0), 1)
             .endCell(),
     });
 
@@ -35,7 +40,9 @@ const userContractAddress_test = contractAddress(
 window.usersc = userContractAddress_test
 // @ts-ignore
 window.mastersc = masterContractAddress
-
+console.log(888888888)
+console.log(userContractAddress_test)
+console.log(888888888)
 console.log(userContractAddress_test.toString());
 
 function bufferToBigInt(buffer: any, start = 0, end = buffer.length) {
@@ -218,25 +225,40 @@ export const useBalance = create<BalanceStore>((set, get) => {
         argsUser.writeNumber(data.s_rate) //s_rate todo change on actual srate
         argsUser.writeNumber(data.b_rate)//b_rate todo
 
-        let accountAssetBalanceUsdt = await toncenter.runMethod(
-            userContractAddress_test,
-            'getAccountAssetBalance',
-            argsUser.build(),
-        );
+        let assetBalanceUsdt = BigInt(0);
 
-        const assetBalanceUsdt = BigInt(accountAssetBalanceUsdt.stack.readNumber());
+        try {
+            const accountAssetBalanceUsdt = await toncenter.runMethod(
+                userContractAddress_test,
+                'getAccountAssetBalance',
+                argsUser.build(),
+            );
+    
+            assetBalanceUsdt = BigInt(accountAssetBalanceUsdt.stack.readNumber());
+        } catch (e) {
+            console.log('error with get getAccountAssetBalance', e)
+        }
+
 
         let argsUser2 = new TupleBuilder();
         argsUser2.writeAddress(randomAddress('ton'));
         argsUser2.writeNumber(data.s_rate) //s_rate todo change on actual srate
         argsUser2.writeNumber(data.b_rate)//b_rate todo
 
-        let accountAssetBalanceTon = await toncenter.runMethod(
-            userContractAddress_test,
-            'getAccountAssetBalance',
-            argsUser2.build(),
-        );
-        const assetBalanceTon = BigInt(accountAssetBalanceTon.stack.readNumber());
+        let assetBalanceTon = BigInt(0);
+
+        try {
+            const accountAssetBalanceTon = await toncenter.runMethod(
+                userContractAddress_test,
+                'getAccountAssetBalance',
+                argsUser2.build(),
+            );
+            
+            assetBalanceTon = BigInt(accountAssetBalanceTon.stack.readNumber());
+        } catch (e) {
+            console.log('error with getAccountAssetBalance', e)
+        }
+
 
         console.log(assetBalanceUsdt + " usdt") //asset balance
         console.log(assetBalanceTon + " ton") //asset balance
@@ -259,27 +281,29 @@ export const useBalance = create<BalanceStore>((set, get) => {
             }
         }).endCell();
         argsUserBalances.writeCell(asdf);
-        let stackUserBalances = await toncenter.runMethod(
-            userContractAddress_test,
-            'getAccountBalances',
-            argsUserBalances.build(),
-        );
+
+        // let stackUserBalances = await toncenter.runMethod(
+        //     userContractAddress_test,
+        //     'getAccountBalances',
+        //     argsUserBalances.build(),
+        // );
 
         // stackUserBalances.stack.readCell().beginParse(); // important 
         // console.log(BigInt(stackUserBalances.stack.readNumber())) //asset balance
-        const dictUserBalances = Dictionary.loadDirect(Dictionary.Keys.BigUint(256), {
-            serialize: (src: any, buidler: any) => {
-                buidler.storeSlice(src);
-            },
-            parse: (src: Slice) => {
-                const balance = BigInt(src.loadInt(65)); //s_rate_per_second 64bit
-                return { balance };
-            }
-            //@ts-ignore
-        }, stackUserBalances.stack.readCell().beginParse());
 
-        console.log(dictUserBalances.get(bufferToBigInt(randomAddress('usdt').hash))) //get balance in usd
-        const supplyBalanceData = dictUserBalances.get(bufferToBigInt(randomAddress('usdt').hash)).balance;
+        // const dictUserBalances = Dictionary.loadDirect(Dictionary.Keys.BigUint(256), {
+        //     serialize: (src: any, buidler: any) => {
+        //         buidler.storeSlice(src);
+        //     },
+        //     parse: (src: Slice) => {
+        //         const balance = BigInt(src.loadInt(65)); //s_rate_per_second 64bit
+        //         return { balance };
+        //     }
+        //     //@ts-ignore
+        // }, stackUserBalances.stack.readCell().beginParse());
+
+        // console.log(dictUserBalances.get(bufferToBigInt(randomAddress('usdt').hash))) //get balance in usd
+        // const supplyBalanceData = dictUserBalances.get(bufferToBigInt(randomAddress('usdt').hash)).balance;
 
 
         console.log('9---------AVL TO BORROW ------')
@@ -307,13 +331,19 @@ export const useBalance = create<BalanceStore>((set, get) => {
         }).endCell();
         argsUserAvl.writeCell(asdf_config);
         argsUserAvl.writeCell(asdf);
-        let stackUserAvlToBorr = await toncenter.runMethod(
-            userContractAddress_test,
-            'getAvailableToBorrow',
-            argsUserAvl.build(),
-        );
-        const availableToBorrowData = BigInt(stackUserAvlToBorr.stack.readNumber());
-        console.log(availableToBorrowData); // avaliable to borrow
+
+        let availableToBorrowData = BigInt(0);
+        try {
+            let stackUserAvlToBorr = await toncenter.runMethod(
+                userContractAddress_test,
+                'getAvailableToBorrow',
+                argsUserAvl.build(),
+            );
+
+            availableToBorrowData = BigInt(stackUserAvlToBorr.stack.readNumber());
+        } catch(e) {
+            console.log('error with getAvailableToBorrow', e)
+        }
 
         // let argsUpdateRates = new TupleBuilder();
 
@@ -323,11 +353,21 @@ export const useBalance = create<BalanceStore>((set, get) => {
         argsUserBalanceas.writeCell(asdf_config);
         argsUserBalanceas.writeCell(asdf);
         // let argsUpdateRates = new TupleBuilder();
-        let getAggregatedBalances = await toncenter.runMethod(
-            userContractAddress_test,
-            'getAggregatedBalances',
-            argsUserBalanceas.build(),
-        );
+
+        let aggregatedbalances = 0;
+        try {
+            const getAggregatedBalances = await toncenter.runMethod(
+                userContractAddress_test,
+                'getAggregatedBalances',
+                argsUserBalanceas.build(),
+            );
+
+            aggregatedbalances = getAggregatedBalances.stack.readNumber();
+        } catch(e) {
+            console.log('error with getAggregatedBalances', e)
+        }
+
+
         // const aggregatedBalance1 = getAggregatedBalances.stack.readNumber();// agregatedbalances 
         // const aggregatedBalance2 = getAggregatedBalances.stack.readNumber();// agregatedbalances 
         // console.log(aggregatedBalance1,aggregatedBalance2)
@@ -347,10 +387,10 @@ export const useBalance = create<BalanceStore>((set, get) => {
         // console.log(BigInt(getUpdateRates.stack.readNumber())) //asset balance
         // console.log(BigInt(getUpdateRates.stack.readNumber())) //asset balance
 
-        const supplyBalance = (getAggregatedBalances.stack.readNumber() / VALUE_DECIMAL).toString();
+        const supplyBalance = (aggregatedbalances / VALUE_DECIMAL).toString();
         set({ supplyBalance });
 
-        const borrowBalance = (getAggregatedBalances.stack.readNumber() / VALUE_DECIMAL).toString();
+        const borrowBalance = (aggregatedbalances / VALUE_DECIMAL).toString();
         set({ borrowBalance });
 
         const limitUsed = (Number(availableToBorrowData) / VALUE_DECIMAL);
@@ -374,7 +414,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
             apy: apy_ton_supply,
             earned: '13',
         };
-        
+
         const mySupplies = [newMySupply];
         set({ mySupplies });
 
@@ -423,26 +463,26 @@ export const useBalance = create<BalanceStore>((set, get) => {
             liquidity: '31',
             apy: apy_usdt_borrow,
         };
-        
-        const borrows = [newBorrow, newBorrow2];
-        set({borrows})
 
-        const maxWithdrawUsdt= Math.abs(Number(assetBalanceUsdt) / BALANCE_DECIMAL);
+        const borrows = [newBorrow, newBorrow2];
+        set({ borrows })
+
+        const maxWithdrawUsdt = Math.abs(Number(assetBalanceUsdt) / BALANCE_DECIMAL);
         const maxWithdrawTon = Math.abs(Number(assetBalanceTon) / COUNT_DECIMAL);
 
         set({ maxWithdraw: { [Token.TON]: maxWithdrawTon, [Token.USDT]: maxWithdrawUsdt } });
 
         console.log(maxWithdrawTon, maxWithdrawUsdt);
-        
+
 
         const maxBorrow = Math.abs(Number(availableToBorrowData) / Number(data.price));
         set({ maxBorrow });
 
         const maxRepayUsdt = Math.abs(Number(assetBalanceUsdt) / BALANCE_DECIMAL); //+t need to add
-        const maxRepayTon= Math.abs(Number(assetBalanceTon) / COUNT_DECIMAL); //+t need to add
-        set({ maxRepay: { [Token.TON]: maxRepayTon, [Token.USDT]: maxRepayUsdt  } });
+        const maxRepayTon = Math.abs(Number(assetBalanceTon) / COUNT_DECIMAL); //+t need to add
+        set({ maxRepay: { [Token.TON]: maxRepayTon, [Token.USDT]: maxRepayUsdt } });
         console.log(maxRepayTon, maxRepayUsdt);
-        
+
 
         const maxSupply = Number(data.balance) / BALANCE_DECIMAL;
         set({ maxSupply })
