@@ -2,8 +2,7 @@ import { create } from 'zustand';
 import { Token } from './prices';
 import { Dictionary, beginCell, Builder, Slice, contractAddress, Address, Cell, TonClient, fromNano, TupleBuilder } from 'ton';
 import { randomAddress } from '../utils'
-import { Integer } from 'io-ts';
-import { SignatureHelpTriggerReason } from 'typescript';
+// import { Integer } from 'io-ts';
 
 export const toncenter = new TonClient({
     endpoint: 'https://testnet.toncenter.com/api/v2/jsonRPC',
@@ -18,8 +17,8 @@ const masterContractCode = oracleMasterSourceV1CodeCell;
 const RATE_DECIMAL = Math.pow(10, 18);
 const VALUE_DECIMAL = Math.pow(10, 9);
 const BALANCE_DECIMAL = Math.pow(10, 6);
-const SEC_DECIMAL = Math.pow(10, 12)
-console.log(RATE_DECIMAL, VALUE_DECIMAL);
+const SEC_DECIMAL = Math.pow(10, 12);
+const COUNT_DECIMAL = Math.pow(10, 8);
 
 const userContractAddress_test = contractAddress(
     0,
@@ -356,24 +355,24 @@ export const useBalance = create<BalanceStore>((set) => {
         const borrowLimitPercent = Math.abs(limitUsed) / totalLimit;
         set({ borrowLimitPercent });
 
-        const apy_usdt_supply = ((Number(ratesPerSecondDataUsdt.s_rate_per_second) * 360 * 24 + 1) ^ 365 - 1) / VALUE_DECIMAL;
+        const apy_usdt_supply = parseFloat((((Number(ratesPerSecondDataUsdt.s_rate_per_second) * 360 * 24 + 1) ^ 365 - 1) / SEC_DECIMAL).toString()).toFixed(3);
         const apy_ton_supply = ((Number(ratesPerSecondDataTon.s_rate_per_second) * 360 * 24 + 1) ^ 365 - 1) / VALUE_DECIMAL;
         const apy_usdt_borrow_math = Number(ratesPerSecondDataUsdt.b_rate_per_second) / SEC_DECIMAL;
         const apy_usdt_borrow = ((apy_usdt_borrow_math * 360 * 24 + 1) ^ 365 - 1) / 10000;
 
 
-        const newSupply = {
+        const newMySupply = {
             id: 'fir12312321st',
             token: Token.TON,
-            balance: parseFloat((Number(assetBalanceTon) / VALUE_DECIMAL).toString()).toFixed(2),
+            balance: parseFloat((Number(assetBalanceTon) / COUNT_DECIMAL).toString()).toFixed(2),
             apy: apy_ton_supply,
             earned: '13',
         };
 
-        const mySupplies = [newSupply];
+        const mySupplies = [newMySupply];
         set({ mySupplies });
 
-        const newBorrow = {
+        const newMyBorrow = {
             id: 'firs12t',
             token: Token.USDT,
             balance: Math.abs(Number(parseFloat((Number(assetBalanceUsdt) / BALANCE_DECIMAL).toString()).toFixed(2))).toString(),
@@ -381,9 +380,27 @@ export const useBalance = create<BalanceStore>((set) => {
             accrued: '22',
         };
 
-
-        const myBorrows = [newBorrow];
+        const myBorrows = [newMyBorrow];
         set({ myBorrows });
+
+        const newSupply = {
+            id: 'dkdskasdk',
+            token: Token.USDT,
+            balance: '30',
+            apy: Number(apy_usdt_supply),
+        };
+        const supplies = [newSupply];
+        set({ supplies });
+
+        const newBorrow = {
+            id: '1211ccc1',
+            token: Token.USDT,
+            liquidity: '31',
+            apy: apy_usdt_borrow,
+        };
+        const borrows = [newBorrow];
+        set({borrows})
+
 
         const maxWithdraw = Math.abs(Number(assetBalanceTon)) / VALUE_DECIMAL;
         set({ maxWithdraw });

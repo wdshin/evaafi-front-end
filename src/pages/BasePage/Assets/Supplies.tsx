@@ -19,7 +19,8 @@ const Supplies = ({ tab }: SuppliesProps) => {
     const { mySupplies, supplies } = useBalance();
     const [supplyModalIsOpen, setSupplyModelIsOpen] = useState(false);
     const [withdrawModalIsOpen, setWithdrawModalIsOpen] = useState(false);
-    const currentSupplies = tab === '1' ? mySupplies : [];
+    const currentMySupplies = tab === '1' ? mySupplies : [];
+    const currentSupplies = tab === '1' ? supplies : [];
     
 
 
@@ -35,26 +36,26 @@ const Supplies = ({ tab }: SuppliesProps) => {
 
                 <AssetsSubWrapper>
                     <AssetsTitle>Your Supplies</AssetsTitle>
-                    {currentSupplies.length > 0 &&
+                    {currentMySupplies.length > 0 &&
                         <MySuppliesDescriptionBar />
                     }
-                    {!currentSupplies.length &&
-                        <AssetsSubtitle>Nothing supplied  yet</AssetsSubtitle>
+                    {!currentMySupplies.length &&
+                        <AssetsSubtitle>Nothing supplied yet</AssetsSubtitle>
                     }
-                    {currentSupplies.map(mySupply => (
+                    {currentMySupplies.map(mySupply => (
                         <MySuppliesAssetCard {...mySupply} key={mySupply.id} onClick={callIfLogin(() => setWithdrawModalIsOpen(true))} />
                     ))}
 
                 </AssetsSubWrapper>
                 <AssetsSubWrapper>
                     <AssetsTitle>Supply</AssetsTitle>
-                    {supplies.length > 0 &&
+                    {currentSupplies.length > 0 &&
                         <SupplyDescriptionBar />
                     }
-                    {!supplies.length && 
-                        <AssetsSubtitle>Loading market data</AssetsSubtitle>
+                    {!currentSupplies.length && 
+                        <AssetsSubtitle>No supplies yet</AssetsSubtitle>
                     }
-                    {supplies.map(supply => (
+                    {currentSupplies.map(supply => (
                         <SupplyAssetCard {...supply} key={supply.id} onClick={callIfLogin(() => setSupplyModelIsOpen(true))} />
                     ))}
                 </AssetsSubWrapper>

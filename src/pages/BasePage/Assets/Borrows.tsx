@@ -19,7 +19,8 @@ const Borrows = ({ tab }: BorrowsProps) => {
     const { myBorrows, borrows } = useBalance();
     const [BorrowModalIsOpen, setBorrowModelIsOpen] = useState(false);
     const [RepayModalIsOpen, setRepayModalIsOpen] = useState(false);
-    const currentBorrows = tab === '1' ? myBorrows : [];
+    const currentMyBorrows = tab === '1' ? myBorrows : [];
+    const currentBorrows = tab === '1' ? borrows : [];
 
     return (
         <AssetsWrapper>
@@ -31,25 +32,25 @@ const Borrows = ({ tab }: BorrowsProps) => {
             </Dialog>
             <AssetsSubWrapper>
                 <AssetsTitle>Your Borrows</AssetsTitle>
-                {currentBorrows.length > 0 &&
+                {currentMyBorrows.length > 0 &&
                     <MyBorrowsDescriptionBar />
                 }
-                {!currentBorrows.length &&
+                {!currentMyBorrows.length &&
                     <AssetsSubtitle>Nothing borrowed yet</AssetsSubtitle>
                 }
-                {currentBorrows.map(myBorrow => (
+                {currentMyBorrows.map(myBorrow => (
                     <MyBorrowsAssetCard {...myBorrow} key={myBorrow.id} onClick={callIfLogin(() => setRepayModalIsOpen(true))} />
                 ))}
             </AssetsSubWrapper>
             <AssetsSubWrapper>
                 <AssetsTitle>Borrow</AssetsTitle>
-                {borrows.length > 0 &&
+                {currentBorrows.length > 0 &&
                     <BorrowDescriptionBar />
                 }
-                {!borrows.length &&
-                    <AssetsSubtitle>Loading market data</AssetsSubtitle>
+                {!currentBorrows.length &&
+                    <AssetsSubtitle>No borrows yet</AssetsSubtitle>
                 }
-                {borrows.map(borrow => (
+                {currentBorrows.map(borrow => (
                     <BorrowAssetCard {...borrow} key={borrow.id} onClick={callIfLogin(() => setBorrowModelIsOpen(true))} />
                 ))}
             </AssetsSubWrapper>
