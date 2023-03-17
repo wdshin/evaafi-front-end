@@ -7,8 +7,8 @@ import { BoldRobotoText, RegularRobotoText } from "../Texts/MainTexts";
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import { ArrowLongRightIcon } from '@heroicons/react/20/solid'
 import { AmountInDollars } from "./SupplyModal";
-import { usePrices, Token } from "../../store/prices";
-import { useBalance } from "../../store/balances";
+import { usePrices, Token, TokenMap } from "../../store/prices";
+import { MyBorrow, useBalance } from "../../store/balances";
 
 import { useWallet } from '../../store/wallet';
 
@@ -117,17 +117,21 @@ export const CloseButton = styled(XMarkIcon)`
 
 interface SuppluModalProps {
     close: () => void;
+    borrow?: MyBorrow;
 }
 
 interface FormData {
     price: string;
 }
 
-export const BorrowModal = ({ close }: SuppluModalProps) => {
+export const BorrowModal = ({ close, borrow }: SuppluModalProps) => {
     const { t, i18n } = useTranslation();
     const { register, handleSubmit, watch, formState: { errors, } } = useForm<FormData>();
     const { formatToUsd } = usePrices();
     const { maxBorrow } = useBalance();
+
+    const currentToken = borrow?.token || Token.TON;
+    const {ticker, tokenId} = TokenMap[currentToken];
 
     const { sendTransaction } = useWallet();
 
@@ -143,18 +147,18 @@ export const BorrowModal = ({ close }: SuppluModalProps) => {
     return (
         <Dialog.Panel as={DialogStyled}>
             <CloseButton onClick={close} />
-            <Title>Borrow USDT</Title>
+            <Title>Borrow {ticker}</Title>
             <HelpWrapper>
                 <Subtitle>Amount</Subtitle>
                 <MyStyledInput maxLength={7}  {...register('price', { required: true, pattern: /^(0|[1-9]\d*)(\.\d+)?$/ })} placeholder="Enter amount" />
-                {watch("price") && <AmountInDollars>{formatToUsd(watch("price"), Token.USDT)}</AmountInDollars>}
+                {watch("price") && <AmountInDollars>{formatToUsd(watch("price"), currentToken)}</AmountInDollars>}
             </HelpWrapper>
             <HelpWrapper>
                 <Subtitle>Transaction Overview</Subtitle>
                 <InfoWrapper>
                     <InfoTextWrapper>
                         <InfoText>MAX</InfoText>
-                        <InfoText>{maxBorrow} USDT</InfoText>
+                        <InfoText>{maxBorrow} {ticker}</InfoText>
                     </InfoTextWrapper>
                     <InfoTextWrapper>
                         <InfoText>Borrow Limit Used</InfoText>

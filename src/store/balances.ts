@@ -51,7 +51,7 @@ function hex2a(hexx: any) {
     return str;
 }
 
-interface MySupply {
+export interface MySupply {
     id: string;
     token: Token;
     balance: string;
@@ -59,7 +59,7 @@ interface MySupply {
     earned: string;
 }
 
-interface MyBorrow {
+export interface MyBorrow {
     id: string;
     token: Token;
     balance: string;
@@ -67,14 +67,14 @@ interface MyBorrow {
     accrued: string;
 }
 
-interface Supply {
+export interface Supply {
     id: string;
     token: Token;
     balance: string;
     apy: number;
 }
 
-interface Borrow {
+export interface Borrow {
     id: string;
     token: Token;
     liquidity: string;
@@ -87,10 +87,14 @@ interface BalanceStore {
     availableToBorrow: string;
     borrowLimitPercent: number;
     borrowLimitValue: number;
-    maxWithdraw: number;
+    maxWithdraw: {
+        [key in Token]?: number
+    };
     maxSupply: number;
     maxBorrow: number;
-    maxRepay: number;
+    maxRepay: {
+        [key in Token]?: number
+    };
     mySupplies: MySupply[];
     myBorrows: MyBorrow[];
     supplies: Supply[];
@@ -368,9 +372,10 @@ export const useBalance = create<BalanceStore>((set) => {
             apy: apy_ton_supply,
             earned: '13',
         };
-
+        
         const mySupplies = [newMySupply];
         set({ mySupplies });
+
 
         const newMyBorrow = {
             id: 'firs12t',
@@ -380,8 +385,17 @@ export const useBalance = create<BalanceStore>((set) => {
             accrued: '22',
         };
 
-        const myBorrows = [newMyBorrow];
+        const newMyBorrow2 = {
+            id: 'firs1212t',
+            token: Token.TON,
+            balance: Math.abs(Number(parseFloat((Number(assetBalanceTon) / COUNT_DECIMAL).toString()).toFixed(2))).toString(),
+            apy: apy_usdt_borrow,
+            accrued: '22',
+        };
+
+        const myBorrows = [newMyBorrow, newMyBorrow2];
         set({ myBorrows });
+
 
         const newSupply = {
             id: 'dkdskasdk',
@@ -389,8 +403,10 @@ export const useBalance = create<BalanceStore>((set) => {
             balance: '30',
             apy: Number(apy_usdt_supply),
         };
+
         const supplies = [newSupply];
         set({ supplies });
+
 
         const newBorrow = {
             id: '1211ccc1',
@@ -398,19 +414,33 @@ export const useBalance = create<BalanceStore>((set) => {
             liquidity: '31',
             apy: apy_usdt_borrow,
         };
-        const borrows = [newBorrow];
+
+        const newBorrow2 = {
+            id: '1211111ccc1',
+            token: Token.TON,
+            liquidity: '31',
+            apy: apy_usdt_borrow,
+        };
+        
+        const borrows = [newBorrow, newBorrow2];
         set({borrows})
 
+        const maxWithdrawUsdt= Math.abs(Number(assetBalanceUsdt) / BALANCE_DECIMAL);
+        const maxWithdrawTon = Math.abs(Number(assetBalanceTon) / COUNT_DECIMAL);
 
-        const maxWithdraw = Math.abs(Number(assetBalanceTon)) / VALUE_DECIMAL;
-        set({ maxWithdraw });
+        set({ maxWithdraw: { [Token.TON]: maxWithdrawTon, [Token.USDT]: maxWithdrawUsdt } });
 
+        console.log(maxWithdrawTon, maxWithdrawUsdt);
+        
 
-        const maxBorrow = Math.abs(Number(parseFloat((Number(availableToBorrowData) / Number(data.price)).toString()).toFixed(2)));
+        const maxBorrow = Math.abs(Number(availableToBorrowData) / Number(data.price));
         set({ maxBorrow });
 
-        const maxRepay = Math.abs(Number(parseFloat((Number(assetBalanceUsdt) / BALANCE_DECIMAL).toString()).toFixed(2))); //+t need to add
-        set({ maxRepay });
+        const maxRepayUsdt = Math.abs(Number(assetBalanceUsdt) / BALANCE_DECIMAL); //+t need to add
+        const maxRepayTon= Math.abs(Number(assetBalanceTon) / COUNT_DECIMAL); //+t need to add
+        set({ maxRepay: { [Token.TON]: maxRepayTon, [Token.USDT]: maxRepayUsdt  } });
+        console.log(maxRepayTon, maxRepayUsdt);
+        
 
         const maxSupply = Number(data.balance) / BALANCE_DECIMAL;
         set({ maxSupply })
@@ -426,35 +456,12 @@ export const useBalance = create<BalanceStore>((set) => {
         borrowLimitValue: 0,
         availableToBorrow: '0',
         maxSupply: 200,
-        maxWithdraw: 0,
+        maxWithdraw: {},
         maxBorrow: 0,
-        maxRepay: 0,
+        maxRepay: {},
         mySupplies: [],
         myBorrows: [],
-        supplies: [{
-            id: 'dkdskasdk',
-            token: Token.USDT,
-            balance: '30',
-            apy: 0.32,
-        }, {
-            id: 'dkdsk1234asdk',
-            token: Token.TON,
-            balance: '2',
-            apy: 0.32,
-        }],
-        borrows: [{
-            id: '1211ccc1',
-            token: Token.USDT,
-
-            liquidity: '31',
-            apy: 0.2,
-        },
-        {
-            id: '1211cc123c1',
-            token: Token.TON,
-
-            liquidity: '12',
-            apy: 0.4,
-        }],
+        supplies: [],
+        borrows: [],
     }
 });

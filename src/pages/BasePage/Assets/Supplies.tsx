@@ -5,7 +5,7 @@ import { MySuppliesDescriptionBar, SupplyDescriptionBar } from '../../../compone
 import { SupplyModal } from '../../../components/Modals/SupplyModal';
 import { AssetsSubWrapper, AssetsSubtitle, AssetsTitle, AssetsWrapper } from './AssetsStyles';
 import { WithdrawModal } from '../../../components/Modals/WIthdrawModal';
-import { useBalance } from '../../../store/balances';
+import { useBalance, MySupply, Supply } from '../../../store/balances';
 import { useWallet } from '../../../store/wallet';
 
 
@@ -17,8 +17,8 @@ export interface SuppliesProps {
 const Supplies = ({ tab }: SuppliesProps) => {
     const { callIfLoged: callIfLogin } = useWallet();
     const { mySupplies, supplies } = useBalance();
-    const [supplyModalIsOpen, setSupplyModelIsOpen] = useState(false);
-    const [withdrawModalIsOpen, setWithdrawModalIsOpen] = useState(false);
+    const [selectedMySupply, setSelectedMySupply] = useState<MySupply | undefined>();
+    const [selectedSupply, setSelectedSupply] = useState<Supply | undefined>();
     const currentMySupplies = tab === '1' ? mySupplies : [];
     const currentSupplies = tab === '1' ? supplies : [];
     
@@ -26,11 +26,11 @@ const Supplies = ({ tab }: SuppliesProps) => {
 
     return (
         <>
-            <Dialog className={`w-full h-full fixed bg-black bg-opacity-50 top-0 flex justify-center items-center`} open={supplyModalIsOpen} onClose={() => setSupplyModelIsOpen(false)}>
-                <SupplyModal close={() => setSupplyModelIsOpen(false)} />
+            <Dialog className={`w-full h-full fixed bg-black bg-opacity-50 top-0 flex justify-center items-center`} open={!!selectedMySupply} onClose={() => setSelectedMySupply(undefined)}>
+                <SupplyModal supply={selectedMySupply} close={() => setSelectedMySupply(undefined)} />
             </Dialog>
-            <Dialog className={`w-full h-full fixed bg-black bg-opacity-50 top-0 flex justify-center items-center`} open={withdrawModalIsOpen} onClose={() => setWithdrawModalIsOpen(false)}>
-                <WithdrawModal close={() => setWithdrawModalIsOpen(false)} />
+            <Dialog className={`w-full h-full fixed bg-black bg-opacity-50 top-0 flex justify-center items-center`} open={!!selectedSupply} onClose={() => setSelectedSupply(undefined)}>
+                <WithdrawModal supply={selectedSupply} close={() => setSelectedSupply(undefined)} />
             </Dialog>
             <AssetsWrapper>
 
@@ -43,7 +43,7 @@ const Supplies = ({ tab }: SuppliesProps) => {
                         <AssetsSubtitle>Nothing supplied yet</AssetsSubtitle>
                     }
                     {currentMySupplies.map(mySupply => (
-                        <MySuppliesAssetCard {...mySupply} key={mySupply.id} onClick={callIfLogin(() => setWithdrawModalIsOpen(true))} />
+                        <MySuppliesAssetCard {...mySupply} key={mySupply.id} onClick={callIfLogin(() => setSelectedMySupply(mySupply))} />
                     ))}
 
                 </AssetsSubWrapper>
@@ -56,7 +56,7 @@ const Supplies = ({ tab }: SuppliesProps) => {
                         <AssetsSubtitle>No supplies yet</AssetsSubtitle>
                     }
                     {currentSupplies.map(supply => (
-                        <SupplyAssetCard {...supply} key={supply.id} onClick={callIfLogin(() => setSupplyModelIsOpen(true))} />
+                        <SupplyAssetCard {...supply} key={supply.id} onClick={callIfLogin(() => setSelectedSupply(supply))} />
                     ))}
                 </AssetsSubWrapper>
             </AssetsWrapper>

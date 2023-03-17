@@ -5,8 +5,8 @@ import styled from "styled-components";
 import { BlueButton } from "../Buttons/Buttons";
 import { BoldRobotoText, RegularRobotoText } from "../Texts/MainTexts";
 import { XMarkIcon } from '@heroicons/react/20/solid'
-import { Token, usePrices } from "../../store/prices";
-import { useBalance } from "../../store/balances";
+import { Token, TokenMap, usePrices } from "../../store/prices";
+import { MySupply, useBalance } from "../../store/balances";
 
 import { useWallet } from '../../store/wallet';
 
@@ -113,23 +113,26 @@ export const CloseButton = styled(XMarkIcon)`
 
 interface SuppluModalProps {
     close: () => void;
+    supply?: MySupply;
 }
 
 interface FormData {
     price: string;
 }
 
-export const SupplyModal = ({ close }: SuppluModalProps) => {
+export const SupplyModal = ({ close, supply }: SuppluModalProps) => {
     const { t, i18n } = useTranslation();
     const { register, handleSubmit, watch, formState: { errors, } } = useForm<FormData>();
     const { formatToUsd } = usePrices();
     const { maxSupply } = useBalance();
 
+    const currentToken = supply?.token || Token.TON;
+    const {ticker, tokenId} = TokenMap[currentToken];
+
     const { sendTransaction } = useWallet();
 
     const tokenAmount = watch("price")
     const click = () => {
-        const tokenId = 'usdt' // 'usdt'
         const action = 'supply'
         // @ts-ignore
         const reciver = window.mastersc
@@ -139,18 +142,18 @@ export const SupplyModal = ({ close }: SuppluModalProps) => {
     return (
         <Dialog.Panel as={DialogStyled}>
             <CloseButton onClick={close} />
-            <Title>Supply TON</Title>
+            <Title>Supply {ticker}</Title>
             <HelpWrapper>
                 <Subtitle>Amount</Subtitle>
                 <MyStyledInput maxLength={7}  {...register('price', { required: true, pattern: /^(0|[1-9]\d*)(\.\d+)?$/ })} placeholder="Enter amount" />
-                {watch("price") && <AmountInDollars>{formatToUsd(watch("price"), Token.TON)}</AmountInDollars>}
+                {watch("price") && <AmountInDollars>{formatToUsd(watch("price"), currentToken)}</AmountInDollars>}
             </HelpWrapper>
             <HelpWrapper>
                 <Subtitle>Transaction Overview</Subtitle>
                 <InfoWrapper>
                     <InfoTextWrapper>
                         <InfoText>MAX</InfoText>
-                        <InfoText>{maxSupply} USDT</InfoText>
+                        <InfoText>{maxSupply} {ticker}</InfoText>
                     </InfoTextWrapper>
                     <InfoTextWrapper>
                         <InfoText>Supply APY</InfoText>
