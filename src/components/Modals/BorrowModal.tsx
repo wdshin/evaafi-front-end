@@ -131,13 +131,12 @@ export const BorrowModal = ({ close, borrow }: SuppluModalProps) => {
     const { maxBorrow, apy_usdt_borrow } = useBalance();
 
     const currentToken = borrow?.token || Token.TON;
-    const {ticker, tokenId} = TokenMap[currentToken];
+    const { ticker, tokenId } = TokenMap[currentToken];
 
     const { sendTransaction } = useWallet();
 
     const tokenAmount = watch("price")
     const click = () => {
-        const tokenId = 'usdt' // 'usdt'
         const action = 'borrow'
         // @ts-ignore
         const reciver = window.mastersc
