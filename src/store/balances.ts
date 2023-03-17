@@ -21,30 +21,6 @@ const BALANCE_DECIMAL = Math.pow(10, 6);
 const SEC_DECIMAL = Math.pow(10, 12);
 const COUNT_DECIMAL = Math.pow(10, 8);
 
-console.log(new BN(0)
-)
-const userContractAddress_test = contractAddress(
-    0,
-    {
-        code: masterContractCode,
-        data: beginCell()
-            .storeAddress(masterContractAddress)
-            //@ts-ignore
-            .storeAddress(window.userAddress) // u need to put user wallet address here to calculate userContractAddress
-            .storeDict()
-            .storeInt(BigInt(0), 1)
-            .endCell(),
-    });
-
-// @ts-ignore
-window.usersc = userContractAddress_test
-// @ts-ignore
-window.mastersc = masterContractAddress
-console.log(888888888)
-console.log(userContractAddress_test)
-console.log(888888888)
-console.log(userContractAddress_test.toString());
-
 function bufferToBigInt(buffer: any, start = 0, end = buffer.length) {
     const bufferAsHexString = buffer.slice(start, end).toString("hex");
     return BigInt(`0x${bufferAsHexString}`);
@@ -113,6 +89,33 @@ export const useBalance = create<BalanceStore>((set) => {
         let args = new TupleBuilder();
         args.writeAddress(randomAddress('usdt'));
 
+        console.log(
+            //@ts-ignore
+            window.userAddress // u need to put user wallet address here to calculate userContractAddress
+        )
+        const userContractAddress_test = contractAddress(
+            0,
+            {
+                code: masterContractCode,
+                data: beginCell()
+                    .storeAddress(masterContractAddress)
+                    //@ts-ignore
+                    .storeAddress(window.userAddress) // u need to put user wallet address here to calculate userContractAddress
+                    .storeDict()
+                    .storeInt(BigInt(0), 1)
+                    .endCell(),
+            });
+
+        // @ts-ignore
+        window.usersc = userContractAddress_test
+        // @ts-ignore
+        window.mastersc = masterContractAddress
+        console.log(888888888)
+        console.log(userContractAddress_test)
+        console.log(888888888)
+        console.log(userContractAddress_test.toString());
+        console.log(888888888)
+
         let { stack } = await toncenter.runMethod(
             masterContractAddress,
             'getUIVariables',
@@ -141,7 +144,9 @@ export const useBalance = create<BalanceStore>((set) => {
         }, stack.readCellOpt())
 
         let data = dict.get(bufferToBigInt(randomAddress('usdt').hash))
-
+        console.log(data.price)
+        data = dict.get(bufferToBigInt(randomAddress('ton').hash))
+        console.log(data.price)
         console.log('2-----------POOL METADATA----')
 
         //@ts-ignore
