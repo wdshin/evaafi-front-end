@@ -62,7 +62,7 @@ export const BorrowAssetCard = ({ onClick, token, liquidity, apy} : AssetCardPro
                 <AssetCardLogo src={TokenMap[token].icon}/>
                 <AssetCardTextSimple>{TokenMap[token].ticker}</AssetCardTextSimple>
             </AssetWrapper>
-            <AssetCardText right={45.5}>{liquidity}</AssetCardText>
+            <AssetCardText right={43.5}>{liquidity}</AssetCardText>
             <AssetCardText right={30.1}>{formatPercent(apy)}</AssetCardText>
             <AssetCardButton onClick={onClick} right={0}>Borrow</AssetCardButton>
         </AssetCardWrapper>
