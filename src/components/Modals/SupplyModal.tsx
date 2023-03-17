@@ -6,7 +6,7 @@ import { BlueButton } from "../Buttons/Buttons";
 import { BoldRobotoText, RegularRobotoText } from "../Texts/MainTexts";
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import { Token, TokenMap, usePrices } from "../../store/prices";
-import { Supply, useBalance } from "../../store/balances";
+import { Supply, useBalance} from "../../store/balances";
 
 import { useWallet } from '../../store/wallet';
 
@@ -124,7 +124,7 @@ export const SupplyModal = ({ close, supply }: SuppluModalProps) => {
     const { t, i18n } = useTranslation();
     const { register, handleSubmit, watch, formState: { errors, } } = useForm<FormData>();
     const { formatToUsd } = usePrices();
-    const { maxSupply } = useBalance();
+    const { maxSupply, apy_ton_supply } = useBalance();
 
     const currentToken = supply?.token || Token.TON;
     const {ticker, tokenId} = TokenMap[currentToken];
@@ -157,7 +157,7 @@ export const SupplyModal = ({ close, supply }: SuppluModalProps) => {
                     </InfoTextWrapper>
                     <InfoTextWrapper>
                         <InfoText>Supply APY</InfoText>
-                        <InfoText>3.12%</InfoText>
+                        <InfoText>{apy_ton_supply} %</InfoText>
                     </InfoTextWrapper>
                 </InfoWrapper>
             </HelpWrapper>

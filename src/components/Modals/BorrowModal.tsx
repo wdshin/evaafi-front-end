@@ -9,7 +9,7 @@ import { ArrowLongRightIcon } from '@heroicons/react/20/solid'
 import { AmountInDollars } from "./SupplyModal";
 import { usePrices, Token, TokenMap } from "../../store/prices";
 import { Borrow, useBalance } from "../../store/balances";
-
+import { formatPercent } from '../../utils';
 import { useWallet } from '../../store/wallet';
 
 const DialogStyled = styled(Dialog.Panel)`
@@ -128,7 +128,7 @@ export const BorrowModal = ({ close, borrow }: SuppluModalProps) => {
     const { t, i18n } = useTranslation();
     const { register, handleSubmit, watch, formState: { errors, } } = useForm<FormData>();
     const { formatToUsd } = usePrices();
-    const { maxBorrow } = useBalance();
+    const { maxBorrow, apy_usdt_borrow } = useBalance();
 
     const currentToken = borrow?.token || Token.TON;
     const {ticker, tokenId} = TokenMap[currentToken];
@@ -160,17 +160,17 @@ export const BorrowModal = ({ close, borrow }: SuppluModalProps) => {
                         <InfoText>MAX</InfoText>
                         <InfoText>{maxBorrow} {ticker}</InfoText>
                     </InfoTextWrapper>
-                    <InfoTextWrapper>
+                    {/* <InfoTextWrapper>
                         <InfoText>Borrow Limit Used</InfoText>
                         <InfoText>0% {<ArrowRight />} 28%</InfoText>
                     </InfoTextWrapper>
                     <InfoTextWrapper>
                         <InfoText>Borrow Limit</InfoText>
                         <InfoText>52$ {<ArrowRight />} 37.8$</InfoText>
-                    </InfoTextWrapper>
+                    </InfoTextWrapper> */}
                     <InfoTextWrapper>
                         <InfoText>APY (Interest)</InfoText>
-                        <InfoTextBlue>5.4%</InfoTextBlue>
+                        <InfoTextBlue>{formatPercent(apy_usdt_borrow)}</InfoTextBlue>
                     </InfoTextWrapper>
                 </InfoWrapper>
             </HelpWrapper>
