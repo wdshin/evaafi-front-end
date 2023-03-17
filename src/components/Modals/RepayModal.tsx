@@ -8,7 +8,7 @@ import { XMarkIcon } from '@heroicons/react/20/solid'
 import { ArrowLongRightIcon } from '@heroicons/react/20/solid'
 import { AmountInDollars } from "./SupplyModal";
 import { Token, TokenMap, usePrices } from "../../store/prices";
-import { Borrow, useBalance } from "../../store/balances";
+import { MyBorrow, useBalance } from "../../store/balances";
 
 import { useWallet } from '../../store/wallet';
 
@@ -117,7 +117,7 @@ export const CloseButton = styled(XMarkIcon)`
 
 interface SuppluModalProps {
     close: () => void;
-    borrow?: Borrow;
+    borrow?: MyBorrow;
 }
 
 interface FormData {

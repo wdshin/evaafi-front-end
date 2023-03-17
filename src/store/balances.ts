@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { Token } from './prices';
-import { Dictionary, beginCell, Builder, Slice, contractAddress, Address, Cell, TonClient, fromNano, TupleBuilder } from 'ton';
+import { Dictionary, beginCell, Builder, Slice, contractAddress, Address, Cell, TonClient, TupleBuilder } from 'ton';
 import { randomAddress } from '../utils'
 // import { Integer } from 'io-ts';
 
@@ -99,9 +99,11 @@ interface BalanceStore {
     myBorrows: MyBorrow[];
     supplies: Supply[];
     borrows: Borrow[];
+    tonBalance: string, 
+    usdtBalance: string,
 }
 
-export const useBalance = create<BalanceStore>((set) => {
+export const useBalance = create<BalanceStore>((set, get) => {
     const updateData = async () => {
         let args = new TupleBuilder();
         args.writeAddress(randomAddress('usdt'));
@@ -399,8 +401,8 @@ export const useBalance = create<BalanceStore>((set) => {
 
         const newSupply = {
             id: 'dkdskasdk',
-            token: Token.USDT,
-            balance: '30',
+            token: Token.TON,
+            balance: get().tonBalance,
             apy: Number(apy_usdt_supply),
         };
 
@@ -463,5 +465,8 @@ export const useBalance = create<BalanceStore>((set) => {
         myBorrows: [],
         supplies: [],
         borrows: [],
+
+        tonBalance: '0', 
+        usdtBalance: '0',
     }
 });

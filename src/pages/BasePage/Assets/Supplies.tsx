@@ -27,10 +27,10 @@ const Supplies = ({ tab }: SuppliesProps) => {
     return (
         <>
             <Dialog className={`w-full h-full fixed bg-black bg-opacity-50 top-0 flex justify-center items-center`} open={!!selectedMySupply} onClose={() => setSelectedMySupply(undefined)}>
-                <SupplyModal supply={selectedMySupply} close={() => setSelectedMySupply(undefined)} />
+                <WithdrawModal supply={selectedMySupply} close={() => setSelectedMySupply(undefined)} />
             </Dialog>
             <Dialog className={`w-full h-full fixed bg-black bg-opacity-50 top-0 flex justify-center items-center`} open={!!selectedSupply} onClose={() => setSelectedSupply(undefined)}>
-                <WithdrawModal supply={selectedSupply} close={() => setSelectedSupply(undefined)} />
+                <SupplyModal supply={selectedSupply} close={() => setSelectedSupply(undefined)} />
             </Dialog>
             <AssetsWrapper>
 

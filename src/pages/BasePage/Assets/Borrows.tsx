@@ -25,10 +25,10 @@ const Borrows = ({ tab }: BorrowsProps) => {
     return (
         <AssetsWrapper>
             <Dialog className={`w-full h-full fixed bg-black bg-opacity-50 top-0 flex justify-center items-center`} open={!!selectedMyBorrow} onClose={() => setSelectedMyBorrow(undefined)}>
-                <BorrowModal borrow={selectedMyBorrow} close={() => setSelectedMyBorrow(undefined)} />
+                <RepayModal borrow={selectedMyBorrow} close={() => setSelectedMyBorrow(undefined)} />
             </Dialog>
             <Dialog className={`w-full h-full fixed bg-black bg-opacity-50 top-0 flex justify-center items-center`} open={!!selectedBorrow} onClose={() => setSelectedBorrow(undefined)}>
-                <RepayModal borrow={selectedBorrow} close={() => setSelectedBorrow(undefined)} />
+                <BorrowModal borrow={selectedBorrow} close={() => setSelectedBorrow(undefined)} />
             </Dialog>
             <AssetsSubWrapper>
                 <AssetsTitle>Your Borrows</AssetsTitle>

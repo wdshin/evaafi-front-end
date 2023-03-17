@@ -4,7 +4,7 @@ import { BN } from 'bn.js'
 import { fromNano, TonClient, beginCell, toNano, Address, JettonMaster, ContractProvider, Contract } from 'ton';
 // import { tonweb } from 'tonweb'
 import { friendlifyUserAddress, isMobile, openLink, addReturnStrategy, randomAddress } from '../utils';
-
+import { useBalance } from './balances';
 
 
 function bufferToBigInt(buffer: any, start = 0, end = buffer.length) {
@@ -54,26 +54,29 @@ interface AuthStore {
 }
 
 export const useWallet = create<AuthStore>((set, get) => {
+
   const connector = new TonConnect(dappMetadata);
+  
   connector.onStatusChange((async (wallet) => {
     const userAddress = friendlifyUserAddress(wallet?.account.address);
     const tonBalance = fromNano(await client.getBalance(Address.parse(connector?.wallet?.account.address as string)))
     const jettonWalletAddressMain = 'EQDLqyBI-LPJZy-s2zEZFQMyF9AU-0DxDDSXc2fA-YXCJIIq' // todo calculate jeton wallet 
     const contract = new Minter(Address.parse(jettonWalletAddressMain));
     const juserwalletEvaaMasterSC = await client.open(contract).getWalletAddress(Address.parseRaw(wallet?.account.address as string))
-    // const contract1 = new Minter(juserwalletEvaaMasterSC );
-    // // console.log(Address.parseRaw(wallet?.account.address as string).toString())
-    console.log(juserwalletEvaaMasterSC.toString()
-    )
     const contract1 = new Minter(Address.parseFriendly(juserwalletEvaaMasterSC.toString()).address);
-    const juserwalletEvaaMasterSC1 = await client.open(contract1).getBalance()
-    console.log('-----------------------')
-    console.log()
-    // console.log(Number(BigInt(juserwalletEvaaMasterSC).toString()) / 1000000)
-    console.log('-----------------------')
-    const usdtBalance = juserwalletEvaaMasterSC1.readNumber() / 1000000
+    
+    let usdtBalance = 0;
 
-    set(() => ({ wallet, userAddress, tonBalance, usdtBalance, universalLink: '' }));
+    try {
+      const juserwalletEvaaMasterSC1 = await client.open(contract1).getBalance()
+      usdtBalance = juserwalletEvaaMasterSC1.readNumber() / 1000000;
+    } catch(e) {
+      console.log('error with get usdtBalance', e)
+    }
+
+    set(() => ({ wallet, userAddress, universalLink: '' }));
+    useBalance.setState({ usdtBalance: String(usdtBalance), tonBalance });
+
   }), console.error);
 
   connector.restoreConnection().then(() => {
