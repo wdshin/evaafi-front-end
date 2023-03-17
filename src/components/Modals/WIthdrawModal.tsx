@@ -115,7 +115,7 @@ export const WithdrawModal = ({ close, supply }: SuppluModalProps) => {
     const { t, i18n } = useTranslation();
     const { register, handleSubmit, watch, formState: { errors, } } = useForm<FormData>();
     const { formatToUsd } = usePrices();
-    
+
     const currentToken = supply?.token || Token.TON;
     const { tokenId, ticker } = TokenMap[currentToken];
 
