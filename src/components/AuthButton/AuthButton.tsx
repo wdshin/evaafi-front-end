@@ -29,8 +29,8 @@ export function AuthButton() {
 				<BlueButton onClick={login}>{t("basePage.addWallet")}</BlueButton>
 			}
 
-			<Dialog className={`w-full h-full  absolute bg-black bg-opacity-50 top-0 flex justify-center items-center`} open={!!universalLink} onClose={resetUniversalLink}>
-				<QRModal close={resetUniversalLink} link={universalLink} />
+			<Dialog className={`w-full h-full fixed bg-black bg-opacity-50 top-0 flex justify-center items-center`} open={!!universalLink} onClose={resetUniversalLink}>
+				<QRModal close={resetUniversalLink} link={universalLink}/>
 			</Dialog>
 		</>
 	);

@@ -6,15 +6,21 @@ import { SupplyModal } from '../../../components/Modals/SupplyModal';
 import { AssetsSubWrapper, AssetsSubtitle, AssetsTitle, AssetsWrapper } from './AssetsStyles';
 import { WithdrawModal } from '../../../components/Modals/WIthdrawModal';
 import { useBalance } from '../../../store/balances';
+import { useWallet } from '../../../store/wallet';
 
 
-export interface SuppliesProps { }
+export interface SuppliesProps { 
+    tab: string;
+}
 
 
-const Supplies = ({ }: SuppliesProps) => {
+const Supplies = ({ tab }: SuppliesProps) => {
+    const { callIfLoged: callIfLogin } = useWallet();
     const { mySupplies, supplies } = useBalance();
     const [supplyModalIsOpen, setSupplyModelIsOpen] = useState(false);
     const [withdrawModalIsOpen, setWithdrawModalIsOpen] = useState(false);
+    const currentSupplies = tab === '1' ? mySupplies : [];
+    
 
 
     return (
@@ -29,14 +35,14 @@ const Supplies = ({ }: SuppliesProps) => {
 
                 <AssetsSubWrapper>
                     <AssetsTitle>Your Supplies</AssetsTitle>
-                    {mySupplies.length > 0 &&
+                    {currentSupplies.length > 0 &&
                         <MySuppliesDescriptionBar />
                     }
-                    {!mySupplies.length &&
+                    {!currentSupplies.length &&
                         <AssetsSubtitle>Nothing supplied  yet</AssetsSubtitle>
                     }
-                    {mySupplies.map(mySupply => (
-                        <MySuppliesAssetCard {...mySupply} key={mySupply.id} onClick={() => setWithdrawModalIsOpen(true)} />
+                    {currentSupplies.map(mySupply => (
+                        <MySuppliesAssetCard {...mySupply} key={mySupply.id} onClick={callIfLogin(() => setWithdrawModalIsOpen(true))} />
                     ))}
 
                 </AssetsSubWrapper>
@@ -49,7 +55,7 @@ const Supplies = ({ }: SuppliesProps) => {
                         <AssetsSubtitle>Loading market data</AssetsSubtitle>
                     }
                     {supplies.map(supply => (
-                        <SupplyAssetCard {...supply} key={supply.id} onClick={() => setSupplyModelIsOpen(true)} />
+                        <SupplyAssetCard {...supply} key={supply.id} onClick={callIfLogin(() => setSupplyModelIsOpen(true))} />
                     ))}
                 </AssetsSubWrapper>
             </AssetsWrapper>

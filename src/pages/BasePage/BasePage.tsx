@@ -7,6 +7,8 @@ import Footer from '../../components/Footer/Footer';
 import { Tabs } from 'antd';
 import type { TabsProps } from 'antd';
 import styled from 'styled-components';
+import { useState } from 'react';
+
 
 const StyledTabs = styled(Tabs)`
   width: 90%;
@@ -45,14 +47,17 @@ const items: TabsProps['items'] = [
 
 const BasePage = () => {
 
+  const [ tab, setTab ] = useState('1');
+
+
     return (
         <BasePageContainer>
             <Header />
             <InfoBar />
-            <StyledTabs defaultActiveKey="1" items={items} />
+            <StyledTabs defaultActiveKey="1" items={items} onChange={setTab} />
             <ContentWrapper>
-                <Supplies />
-                <Borrows />
+                <Supplies tab={tab}/>
+                <Borrows tab={tab}/>
             </ContentWrapper>
             <Footer />
         </BasePageContainer>
