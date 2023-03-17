@@ -364,17 +364,20 @@ export const useBalance = create<BalanceStore>((set, get) => {
         argsUserBalanceas.writeCell(asdf);
         // let argsUpdateRates = new TupleBuilder();
 
-        let aggregatedbalances = 0;
-
-        const getAggregatedBalances = await toncenter.runMethod(
-            userContractAddress_test,
-            'getAggregatedBalances',
-            argsUserBalanceas.build(),
-        );
-        const aggregatedBalance1 = getAggregatedBalances.stack.readNumber();// agregatedbalances 
-        const aggregatedBalance2 = getAggregatedBalances.stack.readNumber();// agregatedbalances   
-        console.log(aggregatedBalance1, aggregatedBalance2);
-
+        let aggregatedBalance1 = 0;
+        let aggregatedBalance2 = 0;
+        try {
+            const getAggregatedBalances = await toncenter.runMethod(
+                userContractAddress_test,
+                'getAggregatedBalances',
+                argsUserBalanceas.build(),
+            );
+            aggregatedBalance1 = getAggregatedBalances.stack.readNumber();// agregatedbalances 
+            aggregatedBalance2 = getAggregatedBalances.stack.readNumber();// agregatedbalances   
+            console.log(aggregatedBalance1, aggregatedBalance2);
+        } catch (e) {
+            console.log('error with getAggregatedBalances', e)
+        }
 
 
 
@@ -412,10 +415,10 @@ export const useBalance = create<BalanceStore>((set, get) => {
 
         const apy_usdt_supply = parseFloat((((Number(ratesPerSecondDataUsdt.s_rate_per_second) * 360 * 24 + 1) ^ 365 - 1) / SEC_DECIMAL).toString()).toFixed(3);
         const apy_ton_supply = Number((((Number(ratesPerSecondDataTon.s_rate_per_second) * 360 * 24 + 1) ^ 365 - 1) / VALUE_DECIMAL).toFixed(2));
-        set({apy_ton_supply});
+        set({ apy_ton_supply });
         const apy_usdt_borrow_math = Number(ratesPerSecondDataUsdt.b_rate_per_second) / SEC_DECIMAL;
         const apy_usdt_borrow = ((apy_usdt_borrow_math * 360 * 24 + 1) ^ 365 - 1) / 10000;
-        set({apy_usdt_borrow});
+        set({ apy_usdt_borrow });
         const liquidity_usdt = (Math.abs(Number(assetBalanceUsdt) - Number(assetReserveUsdt)) / BALANCE_DECIMAL).toFixed(2);
         const liquidity_ton = (Math.abs(Number(assetBalanceTon) - Number(assetReserveTon)) / BALANCE_DECIMAL / 10).toFixed(2);
 
