@@ -75,10 +75,10 @@ export const useWallet = create<AuthStore>((set, get) => {
     }
 
     set(() => ({ wallet, userAddress, universalLink: '' }));
-    useBalance.setState({ usdtBalance: String(usdtBalance), tonBalance });
 
-    //@ts-ignore
-    window.userAddress = Address.parseRaw(wallet?.account.address as string);
+    console.log('userAddress', wallet?.account.address)
+  
+    useBalance.setState({ usdtBalance: String(usdtBalance), tonBalance, userAddress: Address.parseRaw(wallet?.account.address as string) });
 
   }), console.error);
 
