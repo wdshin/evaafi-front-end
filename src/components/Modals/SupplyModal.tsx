@@ -127,12 +127,13 @@ export const SupplyModal = ({ close }: SuppluModalProps) => {
 
     const { sendTransaction } = useWallet();
 
+    const tokenAmount = watch("price")
     const click = () => {
-        console.log(1)
-        const amount = '0.1'
-        //@ts-ignore
+        const tokenId = 'usdt' // 'usdt'
+        const action = 'supply'
+        // @ts-ignore
         const reciver = window.mastersc
-        sendTransaction(reciver.toString(), amount)
+        sendTransaction(reciver.toString(), tokenAmount, tokenId, action)
     }
 
     return (

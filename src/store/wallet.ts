@@ -1,10 +1,30 @@
 import { create } from 'zustand';
 import { TonConnect, Wallet, isWalletInfoInjected, WalletInfoRemote } from '@tonconnect/sdk';
-import { toNano } from 'ton';
-
-import { friendlifyUserAddress, isMobile, openLink, addReturnStrategy } from '../utils';
+import { BN } from 'bn.js'
+import { TonClient, beginCell, toNano, Address, JettonMaster, ContractProvider, Contract } from 'ton';
+// import { tonweb } from 'tonweb'
+function bufferToBigInt(buffer: any, start = 0, end = buffer.length) {
+  const bufferAsHexString = buffer.slice(start, end).toString("hex");
+  return BigInt(`0x${bufferAsHexString}`);
+}
+const client = new TonClient({
+  endpoint: 'https://testnet.toncenter.com/api/v2/jsonRPC',
+  apiKey: "49d23d98ab44004b72a7be071d615ea069bde3fbdb395a958d4dfcb4e5475f54",
+});
+import { friendlifyUserAddress, isMobile, openLink, addReturnStrategy, randomAddress } from '../utils';
 
 const dappMetadata = { manifestUrl: 'https://api.tonft.app/apiv1/getConfig' };
+class Minter implements Contract {
+  constructor(readonly address: Address) { }
+  async getWalletAddress(provider: ContractProvider, address: Address) {
+    const param = {
+      type: 'slice',
+      cell: beginCell().storeAddress(address).endCell()
+    } as any;
+    const { stack } = await provider.get("get_wallet_address", [param]);
+    return stack.readAddress();
+  }
+}
 
 interface AuthStore {
   isLoading: boolean;
@@ -16,7 +36,7 @@ interface AuthStore {
 
   logout: () => void;
   login: () => void;
-  sendTransaction: (address: string, amount: string, payload?: string) => void;
+  sendTransaction: (address: string, amount: string, tokenId: string, action: string) => void;
 
   resetUniversalLink: () => void;
 }
@@ -69,20 +89,89 @@ export const useWallet = create<AuthStore>((set) => {
 
     },
 
-    sendTransaction: async (address: string, amount: string, payload?: string) => {
-      console.log(address)
-      console.log(amount)
+    sendTransaction: async (address: string, amount: string, tokenId: string, action: string) => {
+      const body = beginCell()
+        .endCell()
+
+      let messages = []
+
+      if (tokenId === 'ton') {
+        if (action === 'supply' || action === 'repay') {
+          const body = beginCell()
+            .endCell()
+          messages.push({
+            address,
+            amount: toNano(amount).toString(),
+            payload: body.toBoc().toString('base64'),
+          })
+        } else if (action === 'withdrawal' || action === 'borrow') {
+          const assetAddress = bufferToBigInt(randomAddress('ton').hash) // todo change address
+
+          const body = beginCell()
+            .storeUint(60, 32)
+            .storeUint(0, 64)
+            .storeUint(assetAddress, 256)
+            .storeUint(toNano(amount), 64)
+            .endCell()
+
+          messages.push({
+            address,
+            amount: toNano('0.1').toString(),
+            payload: body.toBoc().toString('base64'),
+          })
+        }
+      } else if (tokenId === 'usdt') {
+        if (action === 'supply' || action === 'repay') {
+          const jettonWalletAddressMain = 'EQDLqyBI-LPJZy-s2zEZFQMyF9AU-0DxDDSXc2fA-YXCJIIq' // todo calculate jeton wallet 
+          const contract = new Minter(Address.parse(jettonWalletAddressMain));
+          const juserwalletEvaaMasterSC = await client.open(contract).getWalletAddress(Address.parseFriendly(address).address)
+          const body = beginCell()
+            .storeUint(0xf8a7ea5, 32)
+            .storeUint(0, 64)
+            .storeCoins(new BN(Number(amount) * (1000000) + ''))
+            .storeAddress(juserwalletEvaaMasterSC)
+            .storeAddress(null) //responce add?
+            .storeDict(null)
+            .storeCoins(0)
+            .storeMaybeRef(null) //tons to be forwarded
+            .endCell()
+          const juserwallet = await client.open(contract).getWalletAddress(Address.parse(connector?.wallet?.account.address as string))
+          console.log(juserwallet.toString({
+            urlSafe: true,
+            bounceable: false,
+            testOnly: true
+          }))
+          messages.push({
+            address: juserwallet.toString({
+              urlSafe: true,
+              bounceable: false,
+              testOnly: true
+            }),
+            amount: toNano('0.1').toString(),
+            payload: body.toBoc().toString('base64'),
+          })
+        } else if (action === 'withdraw' || action === 'borrow') {
+          const assetAddress = bufferToBigInt(randomAddress('usdt').hash) // todo change address
+          const body = beginCell()
+            .storeUint(60, 32)
+            .storeUint(0, 64)
+            .storeUint(assetAddress, 256)
+            .storeUint(toNano(amount), 64)
+            .endCell()
+
+          messages.push({
+            address,
+            amount: toNano('0.1').toString(),
+            payload: body.toBoc().toString('base64'),
+          })
+        }
+      }
 
       const tx = await connector.sendTransaction({
         validUntil: (new Date()).getTime() / 1000 + 5 * 1000 * 60,
-        messages: [
-          {
-            address,
-            amount: toNano(amount).toString(),
-            payload
-          }
-        ]
+        messages
       });
+
       if (tx.boc) {
         alert('tx done')
       } else {

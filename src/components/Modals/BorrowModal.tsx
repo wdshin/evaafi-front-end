@@ -131,13 +131,13 @@ export const BorrowModal = ({ close }: SuppluModalProps) => {
 
     const { sendTransaction } = useWallet();
 
+    const tokenAmount = watch("price")
     const click = () => {
-        console.log(1)
-        const amount = '0.1'
+        const tokenId = 'usdt' // 'usdt'
+        const action = 'borrow'
         // @ts-ignore
         const reciver = window.mastersc
-        const payload = ''
-        sendTransaction(reciver.toString(), amount, payload)
+        sendTransaction(reciver.toString(), tokenAmount, tokenId, action)
     }
 
     return (

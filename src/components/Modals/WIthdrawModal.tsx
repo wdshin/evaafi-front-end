@@ -116,13 +116,13 @@ export const WithdrawModal = ({ close }: SuppluModalProps) => {
 
     const { sendTransaction } = useWallet();
 
+    const tokenAmount = watch("price")
     const click = () => {
-        console.log(1)
-        const amount = '0.1'
-        //@ts-ignore
+        const tokenId = 'usdt' // 'usdt'
+        const action = 'withdraw'
+        // @ts-ignore
         const reciver = window.mastersc
-        const payload = ''
-        sendTransaction(reciver.toString(), amount, payload)
+        sendTransaction(reciver.toString(), tokenAmount, tokenId, action)
     }
 
     return (

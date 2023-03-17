@@ -42,7 +42,7 @@ export const MySuppliesAssetCard = ({ onClick, token, balance, apy, earned } : A
                 <AssetCardLogo src={TokenMap[token].icon}/>
                 <AssetCardTextSimple>{TokenMap[token].ticker}</AssetCardTextSimple>
             </AssetWrapper>
-            <DoubleTextWrapper right={45.5}>
+            <DoubleTextWrapper right={42.5}>
                 <DoubleTextUpper>{balance} {TokenMap[token].ticker}</DoubleTextUpper>
                 <DoubleTextLower>{formatToUsd(balance, token)}</DoubleTextLower>
             </DoubleTextWrapper>
