@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { Token } from './prices';
-import { Dictionary, beginCell, Builder, Slice, contractAddress, Address, Cell, TonClient, fromNano, TupleBuilder } from 'ton';
+import { Dictionary, beginCell, Builder, Slice, contractAddress, Address, Cell, TonClient, TupleBuilder } from 'ton';
 import { randomAddress } from '../utils'
 // import { Integer } from 'io-ts';
 import { BN } from 'bn.js'
@@ -82,10 +82,34 @@ interface BalanceStore {
     myBorrows: MyBorrow[];
     supplies: Supply[];
     borrows: Borrow[];
+    tonBalance: string;
+    usdtBalance: string;
+    userAddress?: Address;
 }
 
-export const useBalance = create<BalanceStore>((set) => {
+export const useBalance = create<BalanceStore>((set, get) => {
     const updateData = async () => {
+        if (!get()?.userAddress) {
+            // not initialized yet, just skip this update cycle
+            return;
+        }
+
+        const userContractAddress_test = contractAddress(0, {
+                code: masterContractCode,
+                data: beginCell()
+                    .storeAddress(masterContractAddress)
+                    //@ts-ignore
+                    .storeAddress(get().userAddress) // u need to put user wallet address here to calculate userContractAddress
+                    .storeDict()
+                    .storeInt(BigInt(0), 1)
+                    .endCell(),
+            });
+
+        // @ts-ignore
+        window.usersc = userContractAddress_test
+
+
+
         let args = new TupleBuilder();
         args.writeAddress(randomAddress('usdt'));
 
@@ -228,25 +252,40 @@ export const useBalance = create<BalanceStore>((set) => {
         argsUser.writeNumber(data.s_rate) //s_rate todo change on actual srate
         argsUser.writeNumber(data.b_rate)//b_rate todo
 
-        let accountAssetBalanceUsdt = await toncenter.runMethod(
-            userContractAddress_test,
-            'getAccountAssetBalance',
-            argsUser.build(),
-        );
+        let assetBalanceUsdt = BigInt(0);
 
-        const assetBalanceUsdt = BigInt(accountAssetBalanceUsdt.stack.readNumber());
+        try {
+            const accountAssetBalanceUsdt = await toncenter.runMethod(
+                userContractAddress_test,
+                'getAccountAssetBalance',
+                argsUser.build(),
+            );
+    
+            assetBalanceUsdt = BigInt(accountAssetBalanceUsdt.stack.readNumber());
+        } catch (e) {
+            console.log('error with get getAccountAssetBalance', e)
+        }
+
 
         let argsUser2 = new TupleBuilder();
         argsUser2.writeAddress(randomAddress('ton'));
         argsUser2.writeNumber(data.s_rate) //s_rate todo change on actual srate
         argsUser2.writeNumber(data.b_rate)//b_rate todo
 
-        let accountAssetBalanceTon = await toncenter.runMethod(
-            userContractAddress_test,
-            'getAccountAssetBalance',
-            argsUser2.build(),
-        );
-        const assetBalanceTon = BigInt(accountAssetBalanceTon.stack.readNumber());
+        let assetBalanceTon = BigInt(0);
+
+        try {
+            const accountAssetBalanceTon = await toncenter.runMethod(
+                userContractAddress_test,
+                'getAccountAssetBalance',
+                argsUser2.build(),
+            );
+            
+            assetBalanceTon = BigInt(accountAssetBalanceTon.stack.readNumber());
+        } catch (e) {
+            console.log('error with getAccountAssetBalance', e)
+        }
+
 
         console.log(assetBalanceUsdt + " usdt") //asset balance
         console.log(assetBalanceTon + " ton") //asset balance
@@ -269,27 +308,29 @@ export const useBalance = create<BalanceStore>((set) => {
             }
         }).endCell();
         argsUserBalances.writeCell(asdf);
-        let stackUserBalances = await toncenter.runMethod(
-            userContractAddress_test,
-            'getAccountBalances',
-            argsUserBalances.build(),
-        );
+
+        // let stackUserBalances = await toncenter.runMethod(
+        //     userContractAddress_test,
+        //     'getAccountBalances',
+        //     argsUserBalances.build(),
+        // );
 
         // stackUserBalances.stack.readCell().beginParse(); // important 
         // console.log(BigInt(stackUserBalances.stack.readNumber())) //asset balance
-        const dictUserBalances = Dictionary.loadDirect(Dictionary.Keys.BigUint(256), {
-            serialize: (src: any, buidler: any) => {
-                buidler.storeSlice(src);
-            },
-            parse: (src: Slice) => {
-                const balance = BigInt(src.loadInt(65)); //s_rate_per_second 64bit
-                return { balance };
-            }
-            //@ts-ignore
-        }, stackUserBalances.stack.readCell().beginParse());
 
-        console.log(dictUserBalances.get(bufferToBigInt(randomAddress('usdt').hash))) //get balance in usd
-        const supplyBalanceData = dictUserBalances.get(bufferToBigInt(randomAddress('usdt').hash)).balance;
+        // const dictUserBalances = Dictionary.loadDirect(Dictionary.Keys.BigUint(256), {
+        //     serialize: (src: any, buidler: any) => {
+        //         buidler.storeSlice(src);
+        //     },
+        //     parse: (src: Slice) => {
+        //         const balance = BigInt(src.loadInt(65)); //s_rate_per_second 64bit
+        //         return { balance };
+        //     }
+        //     //@ts-ignore
+        // }, stackUserBalances.stack.readCell().beginParse());
+
+        // console.log(dictUserBalances.get(bufferToBigInt(randomAddress('usdt').hash))) //get balance in usd
+        // const supplyBalanceData = dictUserBalances.get(bufferToBigInt(randomAddress('usdt').hash)).balance;
 
 
         console.log('9---------AVL TO BORROW ------')
@@ -317,13 +358,19 @@ export const useBalance = create<BalanceStore>((set) => {
         }).endCell();
         argsUserAvl.writeCell(asdf_config);
         argsUserAvl.writeCell(asdf);
-        let stackUserAvlToBorr = await toncenter.runMethod(
-            userContractAddress_test,
-            'getAvailableToBorrow',
-            argsUserAvl.build(),
-        );
-        const availableToBorrowData = BigInt(stackUserAvlToBorr.stack.readNumber());
-        console.log(availableToBorrowData); // avaliable to borrow
+
+        let availableToBorrowData = BigInt(0);
+        try {
+            let stackUserAvlToBorr = await toncenter.runMethod(
+                userContractAddress_test,
+                'getAvailableToBorrow',
+                argsUserAvl.build(),
+            );
+
+            availableToBorrowData = BigInt(stackUserAvlToBorr.stack.readNumber());
+        } catch(e) {
+            console.log('error with getAvailableToBorrow', e)
+        }
 
         // let argsUpdateRates = new TupleBuilder();
 
@@ -333,11 +380,21 @@ export const useBalance = create<BalanceStore>((set) => {
         argsUserBalanceas.writeCell(asdf_config);
         argsUserBalanceas.writeCell(asdf);
         // let argsUpdateRates = new TupleBuilder();
-        let getAggregatedBalances = await toncenter.runMethod(
-            userContractAddress_test,
-            'getAggregatedBalances',
-            argsUserBalanceas.build(),
-        );
+
+        let aggregatedbalances = 0;
+        try {
+            const getAggregatedBalances = await toncenter.runMethod(
+                userContractAddress_test,
+                'getAggregatedBalances',
+                argsUserBalanceas.build(),
+            );
+
+            aggregatedbalances = getAggregatedBalances.stack.readNumber();
+        } catch(e) {
+            console.log('error with getAggregatedBalances', e)
+        }
+
+
         // const aggregatedBalance1 = getAggregatedBalances.stack.readNumber();// agregatedbalances 
         // const aggregatedBalance2 = getAggregatedBalances.stack.readNumber();// agregatedbalances 
         // console.log(aggregatedBalance1,aggregatedBalance2)
@@ -357,10 +414,10 @@ export const useBalance = create<BalanceStore>((set) => {
         // console.log(BigInt(getUpdateRates.stack.readNumber())) //asset balance
         // console.log(BigInt(getUpdateRates.stack.readNumber())) //asset balance
 
-        const supplyBalance = (getAggregatedBalances.stack.readNumber() / VALUE_DECIMAL).toString();
+        const supplyBalance = (aggregatedbalances / VALUE_DECIMAL).toString();
         set({ supplyBalance });
 
-        const borrowBalance = (getAggregatedBalances.stack.readNumber() / VALUE_DECIMAL).toString();
+        const borrowBalance = (aggregatedbalances / VALUE_DECIMAL).toString();
         set({ borrowBalance });
 
         const limitUsed = (Number(availableToBorrowData) / VALUE_DECIMAL);
@@ -411,8 +468,8 @@ export const useBalance = create<BalanceStore>((set) => {
 
         const newSupply = {
             id: 'dkdskasdk',
-            token: Token.USDT,
-            balance: '30',
+            token: Token.TON,
+            balance: get().tonBalance,
             apy: Number(apy_usdt_supply),
         };
 
@@ -458,8 +515,8 @@ export const useBalance = create<BalanceStore>((set) => {
         set({ maxSupply })
     }
 
-    setInterval(updateData, 6000000);
-    updateData();
+    setInterval(updateData, 30000);
+    setTimeout(updateData, 1000)
 
     return {
         borrowBalance: '0',
@@ -475,5 +532,8 @@ export const useBalance = create<BalanceStore>((set) => {
         myBorrows: [],
         supplies: [],
         borrows: [],
+
+        tonBalance: '0', 
+        usdtBalance: '0',
     }
 });

@@ -7,7 +7,7 @@ import { BoldRobotoText, RegularRobotoText } from "../Texts/MainTexts";
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import { AmountInDollars } from "./SupplyModal";
 import { Token, usePrices, TokenMap } from "../../store/prices";
-import { Supply, useBalance } from '../../store/balances';
+import { MySupply, useBalance } from '../../store/balances';
 
 import { useWallet } from '../../store/wallet';
 
@@ -102,7 +102,7 @@ export const CloseButton = styled(XMarkIcon)`
 
 interface SuppluModalProps {
     close: () => void;
-    supply?: Supply;
+    supply?: MySupply;
 }
 
 interface FormData {

@@ -6,7 +6,7 @@ import { BlueButton } from "../Buttons/Buttons";
 import { BoldRobotoText, RegularRobotoText } from "../Texts/MainTexts";
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import { Token, TokenMap, usePrices } from "../../store/prices";
-import { MySupply, useBalance } from "../../store/balances";
+import { Supply, useBalance } from "../../store/balances";
 
 import { useWallet } from '../../store/wallet';
 
@@ -113,7 +113,7 @@ export const CloseButton = styled(XMarkIcon)`
 
 interface SuppluModalProps {
     close: () => void;
-    supply?: MySupply;
+    supply?: Supply;
 }
 
 interface FormData {
