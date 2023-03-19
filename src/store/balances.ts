@@ -5,20 +5,14 @@ import { randomAddress } from '../utils'
 // import { Integer } from 'io-ts';
 import { BN } from 'bn.js'
 
-const ton = beginCell().storeUint(4, 3)
-    .storeUint(0, 8)
-    .storeUint(0x1a4219fe5e60d63af2a3cc7dce6fec69b45c6b5718497a6148e7c232ac87bd8an, 256).endCell().beginParse().loadAddress()
-
-const usdt = Address.parseFriendly('EQBOSPO9jMeJPQTmau2FKk3_NryuAucfv5pgxBXd7BxGIs5w').address
-
 export const toncenter = new TonClient({
     endpoint: 'https://testnet.toncenter.com/api/v2/jsonRPC',
     apiKey: "49d23d98ab44004b72a7be071d615ea069bde3fbdb395a958d4dfcb4e5475f54",
 });
 
 const userSCData =
-    { "hex": "b5ee9c72c10246010005de00000d00120017001d0022002700330038003d004b005100a500ac00b100b600bb00c800d900de00f601010106010b011001150138013d015c016f0174017901ee01f3021a0221022602a1032003240329032e0333033803540365036a037b038f039403a503b603bb03c00417043b0440045d046204720486048b049004aa04b204b704dc04e10506058505de0114ff00f4a413f4bcf2c80b010201620d0202012004030007bcd833940201200c0502012007060013b5c59e04226be07e06700201480b080201200a090018aafc547210f035fe2030f0350008a994f03600a3af46f81089af81904183fa4337d29936c881471ca981c183fa0737d0987812af8219117805ba6465816503e5ffe4e801781a907f101864652064e82a1001c183fa0b28894183fa3e37d2b609017409af81c00009b97e7f03280202c9150e0201ce120f02014811100015320040728fc0a0c1fd10e0001d0060c1fd039be864f5c28ff80c1c200201581413002b34ffc04074cfc04074cfc04074cfc0407d013d010c20001134ffc040748fc04c600201203c1602012027170201201d180201201a1900416b2200f8072c7d4018072cfd40133c5960072ffc04072cfc040728fc040728ff260201481c1b003932200cc072c7d4014072cfd400f3c5804072ffc040728fc040728ff260002134ffc04074cfc04074cfc04074cfc04c60020120231e020120201f00e547020f021135f03208307f4866fa5908e5c01d23f013153158307f40e6fa13053278307f40e6fa13001f0255f0403f022109a5f0a24c1008e103103a312f02a01a87a58f004a90413a08e193323c2009f5003f02a58a87a58f004a90414a003925f04e202e251218307f47c6fa5e85f036c228020120222100493c0844d7c0c0fe910c5400e0c1fd039be84c348fc04c4830bfe51b04bc0ab80c68fc0aa8e000093c0cf08020020158252400f11c14c060c1fd219be9642399c0748fc04c54c560c1fd039be84c14c9e0c1fd039be84c007c0957c100fc0897c20c887f880c09704023845b0840e8c4bc0a806a1e963c012a4104a823880d0930802385413c0a806a162a1e963c012a412049c42a4104e800a497c17880789444e0c1fd1f1be97a16db0ca86001f71c083c0844d7c0c820c1fd219be964239980748fc04c54c560c1fd039be84c14c9e0c1fd039be84c007c0957c100fc08841e17c20c89704023849b08540cea1e9400fc0104aa4128fc0a852823880d09308023855410aa006a1e963c012a412049c42a413c0a84e800a497c17880f8944c60c1fd1f1be97a17c0cce026000431b9020120332802012030290201202d2a0201202c2b00331c14c0b040270c4870406480a864cc0068f8a50c00a840788060001d0830bfe4cc7c0af81b04a8fc0b28e00201202f2e001d0830bfe4cc7c0ab81b04a8fc0aa8e00023208c03782dace9d900002a086829406a41200201583231001d208c03782dace9d900002a006a4120001d006a208c03782dace9d900002a41200201203734020148363500a920822f454aff880c083f880c34cfe08648211b86063f880c34cfc04074cfc060822f454aff880c0074cfe0822f454aff880c34cfe0822f454aff880c34c7c060822f454aff880c0074cfc04c60822f454aff880c200043321401c072cfd4014072cfd400c072cfc040728fc040728fc04072c7c04072cff260020120393800354fa40d307d430d0d30fd30fd30fd33fd33fd33fd33fd33fd33f3080201203b3a001b3b51343e903e903d013480004c60002332140133c59633c5bd0000407280327b5520020148403d0201203f3e002f69c60043232c1540173c59400fe8084f2dac4b332407ec02000bf7c147d2218402012042410045d106000492db8f0106000c8987010558029107802105400d49c006000c900d44898f14020148444300450830002496dc78083000644c38082ac014883c00482a006a4e00300064806a244c78a001f71b088831c02456f8007434c0cc1c6c252103fcbc37bc084134c7c04074cfc048b00fe5d7c0db04dc3c083808b01023850c0c4d00fc1094d07c11006804093c11449c3c083809bcb4aa08b00ca38b0cbc0e14d4fc11151c843c0b5401283c0b950d093c11413c0bc9440d14109c017c0e491660103c039540bc0838204500ae22c03d8e3a3631f0435365f044547430f02d26a14540f02e543656f0455133f0348e1914f02f103770260410395092f03e5443558040f00e587ff020e05f08e0303220c0029730d4305502f020e06c41c00730840ff2f0a2943896" }
-export const masterContractAddress = Address.parse('EQBp3jaGmiwasitExEIpUPZ5B4VBa7PiIrlILgmv1_ShXzPq');
+    { "hex": "b5ee9c72c10246010005a200000d00120017001d0022002700330038003d004b005100a500ac00b100b600bb00c800d900de00f601010106010b011001150138013d015c016f0174017901ee01f3021a0221022602a1032003240329032e0333033803540365036a037b038f039403a503b603bb03c003db03ff0404042104260436044a044f0454046e0476047b04a004a504ca054905a20114ff00f4a413f4bcf2c80b010201620d0202012004030007bcd833940201200c0502012007060013b5c59e04226be07e06700201480b080201200a090018aafc547210f035fe2030f0350008a994f03600a3af46f81089af81904183fa4337d29936c881471ca981c183fa0737d0987812af8219117805ba6465816503e5ffe4e801781a907f101864652064e82a1001c183fa0b28894183fa3e37d2b609017409af81c00009b97e7f03280202c9150e0201ce120f02014811100015320040728fc0a0c1fd10e0001d0060c1fd039be864f5c28ff80c1c200201581413002b34ffc04074cfc04074cfc04074cfc0407d013d010c20001134ffc040748fc04c600201203c1602012027170201201d180201201a1900416b2200f8072c7d4018072cfd40133c5960072ffc04072cfc040728fc040728ff260201481c1b003932200cc072c7d4014072cfd400f3c5804072ffc040728fc040728ff260002134ffc04074cfc04074cfc04074cfc04c60020120231e020120201f00e547020f021135f03208307f4866fa5908e5c01d23f013153158307f40e6fa13053278307f40e6fa13001f0255f0403f022109a5f0a24c1008e103103a312f02a01a87a58f004a90413a08e193323c2009f5003f02a58a87a58f004a90414a003925f04e202e251218307f47c6fa5e85f036c228020120222100493c0844d7c0c0fe910c5400e0c1fd039be84c348fc04c4830bfe51b04bc0ab80c68fc0aa8e000093c0cf08020020158252400f11c14c060c1fd219be9642399c0748fc04c54c560c1fd039be84c14c9e0c1fd039be84c007c0957c100fc0897c20c887f880c09704023845b0840e8c4bc0a806a1e963c012a4104a823880d0930802385413c0a806a162a1e963c012a412049c42a4104e800a497c17880789444e0c1fd1f1be97a16db0ca86001f71c083c0844d7c0c820c1fd219be964239980748fc04c54c560c1fd039be84c14c9e0c1fd039be84c007c0957c100fc08841e17c20c89704023849b08540cea1e9400fc0104aa4128fc0a852823880d09308023855410aa006a1e963c012a412049c42a413c0a84e800a497c17880f8944c60c1fd1f1be97a17c0cce026000431b9020120332802012030290201202d2a0201202c2b00331c14c0b040270c4870406480a864cc0068f8a50c00a840788060001d0830bfe4cc7c0af81b04a8fc0b28e00201202f2e001d0830bfe4cc7c0ab81b04a8fc0aa8e00023208c03782dace9d900002a086829406a41200201583231001d208c03782dace9d900002a006a4120001d006a208c03782dace9d900002a412002012037340201483635003134cfc04074cfc04074cfc04074cff4cff4c7c04074cfc04c600043321401c072cfd4014072cfd400c072cfc040728fc040728fc04072c7c04072cff260020120393800354fa40d307d430d0d30fd30fd30fd33fd33fd33fd33fd33fd33f3080201203b3a001b3b51343e903e903d013480004c60002332140133c59633c5bd0000407280327b5520020148403d0201203f3e002f69c60043232c1540173c59400fe8084f2dac4b332407ec02000bf7c147d2218402012042410045d106000492db8f0106000c8987010558029107802105400d49c006000c900d44898f14020148444300450830002496dc78083000644c38082ac014883c00482a006a4e00300064806a244c78a001f71b088831c02456f8007434c0cc1c6c252103fcbc37bc084134c7c04074cfc048b00fe5d7c0db04dc3c083808b01023850c0c4d00fc1094d07c11006804093c11449c3c083809bcb4aa08b00ca38b0cbc0e14d4fc11151c843c0b5401283c0b950d093c11413c0bc9440d14109c017c0e491660103c039540bc0838204500ae22c03d8e3a3631f0435365f044547430f02d26a14540f02e543656f0455133f0348e1914f02f103770260410395092f03e5443558040f00e587ff020e05f08e0303220c0029730d4305502f020e06c41c00730840ff2f06f347720" }
+export const masterContractAddress = Address.parse('EQC9rAR21X7UK6fF_wmoto4eUYzHxevqoj1c96YJr4vBUD97');
 // @ts-ignore
 window.mastersc = masterContractAddress
 export const oracleMasterSourceV1CodeCell = Cell.fromBoc(Buffer.from(userSCData.hex, 'hex'))[0];
@@ -51,11 +45,11 @@ export interface MySupply {
 }
 
 export interface MyBorrow {
-    id: string;
-    token: Token;
-    balance: string;
-    apy: number;
-    accrued: string;
+    id?: string;
+    token?: Token;
+    balance?: string;
+    apy?: number;
+    accrued?: string;
 }
 
 export interface Supply {
@@ -90,7 +84,7 @@ interface BalanceStore {
         [key in Token]?: number
     };
     mySupplies: MySupply[];
-    myBorrows: MyBorrow[];
+    myBorrows?: MyBorrow[];
     supplies: Supply[];
     borrows: Borrow[];
     tonBalance: string;
@@ -105,7 +99,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
     const updateData = async () => {
         if (!get()?.userAddress) {
             // not initialized yet, just skip this update cycle
-            // return;
+            return;
         }
 
         const userContractAddress_test = contractAddress(0, {
@@ -122,8 +116,10 @@ export const useBalance = create<BalanceStore>((set, get) => {
         window.usersc = userContractAddress_test;
 
 
+
+
         let args = new TupleBuilder();
-        args.writeAddress(usdt);
+        args.writeAddress(randomAddress('usdt'));
 
         // console.log(
         //     //@ts-ignore
@@ -179,10 +175,9 @@ export const useBalance = create<BalanceStore>((set, get) => {
             //@ts-ignore
         }, stack.readCellOpt())
 
-        console.log(dict)
-        let data = dict.get(bufferToBigInt(usdt.hash))
+        let data = dict.get(bufferToBigInt(randomAddress('usdt').hash))
         console.log(data.price)
-        data = dict.get(bufferToBigInt(ton.hash))
+        data = dict.get(bufferToBigInt(randomAddress('ton').hash))
         console.log(data.price)
         console.log('2-----------POOL METADATA----')
 
@@ -224,7 +219,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
         }, confItems.loadRef().beginParse())
 
         // get asset config by address -------
-        console.log(dictConf.get(bufferToBigInt(usdt.hash)))
+        console.log(dictConf.get(bufferToBigInt(randomAddress('usdt').hash)))
         console.log('4-----------IS POOL ACTIVE?----')
         console.log(confItems.loadInt(8) === -1) //if pool active = -1 (true) / 0 (false)
         console.log('5----SRATE BRATE PER SEC BY ASSET----')
@@ -240,10 +235,10 @@ export const useBalance = create<BalanceStore>((set, get) => {
             }
         }, stack.readCellOpt())
 
-        console.log(dictRates.get(bufferToBigInt(usdt.hash)))
-        const ratesPerSecondDataUsdt = dictRates.get(bufferToBigInt(usdt.hash));
-        console.log(dictRates.get(bufferToBigInt(ton.hash)))
-        const ratesPerSecondDataTon = dictRates.get(bufferToBigInt(ton.hash));
+        console.log(dictRates.get(bufferToBigInt(randomAddress('usdt').hash)))
+        const ratesPerSecondDataUsdt = dictRates.get(bufferToBigInt(randomAddress('usdt').hash));
+        console.log(dictRates.get(bufferToBigInt(randomAddress('ton').hash)))
+        const ratesPerSecondDataTon = dictRates.get(bufferToBigInt(randomAddress('ton').hash));
 
 
         console.log('6---------RESERVE BY ASSET------')
@@ -257,15 +252,15 @@ export const useBalance = create<BalanceStore>((set, get) => {
             }
         }, stack.readCellOpt())
 
-        const assetReserveUsdt = dictReserves.get(bufferToBigInt(usdt.hash)).reserve;
-        const assetReserveTon = dictReserves.get(bufferToBigInt(ton.hash)).reserve;
+        const assetReserveUsdt = dictReserves.get(bufferToBigInt(randomAddress('usdt').hash)).reserve;
+        const assetReserveTon = dictReserves.get(bufferToBigInt(randomAddress('ton').hash)).reserve;
         console.log(assetReserveUsdt, "usdt");
         console.log(assetReserveTon, "ton");
 
 
         console.log('7----ACCOUNT ASSET BALANCE-----------')
         let argsUser = new TupleBuilder();
-        argsUser.writeAddress(usdt);
+        argsUser.writeAddress(randomAddress('usdt'));
         argsUser.writeNumber(data.s_rate) //s_rate todo change on actual srate
         argsUser.writeNumber(data.b_rate)//b_rate todo
 
@@ -285,7 +280,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
 
 
         let argsUser2 = new TupleBuilder();
-        argsUser2.writeAddress(ton);
+        argsUser2.writeAddress(randomAddress('ton'));
         argsUser2.writeNumber(data.s_rate) //s_rate todo change on actual srate
         argsUser2.writeNumber(data.b_rate)//b_rate todo
 
@@ -418,7 +413,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
 
         argsUserAvl.writeCell(asdf);
         argsUserAvl.writeCell(asdf_config);
-        argsUserAvl.writeAddress(usdt);
+        argsUserAvl.writeAddress(randomAddress('usdt'));
         // argsUserAvl.writeNumber(BigInt((new Date()).getTime() * 1000) - data.lastAccural);
         argsUserAvl.writeNumber(10);
 
@@ -444,12 +439,16 @@ export const useBalance = create<BalanceStore>((set, get) => {
         const borrowLimitPercent = Math.abs(limitUsed) / totalLimit;
         set({ borrowLimitPercent });
 
-        const apy_usdt_supply = parseFloat((((Number(ratesPerSecondDataUsdt.s_rate_per_second) * 360 * 24 + 1) ^ 365 - 1) / SEC_DECIMAL).toString()).toFixed(3);
+        const apy_usdt_supply = Number((((Number(ratesPerSecondDataUsdt.s_rate_per_second) * 360 * 24 + 1) ^ 365 - 1) / SEC_DECIMAL).toFixed(3));
         const apy_ton_supply = Number((((Number(ratesPerSecondDataTon.s_rate_per_second) * 360 * 24 + 1) ^ 365 - 1) / VALUE_DECIMAL).toFixed(2));
         set({ apy_ton_supply });
+
         const apy_usdt_borrow_math = Number(ratesPerSecondDataUsdt.b_rate_per_second) / SEC_DECIMAL;
         const apy_usdt_borrow = ((apy_usdt_borrow_math * 360 * 24 + 1) ^ 365 - 1) / 10000;
         set({ apy_usdt_borrow });
+        const apy_ton_borrow_math = Number(ratesPerSecondDataTon.b_rate_per_second) / VALUE_DECIMAL;
+        const apy_ton_borrow = ((apy_ton_borrow_math * 360 * 24 + 1) ^ 365 - 1) / 10000;
+
         const liquidity_usdt = (Math.abs(Number(assetBalanceUsdt) - Number(assetReserveUsdt)) / BALANCE_DECIMAL).toFixed(2);
         const liquidity_ton = (Math.abs(Number(assetBalanceTon) - Number(assetReserveTon)) / BALANCE_DECIMAL / 10).toFixed(2);
 
@@ -458,7 +457,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
         const newMySupply = {
             id: 'fir12312321st',
             token: Token.TON,
-            balance: parseFloat((Number(assetBalanceTon) / COUNT_DECIMAL).toString()).toFixed(2),
+            balance: parseFloat((Number(assetBalanceTon) / VALUE_DECIMAL).toString()).toFixed(2),
             apy: apy_ton_supply,
             earned: '13',
         };
@@ -467,13 +466,14 @@ export const useBalance = create<BalanceStore>((set, get) => {
         set({ mySupplies });
 
 
-        const myBorrows = [{
-            id: 'firs12t',
-            token: Token.USDT,
-            balance: Math.abs(Number(parseFloat((Number(assetBalanceUsdt) / BALANCE_DECIMAL).toString()).toFixed(2))).toString(),
-            apy: apy_usdt_borrow,
-            accrued: '22',
-        }];
+        const myBorrows = [{}]
+        // [{
+        //     id: 'firs12t',
+        //     token: Token.USDT,
+        //     balance: Math.abs(Number(parseFloat((Number(assetBalanceUsdt) / BALANCE_DECIMAL).toString()).toFixed(2))).toString(),
+        //     apy: apy_usdt_borrow,
+        //     accrued: '22',
+        // }];
 
         set({ myBorrows });
 
@@ -483,6 +483,11 @@ export const useBalance = create<BalanceStore>((set, get) => {
             token: Token.TON,
             balance: get().tonBalance,
             apy: Number(apy_ton_supply / 100),
+        }, {
+            id: 'dkdskas123123dk',
+            token: Token.USDT,
+            balance: get().usdtBalance,
+            apy: Number(apy_usdt_supply / 100),
         }];
 
         set({ supplies });
@@ -493,6 +498,12 @@ export const useBalance = create<BalanceStore>((set, get) => {
             token: Token.USDT,
             liquidity: liquidity_usdt,
             apy: apy_usdt_borrow,
+        },
+        {
+            id: '1211ccc1121',
+            token: Token.TON,
+            liquidity: liquidity_ton,
+            apy: apy_ton_borrow,
         }];
 
         set({ borrows })
