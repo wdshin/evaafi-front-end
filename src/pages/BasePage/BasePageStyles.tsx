@@ -11,8 +11,8 @@ export const BasePageContainer = styled.div`
     background: linear-gradient(
     to top,
     #F9FAFB 0%,
-    #F9FAFB 60%,
-    #080A0E 60%,
+    #F9FAFB 45%,
+    #080A0E 45%,
     #080A0E 100%
   );
     /* z-index: 100; */
