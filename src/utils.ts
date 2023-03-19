@@ -31,7 +31,7 @@ export function addReturnStrategy(url: string, returnStrategy: 'back' | 'none'):
 }
 
 export function formatPercent(value: number) {
-	return `${value*100} %`
+	return `${value * 100} %`
 }
 
 export function randomAddress(seed: string, workchain?: number) {

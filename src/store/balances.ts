@@ -36,13 +36,10 @@ class Minter implements Contract {
 const contract = new Minter(Address.parse(jettonWalletAddressMain));
 const usdt = await client.open(contract).getWalletAddress(Address.parse(masterAdd))
 
-// const usdt = Address.parseFriendly('EQBOSPO9jMeJPQTmau2FKk3_NryuAucfv5pgxBXd7BxGIs5w').address
-
 export const toncenter = new TonClient({
     endpoint: 'https://testnet.toncenter.com/api/v2/jsonRPC',
     apiKey: "49d23d98ab44004b72a7be071d615ea069bde3fbdb395a958d4dfcb4e5475f54",
 });
-
 
 export const masterContractAddress = Address.parse(masterAdd);
 // @ts-ignore
@@ -77,11 +74,11 @@ export interface MySupply {
 }
 
 export interface MyBorrow {
-    id: string;
-    token: Token;
-    balance: string;
-    apy: number;
-    accrued: string;
+    id?: string;
+    token?: Token;
+    balance?: string;
+    apy?: number;
+    accrued?: string;
 }
 
 export interface Supply {
@@ -116,7 +113,7 @@ interface BalanceStore {
         [key in Token]?: number
     };
     mySupplies: MySupply[];
-    myBorrows: MyBorrow[];
+    myBorrows?: MyBorrow[];
     supplies: Supply[];
     borrows: Borrow[];
     tonBalance: string;
@@ -131,7 +128,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
     const updateData = async () => {
         if (!get()?.userAddress) {
             // not initialized yet, just skip this update cycle
-            // return;
+            return;
         }
 
         const userContractAddress_test = contractAddress(0, {
@@ -146,6 +143,8 @@ export const useBalance = create<BalanceStore>((set, get) => {
         });
         // @ts-ignore
         window.usersc = userContractAddress_test;
+
+
 
 
         let args = new TupleBuilder();
@@ -205,7 +204,6 @@ export const useBalance = create<BalanceStore>((set, get) => {
             //@ts-ignore
         }, stack.readCellOpt())
 
-        console.log(dict)
         let data = dict.get(bufferToBigInt(usdt.hash))
         console.log(data.price)
         data = dict.get(bufferToBigInt(ton.hash))
@@ -470,12 +468,16 @@ export const useBalance = create<BalanceStore>((set, get) => {
         const borrowLimitPercent = Math.abs(limitUsed) / totalLimit;
         set({ borrowLimitPercent });
 
-        const apy_usdt_supply = parseFloat((((Number(ratesPerSecondDataUsdt.s_rate_per_second) * 360 * 24 + 1) ^ 365 - 1) / SEC_DECIMAL).toString()).toFixed(3);
+        const apy_usdt_supply = Number((((Number(ratesPerSecondDataUsdt.s_rate_per_second) * 360 * 24 + 1) ^ 365 - 1) / SEC_DECIMAL).toFixed(3));
         const apy_ton_supply = Number((((Number(ratesPerSecondDataTon.s_rate_per_second) * 360 * 24 + 1) ^ 365 - 1) / VALUE_DECIMAL).toFixed(2));
         set({ apy_ton_supply });
+
         const apy_usdt_borrow_math = Number(ratesPerSecondDataUsdt.b_rate_per_second) / SEC_DECIMAL;
         const apy_usdt_borrow = ((apy_usdt_borrow_math * 360 * 24 + 1) ^ 365 - 1) / 10000;
         set({ apy_usdt_borrow });
+        const apy_ton_borrow_math = Number(ratesPerSecondDataTon.b_rate_per_second) / VALUE_DECIMAL;
+        const apy_ton_borrow = ((apy_ton_borrow_math * 360 * 24 + 1) ^ 365 - 1) / 10000;
+
         const liquidity_usdt = (Math.abs(Number(assetBalanceUsdt) - Number(assetReserveUsdt)) / BALANCE_DECIMAL).toFixed(2);
         const liquidity_ton = (Math.abs(Number(assetBalanceTon) - Number(assetReserveTon)) / BALANCE_DECIMAL / 10).toFixed(2);
 
@@ -484,7 +486,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
         const newMySupply = {
             id: 'fir12312321st',
             token: Token.TON,
-            balance: parseFloat((Number(assetBalanceTon) / COUNT_DECIMAL).toString()).toFixed(2),
+            balance: parseFloat((Number(assetBalanceTon) / VALUE_DECIMAL).toString()).toFixed(2),
             apy: apy_ton_supply,
             earned: '13',
         };
@@ -493,13 +495,14 @@ export const useBalance = create<BalanceStore>((set, get) => {
         set({ mySupplies });
 
 
-        const myBorrows = [{
-            id: 'firs12t',
-            token: Token.USDT,
-            balance: Math.abs(Number(parseFloat((Number(assetBalanceUsdt) / BALANCE_DECIMAL).toString()).toFixed(2))).toString(),
-            apy: apy_usdt_borrow,
-            accrued: '22',
-        }];
+        const myBorrows = [{}]
+        // [{
+        //     id: 'firs12t',
+        //     token: Token.USDT,
+        //     balance: Math.abs(Number(parseFloat((Number(assetBalanceUsdt) / BALANCE_DECIMAL).toString()).toFixed(2))).toString(),
+        //     apy: apy_usdt_borrow,
+        //     accrued: '22',
+        // }];
 
         set({ myBorrows });
 
@@ -509,6 +512,11 @@ export const useBalance = create<BalanceStore>((set, get) => {
             token: Token.TON,
             balance: get().tonBalance,
             apy: Number(apy_ton_supply / 100),
+        }, {
+            id: 'dkdskas123123dk',
+            token: Token.USDT,
+            balance: get().usdtBalance,
+            apy: Number(apy_usdt_supply / 100),
         }];
 
         set({ supplies });
@@ -519,6 +527,12 @@ export const useBalance = create<BalanceStore>((set, get) => {
             token: Token.USDT,
             liquidity: liquidity_usdt,
             apy: apy_usdt_borrow,
+        },
+        {
+            id: '1211ccc1121',
+            token: Token.TON,
+            liquidity: liquidity_ton,
+            apy: apy_ton_borrow,
         }];
 
         set({ borrows })
