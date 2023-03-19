@@ -6,13 +6,14 @@ import { fromNano, TonClient, beginCell, toNano, Address, JettonMaster, Contract
 import { friendlifyUserAddress, isMobile, openLink, addReturnStrategy, randomAddress } from '../utils';
 import { useBalance } from './balances';
 
-const ton = beginCell().storeUint(4, 3)
-  .storeUint(0, 8)
-  .storeUint(0x1a4219fe5e60d63af2a3cc7dce6fec69b45c6b5718497a6148e7c232ac87bd8an, 256).endCell().beginParse().loadAddress()
-
-const usdt = Address.parseFriendly('EQBOSPO9jMeJPQTmau2FKk3_NryuAucfv5pgxBXd7BxGIs5w').address
-
+// const ton = beginCell().storeUint(4, 3)
+//   .storeUint(0, 8)
+//   .storeUint(0x1a4219fe5e60d63af2a3cc7dce6fec69b45c6b5718497a6148e7c232ac87bd8an, 256).endCell().beginParse().loadAddress()
 const jettonWalletAddressMain = 'EQDLqyBI-LPJZy-s2zEZFQMyF9AU-0DxDDSXc2fA-YXCJIIq' // todo calculate jeton wallet 
+const masterAdd = 'EQCZY2a8FP9YodSLbawW12vfAP-M82fCFeCBZkn0VOZHWvBc'
+const ton = Address.parse('0:1a4219fe5e60d63af2a3cc7dce6fec69b45c6b5718497a6148e7c232ac87bd8a');
+
+// const usdt = Address.parseFriendly('EQBOSPO9jMeJPQTmau2FKk3_NryuAucfv5pgxBXd7BxGIs5w').address
 
 function bufferToBigInt(buffer: any, start = 0, end = buffer.length) {
   const bufferAsHexString = buffer.slice(start, end).toString("hex");
@@ -43,6 +44,9 @@ class Minter implements Contract {
     // return stack;
   }
 }
+
+const contract = new Minter(Address.parse(jettonWalletAddressMain));
+const usdt = await client.open(contract).getWalletAddress(Address.parse(masterAdd))
 
 interface AuthStore {
   isLoading: boolean;
@@ -154,7 +158,7 @@ export const useWallet = create<AuthStore>((set, get) => {
             amount: toNano(amount).toString(),
             payload: body.toBoc().toString('base64'),
           })
-        } else if (action === 'withdrawal' || action === 'borrow') {
+        } else if (action === 'withdraw' || action === 'borrow') {
           const assetAddress = bufferToBigInt(ton.hash) // todo change address
 
           const body = beginCell()
@@ -165,7 +169,7 @@ export const useWallet = create<AuthStore>((set, get) => {
             .endCell()
 
           messages.push({
-            address,
+            address: masterAdd,
             amount: toNano('0.1').toString(),
             payload: body.toBoc().toString('base64'),
           })
@@ -216,7 +220,7 @@ export const useWallet = create<AuthStore>((set, get) => {
           })
         }
       }
-
+      console.log(messages)
       const tx = await connector.sendTransaction({
         validUntil: (new Date()).getTime() / 1000 + 5 * 1000 * 60,
         messages
