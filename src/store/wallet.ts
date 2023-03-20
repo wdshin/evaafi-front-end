@@ -10,7 +10,7 @@ import { useBalance } from './balances';
 //   .storeUint(0, 8)
 //   .storeUint(0x1a4219fe5e60d63af2a3cc7dce6fec69b45c6b5718497a6148e7c232ac87bd8an, 256).endCell().beginParse().loadAddress()
 const jettonWalletAddressMain = 'EQDLqyBI-LPJZy-s2zEZFQMyF9AU-0DxDDSXc2fA-YXCJIIq' // todo calculate jeton wallet 
-const masterAdd = 'EQCZY2a8FP9YodSLbawW12vfAP-M82fCFeCBZkn0VOZHWvBc'
+const masterAdd = 'EQCMRwxs_9qPeivt7gdY2Wbm6plE2ccJHOfQk5x6qSE5z4q8'
 const ton = Address.parse('0:1a4219fe5e60d63af2a3cc7dce6fec69b45c6b5718497a6148e7c232ac87bd8a');
 
 // const usdt = Address.parseFriendly('EQBOSPO9jMeJPQTmau2FKk3_NryuAucfv5pgxBXd7BxGIs5w').address
