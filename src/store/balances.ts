@@ -512,12 +512,12 @@ export const useBalance = create<BalanceStore>((set, get) => {
         const supplies = [{
             id: 'dkdskasdk',
             token: Token.TON,
-            balance: get().tonBalance,
+            balance: Number(get().tonBalance).toFixed(2),
             apy: Number(apy_ton_supply / 100),
         }, {
             id: 'dkdskas123123dk',
             token: Token.USDT,
-            balance: get().usdtBalance,
+            balance: Number(get().usdtBalance).toFixed(2),
             apy: Number(apy_usdt_supply),
         }];
 
