@@ -74,11 +74,11 @@ export interface MySupply {
 }
 
 export interface MyBorrow {
-    id?: string;
-    token?: Token;
-    balance?: string;
-    apy?: number;
-    accrued?: string;
+    id: string;
+    token: Token;
+    balance: string;
+    apy: number;
+    accrued: string;
 }
 
 export interface Supply {
@@ -113,7 +113,7 @@ interface BalanceStore {
         [key in Token]?: number
     };
     mySupplies: MySupply[];
-    myBorrows?: MyBorrow[];
+    myBorrows: MyBorrow[];
     supplies: Supply[];
     borrows: Borrow[];
     tonBalance: string;
@@ -128,6 +128,7 @@ interface BalanceStore {
 export const useBalance = create<BalanceStore>((set, get) => {
     const updateData = async () => {
         if (!get()?.userAddress) {
+            
             // not initialized yet, just skip this update cycle
             return;
         }
@@ -478,7 +479,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
         set({ apy_usdt_borrow });
         const apy_ton_borrow_math = Number(ratesPerSecondDataTon.b_rate_per_second) / VALUE_DECIMAL;
         const apy_ton_borrow = Number((((apy_ton_borrow_math * 360 * 24 + 1) ^ 365 - 1) / 10000000).toFixed(4));
-        set({apy_ton_borrow})
+        set({ apy_ton_borrow })
 
         const liquidity_usdt = (Math.abs(Number(assetBalanceUsdt) - Number(assetReserveUsdt)) / BALANCE_DECIMAL).toFixed(2);
         const liquidity_ton = (Math.abs(Number(assetBalanceTon) - Number(assetReserveTon)) / BALANCE_DECIMAL / 1000).toFixed(2);
@@ -497,9 +498,8 @@ export const useBalance = create<BalanceStore>((set, get) => {
         set({ mySupplies });
 
 
-        const myBorrows =
-            [{
-                id: 'firs12t',
+        const myBorrows =[{
+                id: 'firs12122t',
                 token: Token.USDT,
                 balance: Math.abs(Number(parseFloat((Number(assetBalanceUsdt) / BALANCE_DECIMAL).toString()).toFixed(2))).toString(),
                 apy: apy_usdt_borrow,
@@ -545,7 +545,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
         set({ maxWithdraw: { [Token.TON]: maxWithdrawTon, [Token.USDT]: maxWithdrawUsdt } });
 
         const maxBorrow = Math.abs(Number(availableToBorrowData) / Number(data.price));
-        
+
         set({ maxBorrow });
 
         const maxRepayUsdt = Math.abs(Number(assetBalanceUsdt) / BALANCE_DECIMAL); //+t need to add
