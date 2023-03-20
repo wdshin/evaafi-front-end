@@ -455,7 +455,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
         // console.log(BigInt(getUpdateRates.stack.readNumber())) //asset balance
         // console.log(BigInt(getUpdateRates.stack.readNumber())) //asset balance
 
-        const supplyBalance = (aggregatedBalance1 / VALUE_DECIMAL).toString();
+        const supplyBalance = (aggregatedBalance1 / VALUE_DECIMAL / 10).toString();
         set({ supplyBalance });
 
         const borrowBalance = (aggregatedBalance2 / VALUE_DECIMAL).toString();
