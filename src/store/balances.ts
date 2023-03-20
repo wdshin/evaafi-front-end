@@ -34,7 +34,7 @@ class Minter implements Contract {
 }
 
 const contract = new Minter(Address.parse(jettonWalletAddressMain));
-const usdt = await client.open(contract).getWalletAddress(Address.parse(masterAdd))
+const usdt = client.open(contract).getWalletAddress(Address.parse(masterAdd))
 
 export const toncenter = new TonClient({
     endpoint: 'https://testnet.toncenter.com/api/v2/jsonRPC',
@@ -150,7 +150,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
 
 
         let args = new TupleBuilder();
-        args.writeAddress(usdt);
+        args.writeAddress(await usdt);
 
         // console.log(
         //     //@ts-ignore
@@ -206,7 +206,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
             //@ts-ignore
         }, stack.readCellOpt())
 
-        let data = dict.get(bufferToBigInt(usdt.hash))
+        let data = dict.get(bufferToBigInt((await usdt).hash))
         console.log(data.price)
         data = dict.get(bufferToBigInt(ton.hash))
         console.log(data.price)
@@ -250,7 +250,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
         }, confItems.loadRef().beginParse())
 
         // get asset config by address -------
-        console.log(dictConf.get(bufferToBigInt(usdt.hash)))
+        console.log(dictConf.get(bufferToBigInt((await usdt).hash)))
         console.log('4-----------IS POOL ACTIVE?----')
         console.log(confItems.loadInt(8) === -1) //if pool active = -1 (true) / 0 (false)
         console.log('5----SRATE BRATE PER SEC BY ASSET----')
@@ -266,8 +266,8 @@ export const useBalance = create<BalanceStore>((set, get) => {
             }
         }, stack.readCellOpt())
 
-        console.log(dictRates.get(bufferToBigInt(usdt.hash)))
-        const ratesPerSecondDataUsdt = dictRates.get(bufferToBigInt(usdt.hash));
+        console.log(dictRates.get(bufferToBigInt((await usdt).hash)))
+        const ratesPerSecondDataUsdt = dictRates.get(bufferToBigInt((await usdt).hash));
         console.log(dictRates.get(bufferToBigInt(ton.hash)))
         const ratesPerSecondDataTon = dictRates.get(bufferToBigInt(ton.hash));
 
@@ -283,7 +283,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
             }
         }, stack.readCellOpt())
 
-        const assetReserveUsdt = dictReserves.get(bufferToBigInt(usdt.hash)).reserve;
+        const assetReserveUsdt = dictReserves.get(bufferToBigInt((await usdt).hash)).reserve;
         const assetReserveTon = dictReserves.get(bufferToBigInt(ton.hash)).reserve;
         console.log(assetReserveUsdt, "usdt");
         console.log(assetReserveTon, "ton");
@@ -291,7 +291,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
 
         console.log('7----ACCOUNT ASSET BALANCE-----------')
         let argsUser = new TupleBuilder();
-        argsUser.writeAddress(usdt);
+        argsUser.writeAddress(await usdt);
         argsUser.writeNumber(data.s_rate) //s_rate todo change on actual srate
         argsUser.writeNumber(data.b_rate)//b_rate todo
 
@@ -444,7 +444,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
 
         argsUserAvl.writeCell(asdf);
         argsUserAvl.writeCell(asdf_config);
-        argsUserAvl.writeAddress(usdt);
+        argsUserAvl.writeAddress(await usdt);
         // argsUserAvl.writeNumber(BigInt((new Date()).getTime() * 1000) - data.lastAccural);
         argsUserAvl.writeNumber(10);
 
