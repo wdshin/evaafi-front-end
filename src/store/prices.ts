@@ -47,7 +47,7 @@ export const usePrices = create<PriceStore>((set, get) => {
                 return `$${usd.toFixed(2)}`
             }
             if (token === Token.USDT) {
-                const usd = parseFloat(value) * get().tetherPrice;
+                const usd = parseFloat(value) * 2; //todo get from sk
                 return `$${usd.toFixed(2)}`
             }else{
                 const usd = parseFloat(value);
