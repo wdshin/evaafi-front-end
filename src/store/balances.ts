@@ -120,6 +120,7 @@ interface BalanceStore {
     usdtBalance: string;
     userAddress?: Address;
     apy_usdt_borrow: number;
+    apy_ton_borrow: number;
     apy_ton_supply: number;
     forceUpdateData: () => void;
 }
@@ -476,7 +477,8 @@ export const useBalance = create<BalanceStore>((set, get) => {
         const apy_usdt_borrow = ((apy_usdt_borrow_math * 360 * 24 + 1) ^ 365 - 1) / 10000;
         set({ apy_usdt_borrow });
         const apy_ton_borrow_math = Number(ratesPerSecondDataTon.b_rate_per_second) / VALUE_DECIMAL;
-        const apy_ton_borrow = ((apy_ton_borrow_math * 360 * 24 + 1) ^ 365 - 1) / 10000;
+        const apy_ton_borrow = Number((((apy_ton_borrow_math * 360 * 24 + 1) ^ 365 - 1) / 10000000).toFixed(4));
+        set({apy_ton_borrow})
 
         const liquidity_usdt = (Math.abs(Number(assetBalanceUsdt) - Number(assetReserveUsdt)) / BALANCE_DECIMAL).toFixed(2);
         const liquidity_ton = (Math.abs(Number(assetBalanceTon) - Number(assetReserveTon)) / BALANCE_DECIMAL / 10).toFixed(2);
@@ -495,14 +497,14 @@ export const useBalance = create<BalanceStore>((set, get) => {
         set({ mySupplies });
 
 
-        const myBorrows = [{}]
-        // [{
-        //     id: 'firs12t',
-        //     token: Token.USDT,
-        //     balance: Math.abs(Number(parseFloat((Number(assetBalanceUsdt) / BALANCE_DECIMAL).toString()).toFixed(2))).toString(),
-        //     apy: apy_usdt_borrow,
-        //     accrued: '22',
-        // }];
+        const myBorrows =
+            [{
+                id: 'firs12t',
+                token: Token.USDT,
+                balance: Math.abs(Number(parseFloat((Number(assetBalanceUsdt) / BALANCE_DECIMAL).toString()).toFixed(2))).toString(),
+                apy: apy_usdt_borrow,
+                accrued: '22',
+            }];
 
         set({ myBorrows });
 
@@ -516,7 +518,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
             id: 'dkdskas123123dk',
             token: Token.USDT,
             balance: get().usdtBalance,
-            apy: Number(apy_usdt_supply / 100),
+            apy: Number(apy_usdt_supply),
         }];
 
         set({ supplies });
@@ -543,6 +545,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
         set({ maxWithdraw: { [Token.TON]: maxWithdrawTon, [Token.USDT]: maxWithdrawUsdt } });
 
         const maxBorrow = Math.abs(Number(availableToBorrowData) / Number(data.price));
+        
         set({ maxBorrow });
 
         const maxRepayUsdt = Math.abs(Number(assetBalanceUsdt) / BALANCE_DECIMAL); //+t need to add
@@ -572,6 +575,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
         supplies: [],
         borrows: [],
         apy_usdt_borrow: 0,
+        apy_ton_borrow: 0,
         apy_ton_supply: 0,
         tonBalance: '0',
         usdtBalance: '0',
