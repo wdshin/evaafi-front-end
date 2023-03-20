@@ -176,14 +176,14 @@ export const useWallet = create<AuthStore>((set, get) => {
         }
       } else if (tokenId === 'usdt') {
         if (action === 'supply' || action === 'repay') {
-          const contract = new Minter(Address.parse(jettonWalletAddressMain));
-          const juserwalletEvaaMasterSC = await client.open(contract).getWalletAddress(Address.parseFriendly(address).address)
+          // const contract = new Minter(Address.parse(jettonWalletAddressMain));
+          // const juserwalletEvaaMasterSC = await client.open(contract).getWalletAddress(Address.parseFriendly(address).address)
           const body = beginCell()
             .storeUint(0xf8a7ea5, 32)
             .storeUint(0, 64)
             // @ts-ignore
             .storeCoins(new BN(Number(amount) * (1000000) + ''))
-            .storeAddress(juserwalletEvaaMasterSC)
+            .storeAddress(usdt)
             .storeAddress(null) //responce add?
             .storeDict(null)
             .storeCoins(0)
