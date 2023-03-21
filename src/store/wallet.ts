@@ -48,6 +48,8 @@ class Minter implements Contract {
 const contract = new Minter(Address.parse(jettonWalletAddressMain));
 const usdt = await client.open(contract).getWalletAddress(Address.parse(masterAdd))
 
+console.log(usdt.toString())
+
 interface AuthStore {
   isLoading: boolean;
   universalLink: string;
@@ -176,17 +178,17 @@ export const useWallet = create<AuthStore>((set, get) => {
         }
       } else if (tokenId === 'usdt') {
         if (action === 'supply' || action === 'repay') {
-          // const contract = new Minter(Address.parse(jettonWalletAddressMain));
-          // const juserwalletEvaaMasterSC = await client.open(contract).getWalletAddress(Address.parseFriendly(address).address)
+          const contract = new Minter(Address.parse(jettonWalletAddressMain));
+          const juserwalletEvaaMasterSC = await client.open(contract).getWalletAddress(Address.parseFriendly(address).address)
           const body = beginCell()
             .storeUint(0xf8a7ea5, 32)
             .storeUint(0, 64)
             // @ts-ignore
             .storeCoins(new BN(Number(amount) * (1000000) + ''))
-            .storeAddress(usdt)
+            .storeAddress(Address.parse(masterAdd))
             .storeAddress(null) //responce add?
             .storeDict(null)
-            .storeCoins(0)
+            .storeCoins(toNano('0.1'))
             .storeMaybeRef(null) //tons to be forwarded
             .endCell()
           const juserwallet = await client.open(contract).getWalletAddress(Address.parse(connector?.wallet?.account.address as string))
@@ -201,7 +203,7 @@ export const useWallet = create<AuthStore>((set, get) => {
               bounceable: false,
               testOnly: true
             }),
-            amount: toNano('0.1').toString(),
+            amount: toNano('0.2').toString(),
             payload: body.toBoc().toString('base64'),
           })
         } else if (action === 'withdraw' || action === 'borrow') {
