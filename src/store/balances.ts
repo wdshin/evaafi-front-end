@@ -1,9 +1,7 @@
 import { create } from 'zustand';
 import { Token } from './prices';
 import { Dictionary, beginCell, Builder, Contract, Slice, contractAddress, Address, Cell, TonClient, TupleBuilder } from 'ton';
-import { randomAddress } from '../utils'
-// import { Integer } from 'io-ts';
-import { BN } from 'bn.js'
+
 
 const jettonWalletAddressMain = 'EQDLqyBI-LPJZy-s2zEZFQMyF9AU-0DxDDSXc2fA-YXCJIIq' // todo calculate jeton wallet 
 const masterAdd = 'EQCMRwxs_9qPeivt7gdY2Wbm6plE2ccJHOfQk5x6qSE5z4q8'
@@ -28,8 +26,6 @@ class Minter implements Contract {
     async getBalance(provider: any) {
         const { stack } = await provider.get("get_wallet_data", []);
         return stack;
-        // const stack = await provider.getState();
-        // return stack;
     }
 }
 
@@ -140,7 +136,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
         // @ts-ignore
         window.usersc = userContractAddress_test;
 
-        
+
         let args = new TupleBuilder();
         args.writeAddress(await usdt);
 
@@ -378,8 +374,6 @@ export const useBalance = create<BalanceStore>((set, get) => {
              console.log('error with getAggregatedBalances', e)
          }
  
-
- 
          argsUserAvl.writeCell(asdf);
          argsUserAvl.writeCell(asdf_config);
          argsUserAvl.writeAddress(await usdt);
@@ -405,7 +399,6 @@ export const useBalance = create<BalanceStore>((set, get) => {
         set({ supplies });
 
 
-
         const apy_usdt_borrow_math = Number(ratesPerSecondDataUsdt.b_rate_per_second) / SEC_DECIMAL;
         const apy_usdt_borrow = ((apy_usdt_borrow_math * 360 * 24 + 1) ^ 365 - 1) / 10000;
         set({ apy_usdt_borrow });
@@ -417,7 +410,6 @@ export const useBalance = create<BalanceStore>((set, get) => {
         const liquidity_ton = (Math.abs(Number(assetBalanceTon) - Number(assetReserveTon)) / BALANCE_DECIMAL / 1000).toFixed(2);
 
         
-
         const borrows = [{
             id: '1211ccc1',
             token: Token.USDT,
@@ -433,7 +425,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
 
         set({ borrows })
 
-
+///////////////////////////////////
         if (!get()?.userAddress) {
             
             // not initialized yet, just skip this update cycle

@@ -11,6 +11,7 @@ import { Token, TokenMap, usePrices } from "../../store/prices";
 import { MyBorrow, useBalance } from "../../store/balances";
 
 import { useWallet } from '../../store/wallet';
+import { formatPercent } from "../../utils";
 
 const DialogStyled = styled(Dialog.Panel)`
     position: relative;
@@ -125,7 +126,7 @@ interface FormData {
 }
 
 export const RepayModal = ({ close, borrow }: SuppluModalProps) => {
-    const { maxRepay } = useBalance();
+    const { maxRepay, borrowLimitPercent, borrowBalance, availableToBorrow } = useBalance();
     const { t, i18n } = useTranslation();
     const { register, handleSubmit, watch, formState: { errors, } } = useForm<FormData>();
     const { formatToUsd } = usePrices();
@@ -161,11 +162,11 @@ export const RepayModal = ({ close, borrow }: SuppluModalProps) => {
                     </InfoTextWrapper>
                     <InfoTextWrapper>
                         <InfoText>Borrow Limit Used</InfoText>
-                        <InfoText>28% {<ArrowRight />} 0%</InfoText>
+                        <InfoText>{borrowLimitPercent * 100} {<ArrowRight />} {formatPercent(Number(parseFloat(borrowLimitPercent.toString()).toFixed(2)))}</InfoText>
                     </InfoTextWrapper>
                     <InfoTextWrapper>
                         <InfoText>Borrow Balance</InfoText>
-                        <InfoText>15$ {<ArrowRight />} 0$</InfoText>
+                        <InfoText>{formatToUsd(borrowBalance)} {<ArrowRight />} {formatToUsd(availableToBorrow)}</InfoText>
                     </InfoTextWrapper>
                 </InfoWrapper>
             </HelpWrapper>
