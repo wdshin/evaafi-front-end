@@ -466,9 +466,13 @@ export const useBalance = create<BalanceStore>((set, get) => {
         const totalLimit = limitUsed + Number(borrowBalance);
 
         const borrowLimitValue = totalLimit;
+        
         set({ borrowLimitValue });
-        const borrowLimitPercent = Math.abs(limitUsed) / totalLimit;
-        set({ borrowLimitPercent });
+        if (totalLimit !== 0) {
+            const borrowLimitPercent = Math.abs(limitUsed) / totalLimit;
+            set({ borrowLimitPercent });
+        }
+       
 
         const apy_usdt_supply = Number((((Number(ratesPerSecondDataUsdt.s_rate_per_second) * 360 * 24 + 1) ^ 365 - 1) / SEC_DECIMAL).toFixed(3));
         const apy_ton_supply = Number((((Number(ratesPerSecondDataTon.s_rate_per_second) * 360 * 24 + 1) ^ 365 - 1) / VALUE_DECIMAL).toFixed(2));
