@@ -34,7 +34,7 @@ class Minter implements Contract {
 }
 
 const contract = new Minter(Address.parse(jettonWalletAddressMain));
-const usdt = await client.open(contract).getWalletAddress(Address.parse(masterAdd))
+const usdt = client.open(contract).getWalletAddress(Address.parse(masterAdd))
 
 export const toncenter = new TonClient({
     endpoint: 'https://testnet.toncenter.com/api/v2/jsonRPC',
@@ -74,11 +74,11 @@ export interface MySupply {
 }
 
 export interface MyBorrow {
-    id?: string;
-    token?: Token;
-    balance?: string;
-    apy?: number;
-    accrued?: string;
+    id: string;
+    token: Token;
+    balance: string;
+    apy: number;
+    accrued: string;
 }
 
 export interface Supply {
@@ -113,7 +113,7 @@ interface BalanceStore {
         [key in Token]?: number
     };
     mySupplies: MySupply[];
-    myBorrows?: MyBorrow[];
+    myBorrows: MyBorrow[];
     supplies: Supply[];
     borrows: Borrow[];
     tonBalance: string;
@@ -128,6 +128,7 @@ interface BalanceStore {
 export const useBalance = create<BalanceStore>((set, get) => {
     const updateData = async () => {
         if (!get()?.userAddress) {
+            
             // not initialized yet, just skip this update cycle
             return;
         }
@@ -149,7 +150,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
 
 
         let args = new TupleBuilder();
-        args.writeAddress(usdt);
+        args.writeAddress(await usdt);
 
         // console.log(
         //     //@ts-ignore
@@ -205,7 +206,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
             //@ts-ignore
         }, stack.readCellOpt())
 
-        let data = dict.get(bufferToBigInt(usdt.hash))
+        let data = dict.get(bufferToBigInt((await usdt).hash))
         console.log(data.price)
         data = dict.get(bufferToBigInt(ton.hash))
         console.log(data.price)
@@ -249,7 +250,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
         }, confItems.loadRef().beginParse())
 
         // get asset config by address -------
-        console.log(dictConf.get(bufferToBigInt(usdt.hash)))
+        console.log(dictConf.get(bufferToBigInt((await usdt).hash)))
         console.log('4-----------IS POOL ACTIVE?----')
         console.log(confItems.loadInt(8) === -1) //if pool active = -1 (true) / 0 (false)
         console.log('5----SRATE BRATE PER SEC BY ASSET----')
@@ -265,8 +266,8 @@ export const useBalance = create<BalanceStore>((set, get) => {
             }
         }, stack.readCellOpt())
 
-        console.log(dictRates.get(bufferToBigInt(usdt.hash)))
-        const ratesPerSecondDataUsdt = dictRates.get(bufferToBigInt(usdt.hash));
+        console.log(dictRates.get(bufferToBigInt((await usdt).hash)))
+        const ratesPerSecondDataUsdt = dictRates.get(bufferToBigInt((await usdt).hash));
         console.log(dictRates.get(bufferToBigInt(ton.hash)))
         const ratesPerSecondDataTon = dictRates.get(bufferToBigInt(ton.hash));
 
@@ -282,7 +283,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
             }
         }, stack.readCellOpt())
 
-        const assetReserveUsdt = dictReserves.get(bufferToBigInt(usdt.hash)).reserve;
+        const assetReserveUsdt = dictReserves.get(bufferToBigInt((await usdt).hash)).reserve;
         const assetReserveTon = dictReserves.get(bufferToBigInt(ton.hash)).reserve;
         console.log(assetReserveUsdt, "usdt");
         console.log(assetReserveTon, "ton");
@@ -290,7 +291,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
 
         console.log('7----ACCOUNT ASSET BALANCE-----------')
         let argsUser = new TupleBuilder();
-        argsUser.writeAddress(usdt);
+        argsUser.writeAddress(await usdt);
         argsUser.writeNumber(data.s_rate) //s_rate todo change on actual srate
         argsUser.writeNumber(data.b_rate)//b_rate todo
 
@@ -443,7 +444,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
 
         argsUserAvl.writeCell(asdf);
         argsUserAvl.writeCell(asdf_config);
-        argsUserAvl.writeAddress(usdt);
+        argsUserAvl.writeAddress(await usdt);
         // argsUserAvl.writeNumber(BigInt((new Date()).getTime() * 1000) - data.lastAccural);
         argsUserAvl.writeNumber(10);
 
@@ -478,7 +479,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
         set({ apy_usdt_borrow });
         const apy_ton_borrow_math = Number(ratesPerSecondDataTon.b_rate_per_second) / VALUE_DECIMAL;
         const apy_ton_borrow = Number((((apy_ton_borrow_math * 360 * 24 + 1) ^ 365 - 1) / 10000000).toFixed(4));
-        set({apy_ton_borrow})
+        set({ apy_ton_borrow })
 
         const liquidity_usdt = (Math.abs(Number(assetBalanceUsdt) - Number(assetReserveUsdt)) / BALANCE_DECIMAL).toFixed(2);
         const liquidity_ton = (Math.abs(Number(assetBalanceTon) - Number(assetReserveTon)) / BALANCE_DECIMAL / 1000).toFixed(2);
@@ -497,9 +498,8 @@ export const useBalance = create<BalanceStore>((set, get) => {
         set({ mySupplies });
 
 
-        const myBorrows =
-            [{
-                id: 'firs12t',
+        const myBorrows =[{
+                id: 'firs12122t',
                 token: Token.USDT,
                 balance: Math.abs(Number(parseFloat((Number(assetBalanceUsdt) / BALANCE_DECIMAL).toString()).toFixed(2))).toString(),
                 apy: apy_usdt_borrow,
@@ -545,7 +545,7 @@ export const useBalance = create<BalanceStore>((set, get) => {
         set({ maxWithdraw: { [Token.TON]: maxWithdrawTon, [Token.USDT]: maxWithdrawUsdt } });
 
         const maxBorrow = Math.abs(Number(availableToBorrowData) / Number(data.price));
-        
+
         set({ maxBorrow });
 
         const maxRepayUsdt = Math.abs(Number(assetBalanceUsdt) / BALANCE_DECIMAL); //+t need to add

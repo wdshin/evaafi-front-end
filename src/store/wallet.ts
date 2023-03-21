@@ -46,7 +46,7 @@ class Minter implements Contract {
 }
 
 const contract = new Minter(Address.parse(jettonWalletAddressMain));
-const usdt = await client.open(contract).getWalletAddress(Address.parse(masterAdd))
+const usdt = client.open(contract).getWalletAddress(Address.parse(masterAdd))
 
 console.log(usdt.toString())
 
@@ -207,7 +207,7 @@ export const useWallet = create<AuthStore>((set, get) => {
             payload: body.toBoc().toString('base64'),
           })
         } else if (action === 'withdraw' || action === 'borrow') {
-          const assetAddress = bufferToBigInt(usdt.hash) // todo change address
+          const assetAddress = bufferToBigInt((await usdt).hash) // todo change address
           const body = beginCell()
             .storeUint(60, 32)
             .storeUint(0, 64)
