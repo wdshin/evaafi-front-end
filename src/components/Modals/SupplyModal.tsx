@@ -124,7 +124,7 @@ export const SupplyModal = ({ close, supply }: SuppluModalProps) => {
     const { t, i18n } = useTranslation();
     const { register, handleSubmit, watch, formState: { errors, } } = useForm<FormData>();
     const { formatToUsd } = usePrices();
-    const { maxSupply, apy_ton_supply } = useBalance();
+    const { max_ton_supply, max_usdt_supply, apy_ton_supply, apy_usdt_supply } = useBalance();
 
     const currentToken = supply?.token || Token.TON;
     const {ticker, tokenId} = TokenMap[currentToken];
@@ -137,6 +137,15 @@ export const SupplyModal = ({ close, supply }: SuppluModalProps) => {
         // @ts-ignore
         const reciver = window.mastersc
         sendTransaction(reciver.toString(), tokenAmount, tokenId, action)
+    }
+    let maxSupply;
+    let apySupply;
+    if (currentToken == Token.TON){
+        maxSupply = max_ton_supply;
+        apySupply = apy_ton_supply;
+    }else{
+        maxSupply = max_usdt_supply;
+        apySupply = apy_usdt_supply;
     }
 
     return (
@@ -157,7 +166,7 @@ export const SupplyModal = ({ close, supply }: SuppluModalProps) => {
                     </InfoTextWrapper>
                     <InfoTextWrapper>
                         <InfoText>Supply APY</InfoText>
-                        <InfoText>{apy_ton_supply} %</InfoText>
+                        <InfoText>{apySupply} %</InfoText>
                     </InfoTextWrapper>
                 </InfoWrapper>
             </HelpWrapper>
